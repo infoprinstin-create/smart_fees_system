@@ -8,7 +8,7 @@ SECRET_KEY = "django-insecure-smart-fee-development-key"
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # APPLICATIONS
