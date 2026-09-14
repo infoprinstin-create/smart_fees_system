@@ -1,0 +1,488 @@
+
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Fee Structure{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fees_structure.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="fee-structure-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <h1>Fee Structure</h1>
+            <p>Manage the school fees structure for each class and academic year.</p>
+        </div>
+
+        <div class="header-actions">
+            <div class="academic-year-box">
+                <i class="fas fa-calendar-days"></i>
+                <span>2025/2026 Academic Year</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+
+            <a href="#" class="btn-add-fee">
+                <i class="fas fa-plus"></i>
+                <span>Add Fee Structure</span>
+            </a>
+        </div>
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <div class="summary-icon blue">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div>
+                <span class="summary-label">Total Classes</span>
+                <strong>10</strong>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon green">
+                <i class="fas fa-coins"></i>
+            </div>
+            <div>
+                <span class="summary-label">Total Fee Categories</span>
+                <strong>5</strong>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon purple">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div>
+                <span class="summary-label">Average Annual Fee</span>
+                <strong>AED 2,650.00</strong>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon orange">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <span class="summary-label">Total Students</span>
+                <strong>245</strong>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="fee-content-grid">
+
+        <!-- LEFT -->
+        <div class="fee-main-card">
+
+            <div class="card-title">
+                <h2>Fee Structure by Class</h2>
+            </div>
+
+            <!-- SEARCH -->
+            <div class="search-area">
+
+                <div class="search-box">
+                    <i class="fas fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        placeholder="Search class..."
+                    >
+                </div>
+
+                <select>
+                    <option>All Classes</option>
+                    <option>JHS 1</option>
+                    <option>JHS 2</option>
+                    <option>JHS 3</option>
+                    <option>Primary 1</option>
+                    <option>Primary 2</option>
+                    <option>Primary 3</option>
+                    <option>Primary 4</option>
+                    <option>Primary 5</option>
+                    <option>KG</option>
+                    <option>Playgroup</option>
+                </select>
+
+            </div>
+
+
+            <!-- TABLE -->
+            <div class="table-wrapper">
+
+                <table class="fee-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Class</th>
+                            <th>Registration<br>Fee</th>
+                            <th>Tuition Fee<br>(Annual)</th>
+                            <th>Examination<br>Fee</th>
+                            <th>Library<br>Fee</th>
+                            <th>Activity<br>Fee</th>
+                            <th>Total<br>Annual Fee</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>1</td>
+                            <td><span class="class-badge blue-badge">JHS 1</span></td>
+                            <td>AED 200.00</td>
+                            <td>AED 1,500.00</td>
+                            <td>AED 300.00</td>
+                            <td>AED 150.00</td>
+                            <td>AED 100.00</td>
+                            <td><strong>AED 2,250.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td><span class="class-badge blue-badge">JHS 2</span></td>
+                            <td>AED 200.00</td>
+                            <td>AED 1,500.00</td>
+                            <td>AED 300.00</td>
+                            <td>AED 150.00</td>
+                            <td>AED 100.00</td>
+                            <td><strong>AED 2,250.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td><span class="class-badge blue-badge">JHS 3</span></td>
+                            <td>AED 200.00</td>
+                            <td>AED 1,600.00</td>
+                            <td>AED 300.00</td>
+                            <td>AED 150.00</td>
+                            <td>AED 100.00</td>
+                            <td><strong>AED 2,350.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>4</td>
+                            <td><span class="class-badge green-badge">Primary 1</span></td>
+                            <td>AED 150.00</td>
+                            <td>AED 1,200.00</td>
+                            <td>AED 250.00</td>
+                            <td>AED 120.00</td>
+                            <td>AED 80.00</td>
+                            <td><strong>AED 1,800.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td><span class="class-badge green-badge">Primary 2</span></td>
+                            <td>AED 150.00</td>
+                            <td>AED 1,200.00</td>
+                            <td>AED 250.00</td>
+                            <td>AED 120.00</td>
+                            <td>AED 80.00</td>
+                            <td><strong>AED 1,800.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>6</td>
+                            <td><span class="class-badge green-badge">Primary 3</span></td>
+                            <td>AED 150.00</td>
+                            <td>AED 1,250.00</td>
+                            <td>AED 250.00</td>
+                            <td>AED 120.00</td>
+                            <td>AED 80.00</td>
+                            <td><strong>AED 1,850.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>7</td>
+                            <td><span class="class-badge green-badge">Primary 4</span></td>
+                            <td>AED 150.00</td>
+                            <td>AED 1,250.00</td>
+                            <td>AED 250.00</td>
+                            <td>AED 120.00</td>
+                            <td>AED 80.00</td>
+                            <td><strong>AED 1,850.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>8</td>
+                            <td><span class="class-badge green-badge">Primary 5</span></td>
+                            <td>AED 150.00</td>
+                            <td>AED 1,250.00</td>
+                            <td>AED 250.00</td>
+                            <td>AED 120.00</td>
+                            <td>AED 80.00</td>
+                            <td><strong>AED 1,850.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>9</td>
+                            <td><span class="class-badge purple-badge">KG</span></td>
+                            <td>AED 100.00</td>
+                            <td>AED 1,000.00</td>
+                            <td>AED 200.00</td>
+                            <td>AED 100.00</td>
+                            <td>AED 50.00</td>
+                            <td><strong>AED 1,450.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>10</td>
+                            <td><span class="class-badge purple-badge">Playgroup</span></td>
+                            <td>AED 100.00</td>
+                            <td>AED 800.00</td>
+                            <td>AED 200.00</td>
+                            <td>AED 100.00</td>
+                            <td>AED 50.00</td>
+                            <td><strong>AED 1,250.00</strong></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="edit-btn">
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="delete-btn">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div class="table-footer">
+                <span>Showing 1 to 10 of 10 classes</span>
+
+                <div class="pagination">
+                    <button>‹</button>
+                    <button class="active">1</button>
+                    <button>›</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="fee-sidebar">
+
+            <!-- FEE CATEGORIES -->
+            <div class="side-card">
+
+                <h2>Fee Categories</h2>
+
+                <div class="fee-category">
+                    <div class="category-icon green">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <strong>Registration Fee</strong>
+                        <span>One-time payment</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="fee-category">
+                    <div class="category-icon blue">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div>
+                        <strong>Tuition Fee</strong>
+                        <span>Annual payment</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="fee-category">
+                    <div class="category-icon purple">
+                        <i class="fas fa-file-lines"></i>
+                    </div>
+                    <div>
+                        <strong>Examination Fee</strong>
+                        <span>Per term</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="fee-category">
+                    <div class="category-icon orange">
+                        <i class="fas fa-chart-column"></i>
+                    </div>
+                    <div>
+                        <strong>Library Fee</strong>
+                        <span>Per term</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+                <div class="fee-category">
+                    <div class="category-icon red">
+                        <i class="fas fa-volleyball"></i>
+                    </div>
+                    <div>
+                        <strong>Activity Fee</strong>
+                        <span>Per term</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+
+            </div>
+
+
+            <!-- IMPORTANT NOTE -->
+            <div class="side-card note-card">
+
+                <div class="note-icon">
+                    <i class="fas fa-info"></i>
+                </div>
+
+                <div>
+                    <strong>Important Note</strong>
+                    <p>
+                        The fee structure is set for the 2025/2026
+                        academic year. Any changes made will apply
+                        to new enrollments and existing students
+                        from the next billing cycle.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+            <div class="side-card">
+
+                <h2>Quick Actions</h2>
+
+                <a href="#" class="quick-action blue-action">
+                    <i class="fas fa-plus"></i>
+                    <span>Add Fee Structure</span>
+                </a>
+
+                <a href="#" class="quick-action green-action">
+                    <i class="fas fa-copy"></i>
+                    <span>Copy from Previous Year</span>
+                </a>
+
+                <a href="#" class="quick-action purple-action">
+                    <i class="fas fa-print"></i>
+                    <span>Print Fee Structure</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

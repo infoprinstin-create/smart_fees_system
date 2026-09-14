@@ -1,0 +1,800 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Classes{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/classes.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="classes-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <div>
+            <h1>Classes</h1>
+            <p>Manage classes, view class details and assign students.</p>
+        </div>
+
+        <a href="#" class="add-class-btn">
+            <i class="fas fa-plus"></i>
+            <span>Add New Class</span>
+        </a>
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="class-summary">
+
+        <div class="summary-card">
+            <div class="summary-icon blue">
+                <i class="fas fa-users"></i>
+            </div>
+
+            <div class="summary-content">
+                <span>Total Classes</span>
+                <strong>10</strong>
+                <a href="#">
+                    View All Classes
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon green">
+                <i class="fas fa-user-group"></i>
+            </div>
+
+            <div class="summary-content">
+                <span>Total Students</span>
+                <strong>245</strong>
+
+                <a href="{% url 'students' %}">
+                    View Students
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon purple">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+
+            <div class="summary-content">
+                <span>Average Students per Class</span>
+                <strong>24.5</strong>
+
+                <a href="#">
+                    View Details
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="summary-card">
+            <div class="summary-icon orange">
+                <i class="fas fa-school"></i>
+            </div>
+
+            <div class="summary-content">
+                <span>Active Classes</span>
+                <strong>9</strong>
+
+                <a href="#">
+                    View Active Classes
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="classes-layout">
+
+        <!-- LEFT SIDE -->
+        <div class="classes-main">
+
+            <div class="classes-card">
+
+                <div class="card-heading">
+                    <div>
+                        <h2>Classes</h2>
+                        <p>All registered classes</p>
+                    </div>
+                </div>
+
+
+                <!-- FILTERS -->
+                <div class="class-filters">
+
+                    <div class="class-search">
+                        <i class="fas fa-search"></i>
+
+                        <input
+                            type="text"
+                            placeholder="Search class name or class level..."
+                        >
+                    </div>
+
+
+                    <select>
+                        <option>All Levels</option>
+                        <option>Junior High School</option>
+                        <option>Primary School</option>
+                        <option>Kindergarten</option>
+                        <option>Playgroup</option>
+                    </select>
+
+
+                    <select>
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+
+
+                    <button type="button" class="search-btn">
+                        <i class="fas fa-search"></i>
+                        Search
+                    </button>
+
+                </div>
+
+
+                <!-- TABLE -->
+                <div class="table-wrapper">
+
+                    <table class="classes-table">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Class Name</th>
+                                <th>Level</th>
+                                <th>Stream</th>
+                                <th>Class Teacher</th>
+                                <th>Students</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            <!-- JHS 1 -->
+                            <tr>
+                                <td>1</td>
+
+                                <td>
+                                    <span class="class-badge blue-badge">
+                                        JHS 1
+                                    </span>
+                                </td>
+
+                                <td>Junior High School</td>
+                                <td>1</td>
+                                <td>Science</td>
+                                <td>Mr. Osei Mensah</td>
+                                <td>26</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- JHS 2 -->
+                            <tr>
+                                <td>2</td>
+
+                                <td>
+                                    <span class="class-badge blue-badge">
+                                        JHS 2
+                                    </span>
+                                </td>
+
+                                <td>Junior High School</td>
+                                <td>2</td>
+                                <td>Science</td>
+                                <td>Ms. Abena Owusu</td>
+                                <td>24</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- JHS 3 -->
+                            <tr>
+                                <td>3</td>
+
+                                <td>
+                                    <span class="class-badge blue-badge">
+                                        JHS 3
+                                    </span>
+                                </td>
+
+                                <td>Junior High School</td>
+                                <td>3</td>
+                                <td>Science</td>
+                                <td>Mr. Kwame Bediako</td>
+                                <td>22</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- PRIMARY 1 -->
+                            <tr>
+                                <td>4</td>
+
+                                <td>
+                                    <span class="class-badge green-badge">
+                                        Primary 1
+                                    </span>
+                                </td>
+
+                                <td>Primary School</td>
+                                <td>1</td>
+                                <td>General</td>
+                                <td>Ms. Adwoa Mensah</td>
+                                <td>28</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- PRIMARY 2 -->
+                            <tr>
+                                <td>5</td>
+
+                                <td>
+                                    <span class="class-badge green-badge">
+                                        Primary 2
+                                    </span>
+                                </td>
+
+                                <td>Primary School</td>
+                                <td>2</td>
+                                <td>General</td>
+                                <td>Mr. Isaac Darko</td>
+                                <td>27</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- PRIMARY 3 -->
+                            <tr>
+                                <td>6</td>
+
+                                <td>
+                                    <span class="class-badge green-badge">
+                                        Primary 3
+                                    </span>
+                                </td>
+
+                                <td>Primary School</td>
+                                <td>3</td>
+                                <td>General</td>
+                                <td>Ms. Felicia Boateng</td>
+                                <td>26</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- PRIMARY 4 -->
+                            <tr>
+                                <td>7</td>
+
+                                <td>
+                                    <span class="class-badge green-badge">
+                                        Primary 4
+                                    </span>
+                                </td>
+
+                                <td>Primary School</td>
+                                <td>4</td>
+                                <td>General</td>
+                                <td>Mr. Samuel Tetteh</td>
+                                <td>25</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- PRIMARY 5 -->
+                            <tr>
+                                <td>8</td>
+
+                                <td>
+                                    <span class="class-badge green-badge">
+                                        Primary 5
+                                    </span>
+                                </td>
+
+                                <td>Primary School</td>
+                                <td>5</td>
+                                <td>General</td>
+                                <td>Ms. Rita Agyemang</td>
+                                <td>24</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- KG -->
+                            <tr>
+                                <td>9</td>
+
+                                <td>
+                                    <span class="class-badge purple-badge">
+                                        KG
+                                    </span>
+                                </td>
+
+                                <td>Kindergarten</td>
+                                <td>KG</td>
+                                <td>General</td>
+                                <td>Ms. Christiana Appiah</td>
+                                <td>20</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            <!-- PLAYGROUP -->
+                            <tr>
+                                <td>10</td>
+
+                                <td>
+                                    <span class="class-badge purple-badge">
+                                        Playgroup
+                                    </span>
+                                </td>
+
+                                <td>Playgroup</td>
+                                <td>Playgroup</td>
+                                <td>General</td>
+                                <td>Ms. Evelyn Mensah</td>
+                                <td>18</td>
+
+                                <td>
+                                    <span class="status active">
+                                        Active
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="table-actions">
+
+                                        <a href="#" class="view-btn">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </a>
+
+                                        <a href="#" class="edit-btn">
+                                            <i class="fas fa-pen"></i>
+                                            Edit
+                                        </a>
+
+                                        <a href="#" class="delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- TABLE FOOTER -->
+                <div class="table-footer">
+
+                    <span>
+                        Showing 1 to 10 of 10 classes
+                    </span>
+
+                    <div class="pagination">
+                        <button type="button">‹</button>
+                        <button type="button" class="active-page">1</button>
+                        <button type="button">›</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="classes-sidebar">
+
+
+            <!-- CLASS BREAKDOWN -->
+            <div class="side-card">
+
+                <h3>Class Breakdown</h3>
+
+                <div class="breakdown">
+
+                    <div class="donut">
+
+                        <div class="donut-center">
+                            <strong>245</strong>
+                            <span>
+                                Total<br>
+                                Students
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="breakdown-list">
+
+                        <p>
+                            <span class="dot blue"></span>
+                            JHS 1
+                            <b>26</b>
+                        </p>
+
+                        <p>
+                            <span class="dot blue"></span>
+                            JHS 2
+                            <b>24</b>
+                        </p>
+
+                        <p>
+                            <span class="dot cyan"></span>
+                            JHS 3
+                            <b>22</b>
+                        </p>
+
+                        <p>
+                            <span class="dot green"></span>
+                            Primary 1
+                            <b>28</b>
+                        </p>
+
+                        <p>
+                            <span class="dot green"></span>
+                            Primary 2
+                            <b>27</b>
+                        </p>
+
+                        <p>
+                            <span class="dot green"></span>
+                            Primary 3
+                            <b>26</b>
+                        </p>
+
+                        <p>
+                            <span class="dot yellow"></span>
+                            Primary 4
+                            <b>25</b>
+                        </p>
+
+                        <p>
+                            <span class="dot orange"></span>
+                            Primary 5
+                            <b>24</b>
+                        </p>
+
+                        <p>
+                            <span class="dot purple"></span>
+                            KG
+                            <b>20</b>
+                        </p>
+
+                        <p>
+                            <span class="dot light-purple"></span>
+                            Playgroup
+                            <b>18</b>
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CLASS ACTIONS -->
+            <div class="side-card">
+
+                <h3>Class Actions</h3>
+
+                <a href="#" class="side-action blue-action">
+                    <i class="fas fa-plus"></i>
+                    Add New Class
+                </a>
+
+                <a href="#" class="side-action green-action">
+                    <i class="fas fa-users"></i>
+                    Manage Class Teachers
+                </a>
+
+                <a href="#" class="side-action purple-action">
+                    <i class="fas fa-user-group"></i>
+                    View Class Assignments
+                </a>
+
+                <a href="#" class="side-action orange-action">
+                    <i class="fas fa-file-lines"></i>
+                    Generate Class Report
+                </a>
+
+            </div>
+
+
+            <!-- QUICK INFO -->
+            <div class="side-card quick-info">
+
+                <h3>
+                    <i class="fas fa-circle-info"></i>
+                    Quick Info
+                </h3>
+
+                <p>
+                    You can add, edit or delete classes.
+                </p>
+
+                <p>
+                    Make sure to assign a class teacher
+                    and set the class level and stream correctly.
+                </p>
+
+                <em>
+                    Better organisation, brighter future!
+                </em>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

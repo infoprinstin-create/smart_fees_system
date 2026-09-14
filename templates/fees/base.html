@@ -1,0 +1,449 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}Smart Fee{% endblock %}
+    </title>
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <!-- Main Website CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/base.css' %}"
+    >
+
+    <!-- Page Specific CSS -->
+    {% block extra_css %}{% endblock %}
+
+</head>
+
+<body>
+
+    <!-- ================================
+         SIDEBAR
+    ================================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <!-- LOGO -->
+        <div class="sidebar-logo">
+
+            <div class="logo-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <div class="logo-text">
+                <h2>Smart Fee</h2>
+                <span>School Management</span>
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+        <nav class="sidebar-nav">
+
+            <p class="menu-label">MAIN MENU</p>
+
+
+            <!-- Dashboard -->
+            <a href="{% url 'home' %}" class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+
+
+            <!-- Students -->
+            <a href="{% url 'students' %}" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Students</span>
+            </a>
+
+
+            <!-- Fees Structure -->
+            <a href="{% url 'fees_structure' %}" class="nav-item">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Fees Structure</span>
+            </a>
+
+
+            <!-- Payments -->
+            <a href="{% url 'payments' %}" class="nav-item">
+                <i class="fas fa-credit-card"></i>
+                <span>Payments</span>
+            </a>
+
+
+            <!-- Reports -->
+            <a href="{% url 'reports' %}" class="nav-item">
+                <i class="fas fa-chart-column"></i>
+                <span>Reports</span>
+            </a>
+
+
+            <!-- Classes -->
+            <a href="{% url 'classes' %}" class="nav-item">
+                <i class="fas fa-user-group"></i>
+                <span>Classes</span>
+            </a>
+
+
+            <!-- Settings -->
+            <a href="{% url 'settings' %}" class="nav-item">
+                <i class="fas fa-gear"></i>
+                <span>Settings</span>
+            </a>
+
+
+            <!-- Logout -->
+            <a href="{% url 'logout' %}" class="nav-item">
+                <i class="fas fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR FOOTER -->
+        <div class="sidebar-footer">
+
+            <div class="user-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <div class="sidebar-user">
+
+                <strong>Administrator</strong>
+
+                <span>School Admin</span>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================================
+         MAIN WRAPPER
+    ================================= -->
+
+    <div class="main-wrapper" id="mainWrapper">
+
+
+        <!-- ================================
+             TOP BAR
+        ================================= -->
+
+        <header class="topbar">
+
+            <!-- LEFT SIDE -->
+            <div class="topbar-left">
+
+                <!-- Sidebar Toggle -->
+                <button
+                    type="button"
+                    class="sidebar-toggle"
+                    id="sidebarToggle"
+                    onclick="toggleSidebar()"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+
+                <!-- Breadcrumb -->
+                <div class="breadcrumb-area">
+
+                    <span class="breadcrumb-main">
+                        Smart Fee
+                    </span>
+
+                    <i class="fa-solid fa-chevron-right"></i>
+
+                    <span class="breadcrumb-current">
+                        {% block breadcrumb %}Dashboard{% endblock %}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+            <div class="topbar-right">
+
+                <!-- Search -->
+                <button
+                    type="button"
+                    class="topbar-icon"
+                    title="Search"
+                >
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+
+                <!-- Theme -->
+                <button
+                    type="button"
+                    class="theme-toggle"
+                    id="themeToggle"
+                    onclick="toggleTheme()"
+                    title="Toggle Light/Dark Mode"
+                >
+                    <i
+                        class="fa-solid fa-moon"
+                        id="themeIcon"
+                    ></i>
+                </button>
+
+
+                <!-- Notifications -->
+                <button
+                    type="button"
+                    class="topbar-icon notification-btn"
+                    title="Notifications"
+                >
+
+                    <i class="fa-regular fa-bell"></i>
+
+                    <span class="notification-dot">
+                        3
+                    </span>
+
+                </button>
+
+
+                <!-- User -->
+                <div class="topbar-user">
+
+                    <div class="topbar-avatar">
+                        A
+                    </div>
+
+                    <div class="topbar-user-info">
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <span>
+                            Admin
+                        </span>
+
+                    </div>
+
+                    <i
+                        class="fa-solid fa-chevron-down user-arrow"
+                    ></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================================
+             PAGE CONTENT
+        ================================= -->
+
+        <main class="page-content">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+    </div>
+
+
+    <!-- ================================
+         MOBILE SIDEBAR OVERLAY
+    ================================= -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+        onclick="toggleSidebar()"
+    ></div>
+
+
+    <!-- ================================
+         JAVASCRIPT
+    ================================= -->
+
+    <script>
+
+        /* ================================
+           SIDEBAR TOGGLE
+        ================================= */
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.getElementById("sidebar");
+
+            const wrapper =
+                document.getElementById("mainWrapper");
+
+            const overlay =
+                document.getElementById("sidebarOverlay");
+
+
+            if (sidebar) {
+                sidebar.classList.toggle("collapsed");
+            }
+
+
+            if (wrapper) {
+                wrapper.classList.toggle("sidebar-collapsed");
+            }
+
+
+            if (overlay) {
+                overlay.classList.toggle("active");
+            }
+
+        }
+
+
+        /* ================================
+           DARK MODE
+        ================================= */
+
+        function toggleTheme() {
+
+            const body =
+                document.body;
+
+            const icon =
+                document.getElementById("themeIcon");
+
+
+            body.classList.toggle("dark-mode");
+
+
+            if (body.classList.contains("dark-mode")) {
+
+                localStorage.setItem(
+                    "theme",
+                    "dark"
+                );
+
+
+                if (icon) {
+
+                    icon.classList.remove(
+                        "fa-moon"
+                    );
+
+                    icon.classList.add(
+                        "fa-sun"
+                    );
+
+                }
+
+            } else {
+
+                localStorage.setItem(
+                    "theme",
+                    "light"
+                );
+
+
+                if (icon) {
+
+                    icon.classList.remove(
+                        "fa-sun"
+                    );
+
+                    icon.classList.add(
+                        "fa-moon"
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /* ================================
+           LOAD SAVED THEME
+        ================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const savedTheme =
+                    localStorage.getItem("theme");
+
+                const icon =
+                    document.getElementById(
+                        "themeIcon"
+                    );
+
+
+                if (savedTheme === "dark") {
+
+                    document.body.classList.add(
+                        "dark-mode"
+                    );
+
+
+                    if (icon) {
+
+                        icon.classList.remove(
+                            "fa-moon"
+                        );
+
+                        icon.classList.add(
+                            "fa-sun"
+                        );
+
+                    }
+
+                } else {
+
+                    document.body.classList.remove(
+                        "dark-mode"
+                    );
+
+
+                    if (icon) {
+
+                        icon.classList.remove(
+                            "fa-sun"
+                        );
+
+                        icon.classList.add(
+                            "fa-moon"
+                        );
+
+                    }
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+    <!-- Page Specific JavaScript -->
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

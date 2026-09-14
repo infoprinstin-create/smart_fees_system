@@ -1,0 +1,787 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- =====================================================
+         DASHBOARD HEADER
+    ====================================================== -->
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>Dashboard</h1>
+            <p>Welcome to the School Fees Management System</p>
+        </div>
+
+        <div class="dashboard-date">
+            <i class="fas fa-calendar-days"></i>
+            <span>Monday, 16 June 2025</span>
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <div class="summary-grid">
+
+        <!-- TOTAL STUDENTS -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon blue">
+                <i class="fas fa-users"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <h3>Total Students</h3>
+
+                <strong>245</strong>
+
+                <a href="{% url 'students' %}">
+                    View Students
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL FEES DUE -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon green">
+                <i class="fas fa-circle-dollar-to-slot"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <h3>Total Fees Due</h3>
+
+                <strong>AED 412,500.00</strong>
+
+                <a href="{% url 'fees_structure' %}">
+                    View Details
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL PAID -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon purple">
+                <i class="fas fa-check"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <h3>Total Paid</h3>
+
+                <strong>AED 278,650.00</strong>
+
+                <a href="{% url 'payments' %}">
+                    View Payments
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- OUTSTANDING -->
+
+        <div class="summary-card">
+
+            <div class="summary-icon red">
+                <i class="fas fa-clock"></i>
+            </div>
+
+            <div class="summary-content">
+
+                <h3>Outstanding</h3>
+
+                <strong>AED 133,850.00</strong>
+
+                <a href="#">
+                    View Outstanding
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN DASHBOARD GRID
+    ====================================================== -->
+
+    <div class="dashboard-main-grid">
+
+
+        <!-- =================================================
+             LEFT / MAIN COLUMN
+        ================================================== -->
+
+        <div class="dashboard-left">
+
+
+            <!-- =============================================
+                 FEE COLLECTION OVERVIEW
+            ============================================== -->
+
+            <div class="dashboard-card fee-overview-card">
+
+                <div class="card-header">
+
+                    <h2>Fee Collection Overview</h2>
+
+                </div>
+
+
+                <div class="bar-chart">
+
+                    <div class="chart-y-axis">
+
+                        <span>250,000</span>
+                        <span>200,000</span>
+                        <span>150,000</span>
+                        <span>100,000</span>
+                        <span>50,000</span>
+                        <span>0</span>
+
+                    </div>
+
+
+                    <div class="chart-area">
+
+                        <!-- JANUARY -->
+
+                        <div class="chart-column">
+
+                            <div class="bars">
+
+                                <div
+                                    class="bar paid"
+                                    style="height: 64%;"
+                                    title="Paid: AED 160,000">
+                                </div>
+
+                                <div
+                                    class="bar outstanding"
+                                    style="height: 29%;"
+                                    title="Outstanding: AED 72,000">
+                                </div>
+
+                            </div>
+
+                            <span>Jan</span>
+
+                        </div>
+
+
+                        <!-- FEBRUARY -->
+
+                        <div class="chart-column">
+
+                            <div class="bars">
+
+                                <div
+                                    class="bar paid"
+                                    style="height: 70%;"
+                                    title="Paid: AED 175,000">
+                                </div>
+
+                                <div
+                                    class="bar outstanding"
+                                    style="height: 36%;"
+                                    title="Outstanding: AED 90,000">
+                                </div>
+
+                            </div>
+
+                            <span>Feb</span>
+
+                        </div>
+
+
+                        <!-- MARCH -->
+
+                        <div class="chart-column">
+
+                            <div class="bars">
+
+                                <div
+                                    class="bar paid"
+                                    style="height: 55%;"
+                                    title="Paid: AED 138,000">
+                                </div>
+
+                                <div
+                                    class="bar outstanding"
+                                    style="height: 30%;"
+                                    title="Outstanding: AED 75,000">
+                                </div>
+
+                            </div>
+
+                            <span>Mar</span>
+
+                        </div>
+
+
+                        <!-- APRIL -->
+
+                        <div class="chart-column">
+
+                            <div class="bars">
+
+                                <div
+                                    class="bar paid"
+                                    style="height: 78%;"
+                                    title="Paid: AED 195,000">
+                                </div>
+
+                                <div
+                                    class="bar outstanding"
+                                    style="height: 45%;"
+                                    title="Outstanding: AED 112,000">
+                                </div>
+
+                            </div>
+
+                            <span>Apr</span>
+
+                        </div>
+
+
+                        <!-- MAY -->
+
+                        <div class="chart-column">
+
+                            <div class="bars">
+
+                                <div
+                                    class="bar paid"
+                                    style="height: 74%;"
+                                    title="Paid: AED 185,000">
+                                </div>
+
+                                <div
+                                    class="bar outstanding"
+                                    style="height: 42%;"
+                                    title="Outstanding: AED 105,000">
+                                </div>
+
+                            </div>
+
+                            <span>May</span>
+
+                        </div>
+
+
+                        <!-- JUNE -->
+
+                        <div class="chart-column">
+
+                            <div class="bars">
+
+                                <div
+                                    class="bar paid"
+                                    style="height: 58%;"
+                                    title="Paid: AED 145,000">
+                                </div>
+
+                                <div
+                                    class="bar outstanding"
+                                    style="height: 35%;"
+                                    title="Outstanding: AED 87,000">
+                                </div>
+
+                            </div>
+
+                            <span>Jun</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHART LEGEND -->
+
+                <div class="chart-legend">
+
+                    <span>
+                        <i class="legend-dot paid-dot"></i>
+                        Paid
+                    </span>
+
+                    <span>
+                        <i class="legend-dot outstanding-dot"></i>
+                        Outstanding
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 RECENT PAYMENTS
+            ============================================== -->
+
+            <div class="dashboard-card recent-payments-card">
+
+                <div class="card-header">
+
+                    <h2>Recent Payments</h2>
+
+                    <a href="{% url 'payments' %}" class="view-all">
+                        View All Payments
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+
+                </div>
+
+
+                <div class="payments-table-wrapper">
+
+                    <table class="payments-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Date</th>
+
+                                <th>Student Name</th>
+
+                                <th>Class</th>
+
+                                <th>Amount</th>
+
+                                <th>Payment Method</th>
+
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+
+                                <td>16 Jun 2025</td>
+
+                                <td>Emmanuel Mensah</td>
+
+                                <td>JHS 2</td>
+
+                                <td>AED 1,500.00</td>
+
+                                <td>Bank Transfer</td>
+
+                                <td>
+                                    <span class="status paid-status">
+                                        Paid
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>15 Jun 2025</td>
+
+                                <td>Ama Serwaa</td>
+
+                                <td>Primary 4</td>
+
+                                <td>AED 1,200.00</td>
+
+                                <td>Cash</td>
+
+                                <td>
+                                    <span class="status paid-status">
+                                        Paid
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>14 Jun 2025</td>
+
+                                <td>Isaac Oteng</td>
+
+                                <td>SHS 1</td>
+
+                                <td>AED 2,000.00</td>
+
+                                <td>Mobile Money</td>
+
+                                <td>
+                                    <span class="status paid-status">
+                                        Paid
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>13 Jun 2025</td>
+
+                                <td>Esi Yeboah</td>
+
+                                <td>Primary 3</td>
+
+                                <td>AED 1,200.00</td>
+
+                                <td>Bank Transfer</td>
+
+                                <td>
+                                    <span class="status pending-status">
+                                        Pending
+                                    </span>
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+
+                                <td>12 Jun 2025</td>
+
+                                <td>Kwame Asante</td>
+
+                                <td>JHS 1</td>
+
+                                <td>AED 1,500.00</td>
+
+                                <td>Cash</td>
+
+                                <td>
+                                    <span class="status paid-status">
+                                        Paid
+                                    </span>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================== -->
+
+        <div class="dashboard-right">
+
+
+            <!-- =============================================
+                 FEES BY CLASS
+            ============================================== -->
+
+            <div class="dashboard-card fees-class-card">
+
+                <div class="card-header">
+
+                    <h2>Fees by Class</h2>
+
+                </div>
+
+
+                <div class="donut-section">
+
+                    <div class="donut-chart">
+
+                        <div class="donut-inner">
+
+                            <span>Total</span>
+
+                            <strong>245</strong>
+
+                            <small>Students</small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="class-legend">
+
+                        <div class="class-legend-item">
+
+                            <span class="class-dot kg"></span>
+
+                            <span>KG</span>
+
+                            <strong>42 (17.1%)</strong>
+
+                        </div>
+
+
+                        <div class="class-legend-item">
+
+                            <span class="class-dot primary"></span>
+
+                            <span>Primary</span>
+
+                            <strong>98 (40.0%)</strong>
+
+                        </div>
+
+
+                        <div class="class-legend-item">
+
+                            <span class="class-dot jhs"></span>
+
+                            <span>JHS</span>
+
+                            <strong>63 (25.7%)</strong>
+
+                        </div>
+
+
+                        <div class="class-legend-item">
+
+                            <span class="class-dot shs"></span>
+
+                            <span>SHS</span>
+
+                            <strong>42 (17.1%)</strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 QUICK ACTIONS
+            ============================================== -->
+
+            <div class="dashboard-card quick-actions-card">
+
+                <div class="card-header">
+
+                    <h2>Quick Actions</h2>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <a href="{% url 'add_student' %}"
+                       class="quick-action blue-action">
+
+                        <i class="fas fa-plus"></i>
+
+                        <span>Add Student</span>
+
+                    </a>
+
+
+                    <a href="{% url 'record_payment' %}"
+                       class="quick-action green-action">
+
+                        <i class="fas fa-money-bill-wave"></i>
+
+                        <span>Record Payment</span>
+
+                    </a>
+
+
+                    <a href="{% url 'fees_structure' %}"
+                       class="quick-action purple-action">
+
+                        <i class="fas fa-file-invoice"></i>
+
+                        <span>Set Fees Structure</span>
+
+                    </a>
+
+
+                    <a href="{% url 'reports' %}"
+                       class="quick-action orange-action">
+
+                        <i class="fas fa-chart-column"></i>
+
+                        <span>Generate Report</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =============================================
+                 RECENT ACTIVITY
+            ============================================== -->
+
+            <div class="dashboard-card activity-card">
+
+                <div class="card-header">
+
+                    <h2>Recent Activity</h2>
+
+                </div>
+
+
+                <div class="activity-list">
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon green-activity">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>Payment received from Emmanuel Mensah</strong>
+
+                            <span>AED 1,500.00</span>
+
+                        </div>
+
+                        <time>2 hours ago</time>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon blue-activity">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>New student added</strong>
+
+                            <span>Mary Agyemang (Primary 2)</span>
+
+                        </div>
+
+                        <time>4 hours ago</time>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon orange-activity">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>Fees structure updated</strong>
+
+                            <span>New term fees</span>
+
+                        </div>
+
+                        <time>6 hours ago</time>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon red-activity">
+                            <i class="fas fa-bell"></i>
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>Outstanding fee reminder</strong>
+
+                            <span>15 students</span>
+
+                        </div>
+
+                        <time>8 hours ago</time>
+
+                    </div>
+
+
+                    <div class="activity-item">
+
+                        <div class="activity-icon purple-activity">
+                            <i class="fas fa-file-lines"></i>
+                        </div>
+
+                        <div class="activity-info">
+
+                            <strong>Monthly report generated</strong>
+
+                            <span>June 2025</span>
+
+                        </div>
+
+                        <time>1 day ago</time>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,394 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Add New Student - Smart Fee{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_student.css' %}">
+{% endblock %}
+
+{% block breadcrumb %}
+Add New Student
+{% endblock %}
+
+{% block content %}
+
+<div class="add-student-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Add New Student</h1>
+            <p>Fill in the student details below to register a new student.</p>
+        </div>
+
+        <div class="date-box">
+            <i class="fa-regular fa-calendar"></i>
+            <span>Monday, 16 June 2025</span>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN FORM CARD -->
+    <form class="student-form">
+
+        <!-- STUDENT INFORMATION -->
+        <section class="form-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div>
+                    <h2>Student Information</h2>
+                    <p>Enter the basic details of the student.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- FULL NAME -->
+                <div class="form-group">
+
+                    <label for="full_name">
+                        Full Name <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="full_name"
+                            name="full_name"
+                            placeholder="Enter student full name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- STUDENT ID -->
+                <div class="form-group">
+
+                    <label for="student_id">
+                        Student ID <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+                        <i class="fa-solid fa-id-card"></i>
+
+                        <input
+                            type="text"
+                            id="student_id"
+                            name="student_id"
+                            placeholder="e.g. BFSS-2025-0147"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATE OF BIRTH -->
+                <div class="form-group">
+
+                    <label for="date_of_birth">
+                        Date of Birth <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <input
+                            type="date"
+                            id="date_of_birth"
+                            name="date_of_birth"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- GENDER -->
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-venus-mars"></i>
+
+                        <select id="gender" name="gender" required>
+
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CLASS -->
+                <div class="form-group">
+
+                    <label for="class_name">
+                        Class <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-users"></i>
+
+                        <select id="class_name" name="class_name" required>
+
+                            <option value="">Select class</option>
+                            <option>Primary 1</option>
+                            <option>Primary 2</option>
+                            <option>Primary 3</option>
+                            <option>Primary 4</option>
+                            <option>Primary 5</option>
+                            <option>Primary 6</option>
+                            <option>JHS 1</option>
+                            <option>JHS 2</option>
+                            <option>JHS 3</option>
+                            <option>SHS 1</option>
+                            <option>SHS 2</option>
+                            <option>SHS 3</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STREAM -->
+                <div class="form-group">
+
+                    <label for="stream">
+                        Stream <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-graduation-cap"></i>
+
+                        <select id="stream" name="stream" required>
+
+                            <option value="">Select stream</option>
+                            <option>Science</option>
+                            <option>Business</option>
+                            <option>General Arts</option>
+                            <option>Home Economics</option>
+                            <option>Visual Arts</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACADEMIC YEAR -->
+                <div class="form-group">
+
+                    <label for="academic_year">
+                        Academic Year <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-regular fa-calendar"></i>
+
+                        <select id="academic_year" name="academic_year">
+
+                            <option>2025/2026</option>
+                            <option>2026/2027</option>
+                            <option>2027/2028</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PARENT NAME -->
+                <div class="form-group">
+
+                    <label for="parent_name">
+                        Parent / Guardian Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="parent_name"
+                            name="parent_name"
+                            placeholder="Enter parent or guardian name"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PARENT CONTACT -->
+                <div class="form-group">
+
+                    <label for="parent_contact">
+                        Parent Contact
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-phone"></i>
+
+                        <input
+                            type="tel"
+                            id="parent_contact"
+                            name="parent_contact"
+                            placeholder="Enter phone number"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ADDRESS -->
+                <div class="form-group full">
+
+                    <label for="address">
+                        Address
+                    </label>
+
+                    <div class="input-box textarea-box">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        <textarea
+                            id="address"
+                            name="address"
+                            placeholder="Enter home address"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- LOWER SECTION -->
+        <div class="bottom-grid">
+
+
+            <!-- STUDENT PHOTO -->
+            <section class="form-card">
+
+                <div class="section-title">
+
+                    <div class="section-icon">
+                        <i class="fa-solid fa-camera"></i>
+                    </div>
+
+                    <div>
+                        <h2>Student Photo</h2>
+                        <p>Upload a photo of the student (optional).</p>
+                    </div>
+
+                </div>
+
+
+                <label class="photo-upload">
+
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                    <strong>Click to upload</strong>
+
+                    <span>or drag and drop</span>
+
+                    <small>JPG, PNG (Max 2MB)</small>
+
+                    <input
+                        type="file"
+                        name="student_photo"
+                        accept=".jpg,.jpeg,.png"
+                    >
+
+                </label>
+
+            </section>
+
+
+            <!-- ADDITIONAL INFORMATION -->
+            <section class="form-card">
+
+                <div class="section-title">
+
+                    <div class="section-icon">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+
+                    <div>
+                        <h2>Additional Information</h2>
+                        <p>Any additional notes or information about the student.</p>
+                    </div>
+
+                </div>
+
+
+                <textarea
+                    class="notes-area"
+                    name="additional_information"
+                    placeholder="Enter additional notes here..."
+                ></textarea>
+
+            </section>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <div class="form-actions">
+
+            <a href="{% url 'students' %}" class="btn-cancel">
+                <i class="fa-solid fa-xmark"></i>
+                Cancel
+            </a>
+
+            <button type="submit" class="btn-save">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Save Student
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

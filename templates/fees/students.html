@@ -1,0 +1,420 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Students{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/students.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="students-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div class="page-title">
+            <h1>Students</h1>
+            <p>Manage and view all registered students.</p>
+        </div>
+
+        <a href="#" class="btn-add">
+            <i class="fa-solid fa-plus"></i>
+            Add New Student
+        </a>
+
+    </div>
+
+
+    <!-- STATISTICS CARDS -->
+    <div class="student-stats">
+
+        <div class="student-stat-card">
+
+            <div class="stat-icon blue">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Total Students</span>
+                <h2>{{ total_students|default:"0" }}</h2>
+                <a href="#">View All Students <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+
+
+        <div class="student-stat-card">
+
+            <div class="stat-icon green">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Active Students</span>
+                <h2>{{ active_students|default:"0" }}</h2>
+                <a href="#">View Active <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+
+
+        <div class="student-stat-card">
+
+            <div class="stat-icon orange">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>New Admissions</span>
+                <h2>{{ new_admissions|default:"0" }}</h2>
+                <a href="#">View Admissions <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+
+
+        <div class="student-stat-card">
+
+            <div class="stat-icon red">
+                <i class="fa-solid fa-user-xmark"></i>
+            </div>
+
+            <div class="stat-info">
+                <span>Inactive Students</span>
+                <h2>{{ inactive_students|default:"0" }}</h2>
+                <a href="#">View Inactive <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH / FILTER -->
+    <div class="student-filter-card">
+
+        <form method="GET" class="student-filter-form">
+
+            <div class="student-search">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request.GET.search }}"
+                    placeholder="Search by name, student ID, or registration number..."
+                >
+
+            </div>
+
+
+            <select name="class" class="student-filter">
+                <option value="">All Classes</option>
+
+                {% for class in classes %}
+                    <option value="{{ class.id }}">
+                        {{ class.name }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+
+            <select name="status" class="student-filter">
+
+                <option value="">All Status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+
+            </select>
+
+
+            <select name="gender" class="student-filter">
+
+                <option value="">All Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+
+            </select>
+
+
+            <button type="submit" class="btn-search">
+
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Search
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- STUDENTS TABLE -->
+    <div class="students-table-card">
+
+        <div class="table-wrapper">
+
+            <table class="students-table">
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Student Photo</th>
+                        <th>Name</th>
+                        <th>Student ID</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                        <th>Fee Status</th>
+                        <th>Balance</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <!-- PHOTO -->
+                        <td>
+
+                            <div class="student-photo">
+
+                                {% if student.photo %}
+                                    <img
+                                        src="{{ student.photo.url }}"
+                                        alt="{{ student.first_name }}"
+                                    >
+                                {% else %}
+                                    <div class="default-student-photo">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- NAME -->
+                        <td>
+
+                            <div class="student-name">
+
+                                <strong>
+                                    {{ student.first_name }}
+                                    {{ student.last_name }}
+                                </strong>
+
+                                {% if student.registration_number %}
+                                    <span>
+                                        {{ student.registration_number }}
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- STUDENT ID -->
+                        <td>
+                            {{ student.student_id }}
+                        </td>
+
+
+                        <!-- CLASS -->
+                        <td>
+                            {{ student.student_class }}
+                        </td>
+
+
+                        <!-- GENDER -->
+                        <td>
+                            {{ student.gender }}
+                        </td>
+
+
+                        <!-- FEE STATUS -->
+                        <td>
+
+                            {% if student.fee_status == "Paid" %}
+
+                                <span class="fee-badge paid">
+                                    Paid
+                                </span>
+
+                            {% elif student.fee_status == "Pending" %}
+
+                                <span class="fee-badge pending">
+                                    Pending
+                                </span>
+
+                            {% elif student.fee_status == "Overdue" %}
+
+                                <span class="fee-badge overdue">
+                                    Overdue
+                                </span>
+
+                            {% else %}
+
+                                <span class="fee-badge pending">
+                                    Pending
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- BALANCE -->
+                        <td>
+
+                            <span class="student-balance">
+                                AED {{ student.balance|default:"0.00" }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+                        <td>
+
+                            <div class="student-actions">
+
+                                <a
+                                    href="#"
+                                    class="action-btn view"
+                                    title="View"
+                                >
+                                    <i class="fa-solid fa-eye"></i>
+                                    <span>View</span>
+                                </a>
+
+
+                                <a
+                                    href="#"
+                                    class="action-btn edit"
+                                    title="Edit"
+                                >
+                                    <i class="fa-solid fa-pen"></i>
+                                    <span>Edit</span>
+                                </a>
+
+
+                                <a
+                                    href="#"
+                                    class="action-btn delete"
+                                    title="Delete"
+                                    onclick="return confirm('Delete this student?');"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                    <span>Delete</span>
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="9" class="no-students">
+
+                            <div>
+
+                                <i class="fa-solid fa-user-graduate"></i>
+
+                                <h3>No Students Found</h3>
+
+                                <p>
+                                    There are no students registered yet.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- TABLE FOOTER -->
+        <div class="students-table-footer">
+
+            <span>
+                Showing
+                {{ students|length }}
+                students
+            </span>
+
+
+            <div class="pagination">
+
+                <button type="button">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+
+                <button type="button" class="active">
+                    1
+                </button>
+
+                <button type="button">
+                    2
+                </button>
+
+                <button type="button">
+                    3
+                </button>
+
+                <button type="button">
+                    4
+                </button>
+
+                <button type="button">
+                    5
+                </button>
+
+                <span>...</span>
+
+                <button type="button">
+                    25
+                </button>
+
+                <button type="button">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

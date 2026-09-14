@@ -1,0 +1,636 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Payments | Smart Fee{% endblock %}
+
+{% block breadcrumb %}Payments{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/payments.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="payments-page">
+
+    <!-- PAGE HEADER -->
+    <div class="payments-header">
+
+        <div>
+            <h1>Payments</h1>
+            <p>Record and manage all student fee payments.</p>
+        </div>
+
+        <div class="date-filter">
+            <i class="fa-regular fa-calendar"></i>
+            <span>01/06/2025 - 30/06/2025</span>
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="payment-summary">
+
+        <div class="summary-card received">
+            <div class="summary-icon">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+            </div>
+
+            <div class="summary-info">
+                <span>Total Received</span>
+                <h2>AED 125,450.00</h2>
+
+                <div class="summary-bottom">
+                    <small>This Academic Year</small>
+                    <b>↑ 12%</b>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="summary-card total">
+            <div class="summary-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div class="summary-info">
+                <span>Total Payments</span>
+                <h2>368</h2>
+
+                <div class="summary-bottom">
+                    <small>This Academic Year</small>
+                    <b>↑ 15%</b>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="summary-card pending">
+            <div class="summary-icon">
+                <i class="fa-regular fa-calendar-days"></i>
+            </div>
+
+            <div class="summary-info">
+                <span>Pending Payments</span>
+                <h2>54</h2>
+
+                <div class="summary-bottom">
+                    <small>Awaiting Payment</small>
+                    <b>↓ 8%</b>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="summary-card outstanding">
+            <div class="summary-icon">
+                <i class="fa-regular fa-credit-card"></i>
+            </div>
+
+            <div class="summary-info">
+                <span>Outstanding Balance</span>
+                <h2>AED 18,750.00</h2>
+
+                <div class="summary-bottom">
+                    <small>From 54 Students</small>
+                    <b>↓ 6%</b>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="payments-layout">
+
+        <!-- LEFT SIDE -->
+        <div class="payments-main">
+
+            <!-- SEARCH / FILTER -->
+            <div class="payment-filters">
+
+                <div class="payment-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <input
+                        type="text"
+                        placeholder="Search by student name, ID, or receipt number..."
+                    >
+                </div>
+
+                <select>
+                    <option>All Classes</option>
+                    <option>Primary 1</option>
+                    <option>Primary 2</option>
+                    <option>Primary 3</option>
+                    <option>Primary 4</option>
+                    <option>Primary 5</option>
+                    <option>JHS 1</option>
+                    <option>JHS 2</option>
+                    <option>JHS 3</option>
+                </select>
+
+                <select>
+                    <option>All Payment Status</option>
+                    <option>Paid</option>
+                    <option>Pending</option>
+                </select>
+
+                <select>
+                    <option>All Methods</option>
+                    <option>Cash</option>
+                    <option>Bank Transfer</option>
+                    <option>Mobile Money</option>
+                    <option>Card Payment</option>
+                </select>
+
+            </div>
+
+
+            <!-- RECENT PAYMENTS -->
+            <div class="payments-card">
+
+                <div class="payments-card-header">
+                    <h2>Recent Payments</h2>
+                </div>
+
+
+                <div class="payment-table-wrapper">
+
+                    <table class="payment-table">
+
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date</th>
+                                <th>Student Name</th>
+                                <th>Class</th>
+                                <th>Fee Type</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Status</th>
+                                <th>Receipt No.</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            <tr>
+                                <td>1</td>
+                                <td>16 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">J</div>
+                                    <div>
+                                        <span>John Mensah</span>
+                                        <small>JHS 2</small>
+                                    </div>
+                                </td>
+                                <td>JHS 2</td>
+                                <td>Term 1 Fee</td>
+                                <td>AED 1,000.00</td>
+                                <td>Bank Transfer</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00124</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>2</td>
+                                <td>15 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">A</div>
+                                    <div>
+                                        <span>Ama Serwaa</span>
+                                        <small>Primary 4</small>
+                                    </div>
+                                </td>
+                                <td>Primary 4</td>
+                                <td>Tuition Fee</td>
+                                <td>AED 1,200.00</td>
+                                <td>Cash</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00123</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>3</td>
+                                <td>14 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">I</div>
+                                    <div>
+                                        <span>Isaac Oteng</span>
+                                        <small>SHS 1</small>
+                                    </div>
+                                </td>
+                                <td>SHS 1</td>
+                                <td>Examination Fee</td>
+                                <td>AED 300.00</td>
+                                <td>Mobile Money</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00122</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>4</td>
+                                <td>13 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">E</div>
+                                    <div>
+                                        <span>Esi Yeboah</span>
+                                        <small>Primary 3</small>
+                                    </div>
+                                </td>
+                                <td>Primary 3</td>
+                                <td>Activity Fee</td>
+                                <td>AED 150.00</td>
+                                <td>Cash</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00121</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>5</td>
+                                <td>12 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">K</div>
+                                    <div>
+                                        <span>Kwame Asante</span>
+                                        <small>JHS 1</small>
+                                    </div>
+                                </td>
+                                <td>JHS 1</td>
+                                <td>Library Fee</td>
+                                <td>AED 200.00</td>
+                                <td>Bank Transfer</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00120</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>6</td>
+                                <td>11 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">A</div>
+                                    <div>
+                                        <span>Adwoa Mensah</span>
+                                        <small>Primary 5</small>
+                                    </div>
+                                </td>
+                                <td>Primary 5</td>
+                                <td>Tuition Fee</td>
+                                <td>AED 1,000.00</td>
+                                <td>Mobile Money</td>
+                                <td>
+                                    <span class="status pending">Pending</span>
+                                </td>
+                                <td>—</td>
+                                <td>
+                                    <button class="pay-btn">
+                                        Pay Now
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>7</td>
+                                <td>10 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">K</div>
+                                    <div>
+                                        <span>Kofi Nkrumah</span>
+                                        <small>SHS 2</small>
+                                    </div>
+                                </td>
+                                <td>SHS 2</td>
+                                <td>Examination Fee</td>
+                                <td>AED 500.00</td>
+                                <td>Cash</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00119</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>8</td>
+                                <td>09 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">A</div>
+                                    <div>
+                                        <span>Akosua Boateng</span>
+                                        <small>Primary 1</small>
+                                    </div>
+                                </td>
+                                <td>Primary 1</td>
+                                <td>Activity Fee</td>
+                                <td>AED 150.00</td>
+                                <td>Bank Transfer</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00118</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>9</td>
+                                <td>08 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">D</div>
+                                    <div>
+                                        <span>Daniel Adjei</span>
+                                        <small>JHS 3</small>
+                                    </div>
+                                </td>
+                                <td>JHS 3</td>
+                                <td>Tuition Fee</td>
+                                <td>AED 1,200.00</td>
+                                <td>Cash</td>
+                                <td>
+                                    <span class="status pending">Pending</span>
+                                </td>
+                                <td>—</td>
+                                <td>
+                                    <button class="pay-btn">
+                                        Pay Now
+                                    </button>
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>10</td>
+                                <td>07 Jun 2025</td>
+                                <td class="student-name">
+                                    <div class="student-mini-avatar">E</div>
+                                    <div>
+                                        <span>Eunice Darko</span>
+                                        <small>SHS 1</small>
+                                    </div>
+                                </td>
+                                <td>SHS 1</td>
+                                <td>Library Fee</td>
+                                <td>AED 200.00</td>
+                                <td>Mobile Money</td>
+                                <td>
+                                    <span class="status paid">Paid</span>
+                                </td>
+                                <td>RCP-00117</td>
+                                <td>
+                                    <button class="view-btn">
+                                        <i class="fa-regular fa-eye"></i>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- TABLE FOOTER -->
+                <div class="table-footer">
+
+                    <span>
+                        Showing 1 to 10 of 368 payments
+                    </span>
+
+                    <div class="pagination">
+
+                        <button>
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+
+                        <button class="active">1</button>
+                        <button>2</button>
+                        <button>3</button>
+                        <button>4</button>
+                        <button>5</button>
+
+                        <span>...</span>
+
+                        <button>37</button>
+
+                        <button>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDEBAR -->
+        <aside class="payment-sidebar">
+
+            <!-- QUICK ACTIONS -->
+            <div class="side-card">
+
+                <h2>Quick Actions</h2>
+
+                <button class="quick-action blue">
+                    <i class="fa-regular fa-credit-card"></i>
+                    <span>Record Payment</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <button class="quick-action green">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Bulk Payment</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <button class="quick-action purple">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Generate Receipt</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+                <button class="quick-action orange">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Payment Report</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+
+            </div>
+
+
+            <!-- PAYMENT METHODS -->
+            <div class="side-card">
+
+                <h2>Payment Methods</h2>
+
+                <div class="method-row">
+                    <div class="method-icon green">
+                        <i class="fa-solid fa-money-bill"></i>
+                    </div>
+                    <span>Cash</span>
+                    <strong>142</strong>
+                </div>
+
+                <div class="method-row">
+                    <div class="method-icon blue">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                    <span>Bank Transfer</span>
+                    <strong>98</strong>
+                </div>
+
+                <div class="method-row">
+                    <div class="method-icon purple">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <span>Mobile Money</span>
+                    <strong>84</strong>
+                </div>
+
+                <div class="method-row">
+                    <div class="method-icon teal">
+                        <i class="fa-regular fa-credit-card"></i>
+                    </div>
+                    <span>Card Payment</span>
+                    <strong>44</strong>
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ACTIVITY -->
+            <div class="side-card">
+
+                <h2>Recent Activity</h2>
+
+                <div class="activity-row">
+                    <div class="activity-icon green">
+                        <i class="fa-solid fa-money-bill"></i>
+                    </div>
+
+                    <div>
+                        <span>Payment received</span>
+                        <small>John Mensah (JHS 2)</small>
+                    </div>
+
+                    <time>2 hours ago</time>
+                </div>
+
+
+                <div class="activity-row">
+                    <div class="activity-icon blue">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+
+                    <div>
+                        <span>Payment received</span>
+                        <small>Ama Serwaa (Primary 4)</small>
+                    </div>
+
+                    <time>4 hours ago</time>
+                </div>
+
+
+                <div class="activity-row">
+                    <div class="activity-icon orange">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+
+                    <div>
+                        <span>Payment pending</span>
+                        <small>Daniel Adjei (JHS 3)</small>
+                    </div>
+
+                    <time>5 hours ago</time>
+                </div>
+
+
+                <div class="activity-row">
+                    <div class="activity-icon purple">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+
+                    <div>
+                        <span>Receipt generated</span>
+                        <small>Esi Yeboah (Primary 3)</small>
+                    </div>
+
+                    <time>6 hours ago</time>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,389 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Record Payment{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/record_payment.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="record-payment-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Record Payment</h1>
+            <p>Record and manage student fee payments.</p>
+        </div>
+
+        <div class="date-box">
+            <i class="fas fa-calendar-days"></i>
+            <span>16 June 2025</span>
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT FORM -->
+    <form method="POST" class="payment-form">
+
+        {% csrf_token %}
+
+
+        <!-- STUDENT INFORMATION -->
+        <div class="payment-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+
+                <div>
+                    <h2>Student Information</h2>
+                    <p>Select the student making the payment.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- STUDENT -->
+                <div class="form-group full">
+
+                    <label>
+                        Student <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-user"></i>
+
+                        <select name="student" required>
+
+                            <option value="">Select Student</option>
+
+                            <option>Emmanuel Mensah</option>
+                            <option>Ama Serwaa</option>
+                            <option>Isaac Oteng</option>
+                            <option>Esi Yeboah</option>
+                            <option>Kwame Asante</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CLASS -->
+                <div class="form-group">
+
+                    <label>Class</label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-users"></i>
+
+                        <input
+                            type="text"
+                            name="class"
+                            placeholder="Student class"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- STUDENT ID -->
+                <div class="form-group">
+
+                    <label>Student ID</label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-id-card"></i>
+
+                        <input
+                            type="text"
+                            name="student_id"
+                            placeholder="Student ID"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- TERM -->
+                <div class="form-group">
+
+                    <label>
+                        Term <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-calendar"></i>
+
+                        <select name="term" required>
+
+                            <option value="">Select Term</option>
+                            <option>First Term</option>
+                            <option>Second Term</option>
+                            <option>Third Term</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PAYMENT DETAILS -->
+        <div class="payment-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+
+                <div>
+                    <h2>Payment Details</h2>
+                    <p>Enter the payment information below.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- AMOUNT -->
+                <div class="form-group">
+
+                    <label>
+                        Amount Paid <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-coins"></i>
+
+                        <input
+                            type="number"
+                            name="amount"
+                            placeholder="0.00"
+                            step="0.01"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAYMENT METHOD -->
+                <div class="form-group">
+
+                    <label>
+                        Payment Method <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-credit-card"></i>
+
+                        <select name="payment_method" required>
+
+                            <option value="">Select Method</option>
+                            <option>Cash</option>
+                            <option>Bank Transfer</option>
+                            <option>Mobile Money</option>
+                            <option>Cheque</option>
+                            <option>Card</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAYMENT DATE -->
+                <div class="form-group">
+
+                    <label>
+                        Payment Date <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-calendar-days"></i>
+
+                        <input
+                            type="date"
+                            name="payment_date"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- RECEIPT NUMBER -->
+                <div class="form-group">
+
+                    <label>Receipt Number</label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-receipt"></i>
+
+                        <input
+                            type="text"
+                            name="receipt_number"
+                            placeholder="Enter receipt number"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+                <div class="form-group full">
+
+                    <label>Payment Description</label>
+
+                    <div class="input-box textarea-box">
+
+                        <i class="fas fa-file-lines"></i>
+
+                        <textarea
+                            name="description"
+                            placeholder="Enter payment description or notes..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- PAYMENT SUMMARY -->
+        <div class="payment-card payment-summary-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+
+                <div>
+                    <h2>Payment Summary</h2>
+                    <p>Review the payment before saving.</p>
+                </div>
+
+            </div>
+
+
+            <div class="payment-summary">
+
+                <div class="summary-row">
+
+                    <span>Student</span>
+
+                    <strong>Select student</strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>Term</span>
+
+                    <strong>Select term</strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>Amount Paid</span>
+
+                    <strong>AED 0.00</strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>Payment Method</span>
+
+                    <strong>Select method</strong>
+
+                </div>
+
+
+                <div class="summary-divider"></div>
+
+
+                <div class="summary-total">
+
+                    <span>Total Payment</span>
+
+                    <strong>AED 0.00</strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ACTION BUTTONS -->
+        <div class="form-actions">
+
+            <a href="{% url 'payments' %}" class="btn-cancel">
+
+                <i class="fas fa-xmark"></i>
+
+                Cancel
+
+            </a>
+
+
+            <button type="submit" class="btn-save">
+
+                <i class="fas fa-check"></i>
+
+                Record Payment
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
