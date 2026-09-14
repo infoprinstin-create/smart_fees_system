@@ -291,32 +291,27 @@
 
         function toggleSidebar() {
 
-            const sidebar =
-                document.getElementById("sidebar");
+    const sidebar = document.getElementById("sidebar");
+    const wrapper = document.getElementById("mainWrapper");
+    const overlay = document.getElementById("sidebarOverlay");
 
-            const wrapper =
-                document.getElementById("mainWrapper");
+    if (window.innerWidth <= 768) {
 
-            const overlay =
-                document.getElementById("sidebarOverlay");
+        sidebar.classList.toggle("mobile-open");
 
-
-            if (sidebar) {
-                sidebar.classList.toggle("collapsed");
-            }
-
-
-            if (wrapper) {
-                wrapper.classList.toggle("sidebar-collapsed");
-            }
-
-
-            if (overlay) {
-                overlay.classList.toggle("active");
-            }
-
+        if (overlay) {
+            overlay.classList.toggle("active");
         }
 
+    } else {
+
+        sidebar.classList.toggle("collapsed");
+
+        if (wrapper) {
+            wrapper.classList.toggle("sidebar-collapsed");
+        }
+    }
+}
 
         /* ================================
            DARK MODE
