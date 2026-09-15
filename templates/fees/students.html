@@ -1,3 +1,4 @@
+
 {% extends "fees/base.html" %}
 {% load static %}
 
@@ -19,7 +20,7 @@
             <p>Manage and view all registered students.</p>
         </div>
 
-        <a href="#" class="btn-add">
+        <a href="{% url 'add_student' %}" class="btn-add">
             <i class="fa-solid fa-plus"></i>
             Add New Student
         </a>
@@ -39,7 +40,11 @@
             <div class="stat-info">
                 <span>Total Students</span>
                 <h2>{{ total_students|default:"0" }}</h2>
-                <a href="#">View All Students <i class="fa-solid fa-arrow-right"></i></a>
+
+                <a href="#">
+                    View All Students
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
 
         </div>
@@ -54,7 +59,11 @@
             <div class="stat-info">
                 <span>Active Students</span>
                 <h2>{{ active_students|default:"0" }}</h2>
-                <a href="#">View Active <i class="fa-solid fa-arrow-right"></i></a>
+
+                <a href="#">
+                    View Active
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
 
         </div>
@@ -69,7 +78,11 @@
             <div class="stat-info">
                 <span>New Admissions</span>
                 <h2>{{ new_admissions|default:"0" }}</h2>
-                <a href="#">View Admissions <i class="fa-solid fa-arrow-right"></i></a>
+
+                <a href="#">
+                    View Admissions
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
 
         </div>
@@ -84,7 +97,11 @@
             <div class="stat-info">
                 <span>Inactive Students</span>
                 <h2>{{ inactive_students|default:"0" }}</h2>
-                <a href="#">View Inactive <i class="fa-solid fa-arrow-right"></i></a>
+
+                <a href="#">
+                    View Inactive
+                    <i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
 
         </div>
@@ -112,12 +129,17 @@
 
 
             <select name="class" class="student-filter">
-                <option value="">All Classes</option>
+
+                <option value="">
+                    All Classes
+                </option>
 
                 {% for class in classes %}
+
                     <option value="{{ class.id }}">
                         {{ class.name }}
                     </option>
+
                 {% endfor %}
 
             </select>
@@ -125,18 +147,34 @@
 
             <select name="status" class="student-filter">
 
-                <option value="">All Status</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="Active">
+                    Active
+                </option>
+
+                <option value="Inactive">
+                    Inactive
+                </option>
 
             </select>
 
 
             <select name="gender" class="student-filter">
 
-                <option value="">All Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
+                <option value="">
+                    All Gender
+                </option>
+
+                <option value="Male">
+                    Male
+                </option>
+
+                <option value="Female">
+                    Female
+                </option>
 
             </select>
 
@@ -183,6 +221,7 @@
 
                     <tr>
 
+                        <!-- NUMBER -->
                         <td>
                             {{ forloop.counter }}
                         </td>
@@ -194,14 +233,18 @@
                             <div class="student-photo">
 
                                 {% if student.photo %}
+
                                     <img
                                         src="{{ student.photo.url }}"
                                         alt="{{ student.first_name }}"
                                     >
+
                                 {% else %}
+
                                     <div class="default-student-photo">
                                         <i class="fa-solid fa-user"></i>
                                     </div>
+
                                 {% endif %}
 
                             </div>
@@ -220,9 +263,11 @@
                                 </strong>
 
                                 {% if student.registration_number %}
+
                                     <span>
                                         {{ student.registration_number }}
                                     </span>
+
                                 {% endif %}
 
                             </div>
@@ -295,30 +340,33 @@
 
                             <div class="student-actions">
 
+                                <!-- VIEW PROFILE -->
                                 <a
-                                    href="#"
+                                    href="{% url 'student_profile' student.id %}"
                                     class="action-btn view"
-                                    title="View"
+                                    title="View Student Profile"
                                 >
                                     <i class="fa-solid fa-eye"></i>
                                     <span>View</span>
                                 </a>
 
 
+                                <!-- EDIT -->
                                 <a
                                     href="#"
                                     class="action-btn edit"
-                                    title="Edit"
+                                    title="Edit Student"
                                 >
                                     <i class="fa-solid fa-pen"></i>
                                     <span>Edit</span>
                                 </a>
 
 
+                                <!-- DELETE -->
                                 <a
                                     href="#"
                                     class="action-btn delete"
-                                    title="Delete"
+                                    title="Delete Student"
                                     onclick="return confirm('Delete this student?');"
                                 >
                                     <i class="fa-solid fa-trash"></i>
@@ -342,7 +390,9 @@
 
                                 <i class="fa-solid fa-user-graduate"></i>
 
-                                <h3>No Students Found</h3>
+                                <h3>
+                                    No Students Found
+                                </h3>
 
                                 <p>
                                     There are no students registered yet.
@@ -418,3 +468,4 @@
 </div>
 
 {% endblock %}
+

@@ -8,6 +8,7 @@ Student Profile
 {% endblock %}
 
 {% block extra_css %}
+
 <link rel="stylesheet" href="{% static 'css/student_profile.css' %}">
 {% endblock %}
 
@@ -15,538 +16,424 @@ Student Profile
 
 <div class="student-profile-page">
 
-    <!-- PAGE HEADER -->
-    <div class="profile-page-header">
 
-        <div>
-            <h1>Student Profile</h1>
-            <p>View student information and fee details.</p>
-        </div>
+<!-- PAGE HEADER -->
+<div class="profile-page-header">
 
-        <div class="profile-date">
-            <i class="fa-regular fa-calendar"></i>
-            <span>Monday, 16 June 2025</span>
-        </div>
-
+    <div>
+        <h1>Student Profile</h1>
+        <p>View student information and fee details.</p>
     </div>
 
+    <div class="profile-date">
+        <i class="fa-regular fa-calendar"></i>
+        <span>{{ student.date_registered|date:"l, d F Y" }}</span>
+    </div>
 
-    <!-- STUDENT INFORMATION -->
-    <section class="profile-card student-information-card">
+</div>
 
-        <div class="student-photo-area">
 
-            <div class="student-photo">
+<!-- STUDENT INFORMATION -->
+<section class="profile-card student-information-card">
+
+    <div class="student-photo-area">
+
+        <div class="student-photo">
+
+            {% if student.photo %}
+                <img src="{{ student.photo.url }}" alt="{{ student.first_name }} {{ student.last_name }}">
+            {% else %}
                 <i class="fa-solid fa-user"></i>
-            </div>
-
-        </div>
-
-
-        <div class="student-details">
-
-            <span class="section-label">
-                STUDENT INFORMATION
-            </span>
-
-            <h2>John Mensah</h2>
-
-
-            <div class="student-detail-grid">
-
-                <div class="student-detail">
-                    <i class="fa-solid fa-id-card"></i>
-
-                    <div>
-                        <span>Student ID</span>
-                        <strong>BFSS-2025-0147</strong>
-                    </div>
-                </div>
-
-
-                <div class="student-detail">
-                    <i class="fa-solid fa-users"></i>
-
-                    <div>
-                        <span>Class</span>
-                        <strong>JHS 2</strong>
-                    </div>
-                </div>
-
-
-                <div class="student-detail">
-                    <i class="fa-solid fa-graduation-cap"></i>
-
-                    <div>
-                        <span>Stream</span>
-                        <strong>Science</strong>
-                    </div>
-                </div>
-
-
-                <div class="student-detail">
-                    <i class="fa-regular fa-calendar"></i>
-
-                    <div>
-                        <span>Academic Year</span>
-                        <strong>2025/2026</strong>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- CLASS BOX -->
-        <div class="student-class-box">
-
-            <div class="class-icon">
-                <i class="fa-solid fa-graduation-cap"></i>
-            </div>
-
-            <span>Class</span>
-
-            <h3>JHS 2</h3>
-
-            <small>Science</small>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- MAIN CONTENT -->
-    <div class="profile-main-layout">
-
-
-        <!-- LEFT SIDE -->
-        <div class="profile-left-column">
-
-
-            <!-- FEE SUMMARY -->
-            <section class="profile-card">
-
-                <div class="profile-card-title">
-
-                    <h2>Fee Summary</h2>
-
-                </div>
-
-
-                <div class="fee-summary-grid">
-
-
-                    <div class="fee-summary-box blue">
-
-                        <div class="summary-icon">
-                            <i class="fa-solid fa-wallet"></i>
-                        </div>
-
-                        <span>Total Fees</span>
-
-                        <strong>AED 2,000.00</strong>
-
-                    </div>
-
-
-                    <div class="fee-summary-box green">
-
-                        <div class="summary-icon">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-
-                        <span>Amount Paid</span>
-
-                        <strong>AED 1,200.00</strong>
-
-                    </div>
-
-
-                    <div class="fee-summary-box red">
-
-                        <div class="summary-icon">
-                            <i class="fa-regular fa-clock"></i>
-                        </div>
-
-                        <span>Outstanding Balance</span>
-
-                        <strong>AED 800.00</strong>
-
-                    </div>
-
-
-                    <div class="fee-summary-box purple">
-
-                        <div class="summary-icon">
-                            <i class="fa-solid fa-percent"></i>
-                        </div>
-
-                        <span>Progress</span>
-
-                        <strong>60%</strong>
-
-                        <div class="progress-bar">
-                            <div class="progress-value"></div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- FEE DETAILS -->
-            <section class="profile-card">
-
-                <div class="profile-card-title">
-
-                    <h2>Fee Details</h2>
-
-                </div>
-
-
-                <div class="fee-table-wrapper">
-
-                    <table class="fee-table">
-
-                        <thead>
-
-                            <tr>
-                                <th>Description</th>
-                                <th>Term</th>
-                                <th>Amount (AED)</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody>
-
-                            <tr>
-                                <td>Tuition Fee</td>
-                                <td>Term 1</td>
-                                <td>1,000.00</td>
-
-                                <td>
-                                    <span class="status paid">
-                                        Paid
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-fee">
-                                        <i class="fa-solid fa-eye"></i>
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>Tuition Fee</td>
-                                <td>Term 2</td>
-                                <td>1,000.00</td>
-
-                                <td>
-                                    <span class="status pending">
-                                        Pending
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-fee">
-                                        <i class="fa-solid fa-eye"></i>
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>Examination Fee</td>
-                                <td>Term 1</td>
-                                <td>300.00</td>
-
-                                <td>
-                                    <span class="status paid">
-                                        Paid
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-fee">
-                                        <i class="fa-solid fa-eye"></i>
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>Library Fee</td>
-                                <td>Term 1</td>
-                                <td>200.00</td>
-
-                                <td>
-                                    <span class="status pending">
-                                        Pending
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-fee">
-                                        <i class="fa-solid fa-eye"></i>
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-
-
-                            <tr>
-                                <td>Activity Fee</td>
-                                <td>Term 1</td>
-                                <td>150.00</td>
-
-                                <td>
-                                    <span class="status pending">
-                                        Pending
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <button class="view-fee">
-                                        <i class="fa-solid fa-eye"></i>
-                                        View
-                                    </button>
-                                </td>
-                            </tr>
-
-
-                            <tr class="total-row">
-
-                                <td colspan="2">
-                                    Total
-                                </td>
-
-                                <td>
-                                    2,650.00
-                                </td>
-
-                                <td></td>
-
-                                <td></td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-        </div>
-
-
-
-        <!-- RIGHT SIDE -->
-        <div class="profile-right-column">
-
-
-            <!-- QUICK ACTIONS -->
-            <section class="profile-card">
-
-                <div class="profile-card-title">
-                    <h2>Quick Actions</h2>
-                </div>
-
-
-                <div class="quick-actions">
-
-
-                    <button class="quick-action blue-action">
-
-                        <i class="fa-solid fa-credit-card"></i>
-
-                        <span>Make Payment</span>
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-
-                    <button class="quick-action green-action">
-
-                        <i class="fa-solid fa-file-invoice"></i>
-
-                        <span>View Fee Structure</span>
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-
-                    <button class="quick-action purple-action">
-
-                        <i class="fa-solid fa-file-lines"></i>
-
-                        <span>View Payment History</span>
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-
-                    <button class="quick-action orange-action">
-
-                        <i class="fa-solid fa-user"></i>
-
-                        <span>Update Profile</span>
-
-                        <i class="fa-solid fa-arrow-right"></i>
-
-                    </button>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- RECENT PAYMENTS -->
-            <section class="profile-card">
-
-                <div class="profile-card-title payment-title">
-
-                    <h2>Recent Payments</h2>
-
-                    <button class="view-all">
-                        View All
-                    </button>
-
-                </div>
-
-
-                <div class="recent-payments">
-
-
-                    <div class="payment-item">
-
-                        <div class="payment-check">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-
-                        <div class="payment-info">
-
-                            <strong>
-                                Tuition Fee
-                                <span>(Term 1)</span>
-                            </strong>
-
-                            <p>AED 1,000.00</p>
-
-                        </div>
-
-                        <time>
-                            10 Jun 2025
-                        </time>
-
-                    </div>
-
-
-                    <div class="payment-item">
-
-                        <div class="payment-check">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-
-                        <div class="payment-info">
-
-                            <strong>
-                                Examination Fee
-                                <span>(Term 1)</span>
-                            </strong>
-
-                            <p>AED 300.00</p>
-
-                        </div>
-
-                        <time>
-                            05 May 2025
-                        </time>
-
-                    </div>
-
-
-                    <div class="payment-item">
-
-                        <div class="payment-check">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-
-                        <div class="payment-info">
-
-                            <strong>
-                                Library Fee
-                                <span>(Term 1)</span>
-                            </strong>
-
-                            <p>AED 200.00</p>
-
-                        </div>
-
-                        <time>
-                            28 Apr 2025
-                        </time>
-
-                    </div>
-
-
-                </div>
-
-            </section>
-
-
-
-            <!-- IMPORTANT NOTICE -->
-            <section class="notice-card">
-
-                <div class="notice-header">
-
-                    <div class="notice-icon">
-                        <i class="fa-solid fa-info"></i>
-                    </div>
-
-                    <h2>Important Notice</h2>
-
-                </div>
-
-
-                <p>
-                    The second term fees are due by
-                    <strong>30 September 2025.</strong>
-                </p>
-
-                <p>
-                    Please make timely payments to avoid late charges.
-                </p>
-
-                <p>
-                    Thank you!
-                </p>
-
-            </section>
+            {% endif %}
 
         </div>
 
     </div>
+
+
+    <div class="student-details">
+
+        <span class="section-label">
+            STUDENT INFORMATION
+        </span>
+
+        <h2>
+            {{ student.first_name }} {{ student.last_name }}
+        </h2>
+
+
+        <div class="student-detail-grid">
+
+            <div class="student-detail">
+                <i class="fa-solid fa-id-card"></i>
+
+                <div>
+                    <span>Student ID</span>
+                    <strong>{{ student.student_id }}</strong>
+                </div>
+            </div>
+
+
+            <div class="student-detail">
+                <i class="fa-solid fa-users"></i>
+
+                <div>
+                    <span>Class</span>
+                    <strong>{{ student.student_class }}</strong>
+                </div>
+            </div>
+
+
+            <div class="student-detail">
+                <i class="fa-solid fa-graduation-cap"></i>
+
+                <div>
+                    <span>Stream</span>
+                    <strong>{{ student.stream|default:"Not assigned" }}</strong>
+                </div>
+            </div>
+
+
+            <div class="student-detail">
+                <i class="fa-regular fa-calendar"></i>
+
+                <div>
+                    <span>Academic Year</span>
+                    <strong>{{ student.academic_year }}</strong>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CLASS BOX -->
+    <div class="student-class-box">
+
+        <div class="class-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+
+        <span>Class</span>
+
+        <h3>{{ student.student_class }}</h3>
+
+        <small>{{ student.stream|default:"No stream" }}</small>
+
+    </div>
+
+</section>
+
+
+
+<!-- MAIN CONTENT -->
+<div class="profile-main-layout">
+
+
+    <!-- LEFT SIDE -->
+    <div class="profile-left-column">
+
+
+        <!-- FEE SUMMARY -->
+        <section class="profile-card">
+
+            <div class="profile-card-title">
+                <h2>Fee Summary</h2>
+            </div>
+
+
+            <div class="fee-summary-grid">
+
+
+                <div class="fee-summary-box blue">
+
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+
+                    <span>Total Fees</span>
+
+                    <strong>AED 0.00</strong>
+
+                </div>
+
+
+                <div class="fee-summary-box green">
+
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <span>Amount Paid</span>
+
+                    <strong>AED 0.00</strong>
+
+                </div>
+
+
+                <div class="fee-summary-box red">
+
+                    <div class="summary-icon">
+                        <i class="fa-regular fa-clock"></i>
+                    </div>
+
+                    <span>Outstanding Balance</span>
+
+                    <strong>AED {{ student.balance|floatformat:2 }}</strong>
+
+                </div>
+
+
+                <div class="fee-summary-box purple">
+
+                    <div class="summary-icon">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+
+                    <span>Progress</span>
+
+                    <strong>0%</strong>
+
+                    <div class="progress-bar">
+                        <div class="progress-value" style="width: 0%;"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- FEE DETAILS -->
+        <section class="profile-card">
+
+            <div class="profile-card-title">
+                <h2>Fee Details</h2>
+            </div>
+
+
+            <div class="fee-table-wrapper">
+
+                <table class="fee-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Description</th>
+                            <th>Term</th>
+                            <th>Amount (AED)</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr class="total-row">
+
+                            <td colspan="2">
+                                Total
+                            </td>
+
+                            <td>
+                                0.00
+                            </td>
+
+                            <td></td>
+
+                            <td></td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- RIGHT SIDE -->
+    <div class="profile-right-column">
+
+
+        <!-- QUICK ACTIONS -->
+        <section class="profile-card">
+
+            <div class="profile-card-title">
+                <h2>Quick Actions</h2>
+            </div>
+
+
+            <div class="quick-actions">
+
+
+                <a href="{% url 'record_payment' %}" class="quick-action blue-action">
+
+                    <i class="fa-solid fa-credit-card"></i>
+
+                    <span>Make Payment</span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+
+                <a href="{% url 'fees_structure' %}" class="quick-action green-action">
+
+                    <i class="fa-solid fa-file-invoice"></i>
+
+                    <span>View Fee Structure</span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+
+                <a href="{% url 'payments' %}" class="quick-action purple-action">
+
+                    <i class="fa-solid fa-file-lines"></i>
+
+                    <span>View Payment History</span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+
+                <a href="#" class="quick-action orange-action">
+
+                    <i class="fa-solid fa-user"></i>
+
+                    <span>Update Profile</span>
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- RECENT PAYMENTS -->
+        <section class="profile-card">
+
+            <div class="profile-card-title payment-title">
+
+                <h2>Recent Payments</h2>
+
+                <a href="{% url 'payments' %}" class="view-all">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="recent-payments">
+
+                <div class="payment-item">
+
+                    <div class="payment-check">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <div class="payment-info">
+
+                        <strong>No payments yet</strong>
+
+                        <p>AED 0.00</p>
+
+                    </div>
+
+                    <time>
+                        —
+                    </time>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- STUDENT CONTACT INFORMATION -->
+        <section class="profile-card">
+
+            <div class="profile-card-title">
+                <h2>Parent / Guardian</h2>
+            </div>
+
+            <div class="recent-payments">
+
+                <div class="payment-item">
+
+                    <div class="payment-check">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div class="payment-info">
+
+                        <strong>{{ student.parent_name|default:"Not provided" }}</strong>
+
+                        <p>{{ student.parent_contact|default:"No contact provided" }}</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- IMPORTANT NOTICE -->
+        <section class="notice-card">
+
+            <div class="notice-header">
+
+                <div class="notice-icon">
+                    <i class="fa-solid fa-info"></i>
+                </div>
+
+                <h2>Student Status</h2>
+
+            </div>
+
+
+            <p>
+                Status:
+                <strong>{{ student.status }}</strong>
+            </p>
+
+            <p>
+                Fee Status:
+                <strong>{{ student.fee_status }}</strong>
+            </p>
+
+            <p>
+                Registered:
+                <strong>{{ student.date_registered|date:"d M Y" }}</strong>
+            </p>
+
+        </section>
+
+    </div>
+
+</div>
+
 
 </div>
 
