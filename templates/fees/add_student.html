@@ -34,9 +34,14 @@ Add New Student
 
 
 <!-- MAIN FORM CARD -->
-<form method="POST" enctype="multipart/form-data" class="student-form">
+<form
+    method="POST"
+    enctype="multipart/form-data"
+    class="student-form"
+>
 
     {% csrf_token %}
+
 
     <!-- STUDENT INFORMATION -->
     <section class="form-card">
@@ -346,7 +351,37 @@ Add New Student
             </div>
 
 
-            <label class="photo-upload">
+            <!-- PHOTO PREVIEW -->
+            <div
+                id="photoPreviewContainer"
+                class="photo-preview-container"
+                style="display: none;"
+            >
+
+                <img
+                    id="photoPreview"
+                    src=""
+                    alt="Student photo preview"
+                    class="photo-preview"
+                >
+
+                <button
+                    type="button"
+                    id="removePhoto"
+                    class="remove-photo"
+                >
+                    <i class="fa-solid fa-trash"></i>
+                    Remove Photo
+                </button>
+
+            </div>
+
+
+            <!-- UPLOAD AREA -->
+            <label
+                class="photo-upload"
+                id="photoUploadArea"
+            >
 
                 <i class="fa-solid fa-cloud-arrow-up"></i>
 
@@ -358,11 +393,17 @@ Add New Student
 
                 <input
                     type="file"
+                    id="studentPhoto"
                     name="student_photo"
-                    accept=".jpg,.jpeg,.png"
+                    accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                 >
 
             </label>
+
+            <p
+                id="photoError"
+                style="display: none;"
+            ></p>
 
         </section>
 
@@ -421,5 +462,141 @@ Add New Student
 ```
 
 </div>
+
+<!-- ================================
+     PHOTO PREVIEW JAVASCRIPT
+================================= -->
+
+<script>
+
+    const studentPhoto =
+        document.getElementById("studentPhoto");
+
+    const photoPreview =
+        document.getElementById("photoPreview");
+
+    const photoPreviewContainer =
+        document.getElementById("photoPreviewContainer");
+
+    const photoUploadArea =
+        document.getElementById("photoUploadArea");
+
+    const removePhoto =
+        document.getElementById("removePhoto");
+
+    const photoError =
+        document.getElementById("photoError");
+
+
+    /*
+     * WHEN A PHOTO IS SELECTED
+     */
+    studentPhoto.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+
+        if (!file) {
+            return;
+        }
+
+
+        /*
+         * CHECK FILE TYPE
+         */
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+
+            photoError.textContent =
+                "Please select a JPG or PNG image.";
+
+            photoError.style.display = "block";
+
+            this.value = "";
+
+            return;
+        }
+
+
+        /*
+         * CHECK FILE SIZE
+         */
+        const maxSize =
+            2 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+
+            photoError.textContent =
+                "The photo must be smaller than 2MB.";
+
+            photoError.style.display = "block";
+
+            this.value = "";
+
+            return;
+        }
+
+
+        /*
+         * CLEAR ERROR
+         */
+        photoError.textContent = "";
+
+        photoError.style.display = "none";
+
+
+        /*
+         * CREATE IMAGE PREVIEW
+         */
+        const reader =
+            new FileReader();
+
+
+        reader.onload = function (event) {
+
+            photoPreview.src =
+                event.target.result;
+
+            photoPreviewContainer.style.display =
+                "flex";
+
+            photoUploadArea.style.display =
+                "none";
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+    });
+
+
+    /*
+     * REMOVE PHOTO
+     */
+    removePhoto.addEventListener("click", function () {
+
+        studentPhoto.value = "";
+
+        photoPreview.src = "";
+
+        photoPreviewContainer.style.display =
+            "none";
+
+        photoUploadArea.style.display =
+            "flex";
+
+        photoError.textContent = "";
+
+        photoError.style.display =
+            "none";
+
+    });
+
+</script>
 
 {% endblock %}
