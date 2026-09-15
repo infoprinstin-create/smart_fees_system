@@ -1,0 +1,632 @@
+.edit-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 0 40px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 28px;
+}
+
+.page-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #f97316;
+    margin-bottom: 7px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.page-header p {
+    margin: 8px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 17px;
+    border-radius: 10px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+}
+
+.back-button:hover {
+    border-color: #f97316;
+    color: #f97316;
+    transform: translateY(-2px);
+}
+
+.back-button span {
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   FORM CARDS
+   ========================================================= */
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 20px;
+    margin-bottom: 22px;
+    border-bottom: 1px solid #eef0f3;
+}
+
+.card-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #fff7ed;
+    color: #f97316;
+    font-size: 20px;
+}
+
+.card-header h2 {
+    margin: 0;
+    color: #111827;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.card-header p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   PHOTO
+   ========================================================= */
+
+.photo-section {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 18px;
+    margin-bottom: 24px;
+    border-radius: 13px;
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+}
+
+.current-photo {
+    width: 110px;
+    height: 110px;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #e5e7eb;
+}
+
+.current-photo img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff7ed;
+    color: #f97316;
+    font-size: 38px;
+    font-weight: 800;
+}
+
+.photo-info h3 {
+    margin: 0 0 5px;
+    color: #111827;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.photo-info p {
+    margin: 0 0 12px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.photo-info input[type="file"] {
+    display: none;
+}
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 14px;
+    border-radius: 8px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #ea580c;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-button:hover {
+    background: #ffedd5;
+    border-color: #fb923c;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.form-group {
+    min-width: 0;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #111827;
+    padding: 11px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.form-group input,
+.form-group select {
+    height: 44px;
+}
+
+.form-group textarea {
+    min-height: 105px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #9ca3af;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.10);
+}
+
+.form-group select {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.cancel-button,
+.save-button {
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 9px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+}
+
+.cancel-button {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    color: #4b5563;
+}
+
+.cancel-button:hover {
+    border-color: #9ca3af;
+    color: #111827;
+    transform: translateY(-1px);
+}
+
+.save-button {
+    border: 1px solid #f97316;
+    background: #f97316;
+    color: #ffffff;
+    box-shadow: 0 5px 14px rgba(249, 115, 22, 0.20);
+}
+
+.save-button:hover {
+    background: #ea580c;
+    border-color: #ea580c;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(249, 115, 22, 0.25);
+}
+
+.save-button span {
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark-mode .page-header h1,
+body.dark .page-header h1,
+html.dark-mode .page-header h1,
+html.dark .page-header h1 {
+    color: #f9fafb;
+}
+
+body.dark-mode .page-header p,
+body.dark .page-header p,
+html.dark-mode .page-header p,
+html.dark .page-header p {
+    color: #9ca3af;
+}
+
+body.dark-mode .back-button,
+body.dark .back-button,
+html.dark-mode .back-button,
+html.dark .back-button {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+}
+
+body.dark-mode .back-button:hover,
+body.dark .back-button:hover,
+html.dark-mode .back-button:hover,
+html.dark .back-button:hover {
+    border-color: #f97316;
+    color: #fb923c;
+}
+
+body.dark-mode .form-card,
+body.dark .form-card,
+html.dark-mode .form-card,
+html.dark .form-card {
+    background: #111827;
+    border-color: #374151;
+    box-shadow: none;
+}
+
+body.dark-mode .card-header,
+body.dark .card-header,
+html.dark-mode .card-header,
+html.dark .card-header {
+    border-bottom-color: #374151;
+}
+
+body.dark-mode .card-header h2,
+body.dark .card-header h2,
+html.dark-mode .card-header h2,
+html.dark .card-header h2 {
+    color: #f9fafb;
+}
+
+body.dark-mode .card-header p,
+body.dark .card-header p,
+html.dark-mode .card-header p,
+html.dark .card-header p {
+    color: #9ca3af;
+}
+
+body.dark-mode .photo-section,
+body.dark .photo-section,
+html.dark-mode .photo-section,
+html.dark .photo-section {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+body.dark-mode .photo-info h3,
+body.dark .photo-info h3,
+html.dark-mode .photo-info h3,
+html.dark .photo-info h3 {
+    color: #f9fafb;
+}
+
+body.dark-mode .photo-info p,
+body.dark .photo-info p,
+html.dark-mode .photo-info p,
+html.dark .photo-info p {
+    color: #9ca3af;
+}
+
+body.dark-mode .current-photo,
+body.dark .current-photo,
+html.dark-mode .current-photo,
+html.dark .current-photo {
+    background: #374151;
+}
+
+body.dark-mode .form-group label,
+body.dark .form-group label,
+html.dark-mode .form-group label,
+html.dark .form-group label {
+    color: #d1d5db;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea,
+body.dark .form-group input,
+body.dark .form-group select,
+body.dark .form-group textarea,
+html.dark-mode .form-group input,
+html.dark-mode .form-group select,
+html.dark-mode .form-group textarea,
+html.dark .form-group input,
+html.dark .form-group select,
+html.dark .form-group textarea {
+    background: #1f2937;
+    border-color: #4b5563;
+    color: #f9fafb;
+}
+
+body.dark-mode .form-group input::placeholder,
+body.dark-mode .form-group textarea::placeholder,
+body.dark .form-group input::placeholder,
+body.dark .form-group textarea::placeholder,
+html.dark-mode .form-group input::placeholder,
+html.dark-mode .form-group textarea::placeholder,
+html.dark .form-group input::placeholder,
+html.dark .form-group textarea::placeholder {
+    color: #6b7280;
+}
+
+body.dark-mode .cancel-button,
+body.dark .cancel-button,
+html.dark-mode .cancel-button,
+html.dark .cancel-button {
+    background: #1f2937;
+    border-color: #4b5563;
+    color: #d1d5db;
+}
+
+body.dark-mode .cancel-button:hover,
+body.dark .cancel-button:hover,
+html.dark-mode .cancel-button:hover,
+html.dark .cancel-button:hover {
+    border-color: #6b7280;
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .edit-page {
+        padding: 5px 0 30px;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .back-button {
+        align-self: flex-start;
+    }
+
+    .form-card {
+        padding: 20px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .edit-page {
+        width: 100%;
+        max-width: 100%;
+        padding: 0 0 25px;
+        box-sizing: border-box;
+    }
+
+    .page-header {
+        width: 100%;
+        margin-bottom: 20px;
+        gap: 15px;
+    }
+
+    .page-header h1 {
+        font-size: 25px;
+    }
+
+    .page-header p {
+        font-size: 13px;
+    }
+
+    .back-button {
+        width: 100%;
+    }
+
+    .form-card {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 16px;
+        border-radius: 13px;
+    }
+
+    .card-header {
+        gap: 10px;
+        padding-bottom: 16px;
+        margin-bottom: 18px;
+    }
+
+    .card-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: 17px;
+    }
+
+    .card-header h2 {
+        font-size: 16px;
+    }
+
+    .card-header p {
+        font-size: 11px;
+    }
+
+    .photo-section {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px;
+        gap: 15px;
+    }
+
+    .current-photo {
+        width: 95px;
+        height: 95px;
+    }
+
+    .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .form-group input,
+    .form-group select {
+        height: 43px;
+    }
+
+    .form-actions {
+        width: 100%;
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .cancel-button,
+    .save-button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .page-header h1 {
+        font-size: 22px;
+    }
+
+    .form-card {
+        padding: 13px;
+    }
+
+    .card-header h2 {
+        font-size: 15px;
+    }
+
+    .photo-info p {
+        font-size: 11px;
+    }
+}

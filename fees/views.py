@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 
@@ -55,6 +54,118 @@ def student_profile(request, student_id):
     return render(
         request,
         "fees/student_profile.html",
+        {
+            "student": student
+        }
+    )
+
+
+# =========================================================
+# EDIT STUDENT
+# =========================================================
+
+def edit_student(request, student_id):
+
+    student = get_object_or_404(
+        Student,
+        id=student_id
+    )
+
+    if request.method == "POST":
+
+        student.first_name = request.POST.get(
+            "first_name",
+            ""
+        ).strip()
+
+        student.last_name = request.POST.get(
+            "last_name",
+            ""
+        ).strip()
+
+        student.student_id = request.POST.get(
+            "student_id",
+            ""
+        ).strip()
+
+        student.registration_number = (
+            request.POST.get(
+                "registration_number",
+                ""
+            ).strip()
+            or None
+        )
+
+        student.date_of_birth = (
+            request.POST.get(
+                "date_of_birth"
+            )
+            or None
+        )
+
+        student.student_class = request.POST.get(
+            "class_name",
+            ""
+        ).strip()
+
+        student.stream = request.POST.get(
+            "stream",
+            ""
+        ).strip()
+
+        student.academic_year = request.POST.get(
+            "academic_year",
+            ""
+        ).strip()
+
+        student.gender = (
+            request.POST.get(
+                "gender",
+                ""
+            ).title()
+        )
+
+        student.parent_name = request.POST.get(
+            "parent_name",
+            ""
+        ).strip()
+
+        student.parent_contact = request.POST.get(
+            "parent_contact",
+            ""
+        ).strip()
+
+        student.address = request.POST.get(
+            "address",
+            ""
+        ).strip()
+
+        student.additional_information = request.POST.get(
+            "additional_information",
+            ""
+        ).strip()
+
+        student.status = request.POST.get(
+            "status",
+            "Active"
+        )
+
+        # Only replace the photo if a new photo was selected.
+        if request.FILES.get("student_photo"):
+            student.photo = request.FILES.get(
+                "student_photo"
+            )
+
+        student.save()
+
+        return redirect(
+            "student_profile",
+            student_id=student.id
+        )
+
+    return render(
+        request,
+        "fees/edit_student.html",
         {
             "student": student
         }
@@ -211,4 +322,3 @@ def classes(request):
         request,
         "fees/classes.html"
     )
-

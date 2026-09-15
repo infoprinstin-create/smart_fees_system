@@ -353,13 +353,13 @@
 
                                 <!-- EDIT -->
                                 <a
-                                    href="#"
-                                    class="action-btn edit"
-                                    title="Edit Student"
-                                >
-                                    <i class="fa-solid fa-pen"></i>
-                                    <span>Edit</span>
-                                </a>
+    href="{% url 'edit_student' student.id %}"
+    class="action-btn edit"
+    title="Edit Student"
+>
+    <i class="fa-solid fa-pen"></i>
+    <span>Edit</span>
+</a>
 
 
                                 <!-- DELETE -->

@@ -1,0 +1,470 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Edit Student{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/edit_student.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="edit-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Edit Student</h1>
+
+            <p>
+                Update the student's personal, academic and
+                parent/guardian information.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'student_profile' student.id %}"
+            class="back-button"
+        >
+            <span>←</span>
+            Back to Profile
+        </a>
+
+    </div>
+
+
+    <!-- EDIT FORM -->
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        class="edit-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- PERSONAL INFORMATION -->
+        <div class="form-card">
+
+            <div class="card-header">
+
+                <div class="card-icon">
+    
+                </div>
+
+                <div>
+                    <h2>Personal Information</h2>
+                    <p>Basic information about the student.</p>
+                </div>
+
+            </div>
+
+
+            <!-- PHOTO -->
+            <div class="photo-section">
+
+                <div class="current-photo">
+
+                    {% if student.photo %}
+
+                        <img
+                            src="{{ student.photo.url }}"
+                            alt="{{ student.first_name }} {{ student.last_name }}"
+                        >
+
+                    {% else %}
+
+                        <div class="photo-placeholder">
+                            {{ student.first_name|first|upper }}
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="photo-info">
+
+                    <h3>Student Photo</h3>
+
+                    <p>
+                        Upload a new photo if you want to replace
+                        the current one.
+                    </p>
+
+                    <label
+                        for="student_photo"
+                        class="upload-button"
+                    >
+                        Choose New Photo
+                    </label>
+
+                    <input
+                        type="file"
+                        id="student_photo"
+                        name="student_photo"
+                        accept="image/*"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- NAME -->
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="first_name">
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        value="{{ student.first_name }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="last_name">
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        value="{{ student.last_name }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="student_id">
+                        Student ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="student_id"
+                        name="student_id"
+                        value="{{ student.student_id }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="registration_number">
+                        Registration Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="registration_number"
+                        name="registration_number"
+                        value="{{ student.registration_number|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="date_of_birth">
+                        Date of Birth
+                    </label>
+
+                    <input
+                        type="date"
+                        id="date_of_birth"
+                        name="date_of_birth"
+                        value="{{ student.date_of_birth|date:'Y-m-d' }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="gender">
+                        Gender
+                    </label>
+
+                    <select
+                        id="gender"
+                        name="gender"
+                        required
+                    >
+
+                        <option
+                            value="Male"
+                            {% if student.gender == "Male" %}selected{% endif %}
+                        >
+                            Male
+                        </option>
+
+                        <option
+                            value="Female"
+                            {% if student.gender == "Female" %}selected{% endif %}
+                        >
+                            Female
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACADEMIC INFORMATION -->
+        <div class="form-card">
+
+            <div class="card-header">
+
+                <div class="card-icon"> 
+                </div>
+
+                <div>
+                    <h2>Academic Information</h2>
+                    <p>Update the student's school information.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="class_name">
+                        Class
+                    </label>
+
+                    <input
+                        type="text"
+                        id="class_name"
+                        name="class_name"
+                        value="{{ student.student_class }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="stream">
+                        Stream
+                    </label>
+
+                    <input
+                        type="text"
+                        id="stream"
+                        name="stream"
+                        value="{{ student.stream|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label for="academic_year">
+                        Academic Year
+                    </label>
+
+                    <input
+                        type="text"
+                        id="academic_year"
+                        name="academic_year"
+                        value="{{ student.academic_year }}"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PARENT INFORMATION -->
+        <div class="form-card">
+
+            <div class="card-header">
+
+                <div class="card-icon">
+    
+                </div>
+
+                <div>
+                    <h2>Parent / Guardian</h2>
+                    <p>Parent or guardian contact information.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="parent_name">
+                        Parent / Guardian Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="parent_name"
+                        name="parent_name"
+                        value="{{ student.parent_name|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="parent_contact">
+                        Contact Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="parent_contact"
+                        name="parent_contact"
+                        value="{{ student.parent_contact|default:'' }}"
+                    >
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label for="address">
+                        Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        name="address"
+                        rows="4"
+                    >{{ student.address|default:'' }}</textarea>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ADDITIONAL INFORMATION -->
+        <div class="form-card">
+
+            <div class="card-header">
+
+                <div class="card-icon">
+            
+                </div>
+
+                <div>
+                    <h2>Additional Information</h2>
+                    <p>Other information related to the student.</p>
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group full-width">
+
+                    <label for="additional_information">
+                        Additional Information
+                    </label>
+
+                    <textarea
+                        id="additional_information"
+                        name="additional_information"
+                        rows="5"
+                    >{{ student.additional_information|default:'' }}</textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="status">
+                        Student Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                    >
+
+                        <option
+                            value="Active"
+                            {% if student.status == "Active" %}selected{% endif %}
+                        >
+                            Active
+                        </option>
+
+                        <option
+                            value="Inactive"
+                            {% if student.status == "Inactive" %}selected{% endif %}
+                        >
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM ACTIONS -->
+        <div class="form-actions">
+
+            <a
+                href="{% url 'student_profile' student.id %}"
+                class="cancel-button"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="save-button"
+            >
+                <span>✓</span>
+                Save Changes
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}
