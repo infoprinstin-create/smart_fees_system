@@ -1,0 +1,947 @@
+/* =========================================================
+   ADD FEE STRUCTURE PAGE
+
+   Blue Theme
+   Light Mode + Dark Mode
+   Desktop + Tablet + Mobile
+
+   ========================================================= */
+
+
+/* =========================================================
+   PAGE CONTAINER
+   ========================================================= */
+
+.fee-structure-page {
+
+    width: 100%;
+    max-width: 1200px;
+
+    margin: 0 auto;
+
+    padding: 30px;
+
+    color: var(--text-color, #1f2937);
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.fee-structure-page .page-header {
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+
+    margin-bottom: 28px;
+}
+
+
+.fee-structure-page .page-header h1 {
+
+    margin: 0;
+
+    font-size: 30px;
+    font-weight: 800;
+
+    letter-spacing: -0.5px;
+
+    color: var(--text-color, #111827);
+}
+
+
+.fee-structure-page .page-header p {
+
+    margin: 7px 0 0;
+
+    font-size: 14px;
+
+    color: var(--muted-text, #6b7280);
+}
+
+
+/* =========================================================
+   HEADER BUTTON
+   ========================================================= */
+
+.fee-structure-page .header-actions {
+
+    display: flex;
+    align-items: center;
+}
+
+
+.fee-structure-page .btn-add-fee {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 12px 18px;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 18px rgba(37, 99, 235, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+
+.fee-structure-page .btn-add-fee:hover {
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 10px 24px rgba(37, 99, 235, 0.35);
+}
+
+
+.fee-structure-page .btn-add-fee i {
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   MAIN FORM CARD
+   ========================================================= */
+
+.fee-structure-page .fee-main-card {
+
+    background: var(--card-bg, #ffffff);
+
+    border: 1px solid var(--border-color, #e5e7eb);
+
+    border-radius: 18px;
+
+    padding: 30px;
+
+    box-shadow:
+
+        0 10px 30px rgba(15, 23, 42, 0.07),
+
+        0 2px 6px rgba(15, 23, 42, 0.03);
+
+    transition:
+
+        background 0.3s ease,
+
+        border-color 0.3s ease,
+
+        box-shadow 0.3s ease;
+}
+
+
+/* =========================================================
+   CARD TITLE
+   ========================================================= */
+
+.fee-structure-page .card-title {
+
+    display: flex;
+
+    align-items: center;
+
+    padding-bottom: 20px;
+
+    margin-bottom: 25px;
+
+    border-bottom:
+        1px solid var(--border-color, #e5e7eb);
+}
+
+
+.fee-structure-page .card-title h2 {
+
+    margin: 0;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    color: var(--text-color, #111827);
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.fee-structure-page .fee-form {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   TWO-COLUMN FORM ROW
+   ========================================================= */
+
+.fee-structure-page .form-row {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 22px;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.fee-structure-page .form-group {
+
+    margin-bottom: 22px;
+}
+
+
+.fee-structure-page .form-row .form-group {
+
+    margin-bottom: 0;
+}
+
+
+.fee-structure-page .form-group label {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: var(--text-color, #374151);
+}
+
+
+/* =========================================================
+   INPUTS & SELECT
+   ========================================================= */
+
+.fee-structure-page .form-group input,
+.fee-structure-page .form-group select {
+
+    width: 100%;
+
+    height: 48px;
+
+    padding: 0 14px;
+
+    background: var(--input-bg, #f9fafb);
+
+    color: var(--text-color, #111827);
+
+    border:
+        1px solid var(--input-border, #d1d5db);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+
+        border-color 0.2s ease,
+
+        box-shadow 0.2s ease,
+
+        background 0.2s ease;
+}
+
+
+.fee-structure-page .form-group input:hover,
+.fee-structure-page .form-group select:hover {
+
+    border-color: #2563eb;
+}
+
+
+.fee-structure-page .form-group input:focus,
+.fee-structure-page .form-group select:focus {
+
+    background: var(--card-bg, #ffffff);
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================================================
+   SELECT ARROW
+   ========================================================= */
+
+.fee-structure-page .form-group select {
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   GHANA CEDI AMOUNT INPUT
+   ========================================================= */
+
+.fee-structure-page .amount-input {
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    height: 48px;
+
+    background: var(--input-bg, #f9fafb);
+
+    border:
+        1px solid var(--input-border, #d1d5db);
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    transition:
+
+        border-color 0.2s ease,
+
+        box-shadow 0.2s ease,
+
+        background 0.2s ease;
+}
+
+
+.fee-structure-page .amount-input:hover {
+
+    border-color: #2563eb;
+}
+
+
+.fee-structure-page .amount-input:focus-within {
+
+    background: var(--card-bg, #ffffff);
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================================================
+   GHANA CEDI SYMBOL
+   ========================================================= */
+
+.fee-structure-page .amount-input span {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    min-width: 58px;
+
+    padding: 0 12px;
+
+    background:
+        rgba(37, 99, 235, 0.10);
+
+    color: #2563eb;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    border-right:
+        1px solid var(--input-border, #d1d5db);
+}
+
+
+/* =========================================================
+   AMOUNT FIELD
+   ========================================================= */
+
+.fee-structure-page .amount-input input {
+
+    flex: 1;
+
+    width: 100%;
+
+    height: 100%;
+
+    padding: 0 14px;
+
+    background: transparent;
+
+    border: none !important;
+
+    border-radius: 0;
+
+    outline: none;
+
+    color: var(--text-color, #111827);
+
+    box-shadow: none !important;
+}
+
+
+.fee-structure-page .amount-input input:focus {
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   REMOVE NUMBER ARROWS
+   ========================================================= */
+
+.fee-structure-page
+.amount-input
+input::-webkit-inner-spin-button,
+
+.fee-structure-page
+.amount-input
+input::-webkit-outer-spin-button {
+
+    -webkit-appearance: none;
+
+    margin: 0;
+}
+
+
+.fee-structure-page
+.amount-input
+input[type="number"] {
+
+    appearance: textfield;
+
+    -moz-appearance: textfield;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.fee-structure-page .form-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 12px;
+
+    margin-top: 32px;
+
+    padding-top: 24px;
+
+    border-top:
+        1px solid var(--border-color, #e5e7eb);
+}
+
+
+/* =========================================================
+   CANCEL BUTTON
+   ========================================================= */
+
+.fee-structure-page .cancel-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 110px;
+
+    height: 46px;
+
+    padding: 0 18px;
+
+    background:
+        var(--cancel-bg, #f3f4f6);
+
+    color:
+        var(--text-color, #374151);
+
+    border:
+        1px solid var(--border-color, #d1d5db);
+
+    border-radius: 10px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    transition:
+
+        background 0.2s ease,
+
+        transform 0.2s ease,
+
+        border-color 0.2s ease;
+}
+
+
+.fee-structure-page .cancel-btn:hover {
+
+    background:
+        var(--cancel-hover, #e5e7eb);
+
+    border-color: #9ca3af;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   SAVE BUTTON
+   ========================================================= */
+
+.fee-structure-page .save-btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    min-width: 175px;
+
+    height: 46px;
+
+    padding: 0 20px;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 7px 18px rgba(37, 99, 235, 0.25);
+
+    transition:
+
+        transform 0.2s ease,
+
+        box-shadow 0.2s ease,
+
+        filter 0.2s ease;
+}
+
+
+.fee-structure-page .save-btn:hover {
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.05);
+
+    box-shadow:
+        0 10px 24px rgba(37, 99, 235, 0.35);
+}
+
+
+.fee-structure-page .save-btn:active {
+
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   DARK MODE
+   .dark-mode
+   ========================================================= */
+
+.dark-mode .fee-structure-page {
+
+    --text-color: #f3f4f6;
+
+    --muted-text: #9ca3af;
+
+    --card-bg: #171b23;
+
+    --border-color: #2d3440;
+
+    --input-bg: #202631;
+
+    --input-border: #3a4351;
+
+    --cancel-bg: #252c37;
+
+    --cancel-hover: #303846;
+}
+
+
+.dark-mode
+.fee-structure-page
+.fee-main-card {
+
+    box-shadow:
+
+        0 15px 40px rgba(0, 0, 0, 0.30),
+
+        0 2px 8px rgba(0, 0, 0, 0.20);
+}
+
+
+.dark-mode
+.fee-structure-page
+.amount-input
+span {
+
+    background:
+        rgba(37, 99, 235, 0.14);
+
+    color: #60a5fa;
+}
+
+
+.dark-mode
+.fee-structure-page
+.cancel-btn {
+
+    color: #e5e7eb;
+}
+
+
+.dark-mode
+.fee-structure-page
+.form-group
+input::placeholder {
+
+    color: #6b7280;
+}
+
+
+/* =========================================================
+   DATA-THEME DARK MODE
+   ========================================================= */
+
+[data-theme="dark"] .fee-structure-page {
+
+    --text-color: #f3f4f6;
+
+    --muted-text: #9ca3af;
+
+    --card-bg: #171b23;
+
+    --border-color: #2d3440;
+
+    --input-bg: #202631;
+
+    --input-border: #3a4351;
+
+    --cancel-bg: #252c37;
+
+    --cancel-hover: #303846;
+}
+
+
+[data-theme="dark"]
+.fee-structure-page
+.fee-main-card {
+
+    box-shadow:
+
+        0 15px 40px rgba(0, 0, 0, 0.30),
+
+        0 2px 8px rgba(0, 0, 0, 0.20);
+}
+
+
+[data-theme="dark"]
+.fee-structure-page
+.amount-input
+span {
+
+    background:
+        rgba(37, 99, 235, 0.14);
+
+    color: #60a5fa;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .fee-structure-page {
+
+        padding: 24px 20px;
+    }
+
+
+    .fee-structure-page
+    .page-header
+    h1 {
+
+        font-size: 27px;
+    }
+
+
+    .fee-structure-page
+    .fee-main-card {
+
+        padding: 25px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .fee-structure-page {
+
+        padding: 18px 14px;
+    }
+
+
+    /* Header */
+
+    .fee-structure-page
+    .page-header {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 18px;
+
+        margin-bottom: 22px;
+    }
+
+
+    .fee-structure-page
+    .page-header
+    h1 {
+
+        font-size: 24px;
+    }
+
+
+    .fee-structure-page
+    .page-header
+    p {
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    /* Header Button */
+
+    .fee-structure-page
+    .header-actions {
+
+        width: 100%;
+    }
+
+
+    .fee-structure-page
+    .btn-add-fee {
+
+        width: 100%;
+    }
+
+
+    /* Card */
+
+    .fee-structure-page
+    .fee-main-card {
+
+        padding: 20px 16px;
+
+        border-radius: 14px;
+    }
+
+
+    /* Card Title */
+
+    .fee-structure-page
+    .card-title {
+
+        margin-bottom: 20px;
+
+        padding-bottom: 16px;
+    }
+
+
+    .fee-structure-page
+    .card-title
+    h2 {
+
+        font-size: 17px;
+    }
+
+
+    /* One Column */
+
+    .fee-structure-page
+    .form-row {
+
+        grid-template-columns: 1fr;
+
+        gap: 0;
+
+        margin-bottom: 0;
+    }
+
+
+    .fee-structure-page
+    .form-row
+    .form-group {
+
+        margin-bottom: 22px;
+    }
+
+
+    /* Inputs */
+
+    .fee-structure-page
+    .form-group
+    input,
+
+    .fee-structure-page
+    .form-group
+    select {
+
+        height: 46px;
+    }
+
+
+    .fee-structure-page
+    .amount-input {
+
+        height: 46px;
+    }
+
+
+    /* Buttons */
+
+    .fee-structure-page
+    .form-actions {
+
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+
+        margin-top: 25px;
+
+        padding-top: 20px;
+    }
+
+
+    .fee-structure-page
+    .cancel-btn,
+
+    .fee-structure-page
+    .save-btn {
+
+        width: 100%;
+
+        height: 48px;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+    .fee-structure-page {
+
+        padding: 15px 10px;
+    }
+
+
+    .fee-structure-page
+    .fee-main-card {
+
+        padding: 17px 13px;
+    }
+
+
+    .fee-structure-page
+    .page-header
+    h1 {
+
+        font-size: 22px;
+    }
+
+
+    .fee-structure-page
+    .amount-input
+    span {
+
+        min-width: 52px;
+
+        padding: 0 8px;
+
+        font-size: 17px;
+    }
+}

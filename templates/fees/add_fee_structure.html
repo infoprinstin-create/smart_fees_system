@@ -1,0 +1,318 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Add Fee Structure{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_fees_structure.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="fee-structure-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Add Fee Structure</h1>
+            <p>Set the fees for a class and academic year.</p>
+        </div>
+
+        <div class="header-actions">
+
+            <a
+                href="{% url 'fees_structure' %}"
+                class="btn-add-fee"
+            >
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Fee Structure</span>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="fee-main-card">
+
+        <div class="card-title">
+            <h2>Fee Information</h2>
+        </div>
+
+
+        <form
+            method="POST"
+            class="fee-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- CLASS & ACADEMIC YEAR -->
+            <div class="form-row">
+
+                <!-- CLASS -->
+                <div class="form-group">
+
+                    <label for="student_class">
+                        Class
+                    </label>
+
+                    <select
+                        name="student_class"
+                        id="student_class"
+                        required
+                    >
+
+                        <option value="" selected disabled>
+                            Select Class
+                        </option>
+
+                        <option value="Playgroup">
+                            Playgroup
+                        </option>
+
+                        <option value="KG">
+                            KG
+                        </option>
+
+                        <option value="Primary 1">
+                            Primary 1
+                        </option>
+
+                        <option value="Primary 2">
+                            Primary 2
+                        </option>
+
+                        <option value="Primary 3">
+                            Primary 3
+                        </option>
+
+                        <option value="Primary 4">
+                            Primary 4
+                        </option>
+
+                        <option value="Primary 5">
+                            Primary 5
+                        </option>
+
+                        <option value="JHS 1">
+                            JHS 1
+                        </option>
+
+                        <option value="JHS 2">
+                            JHS 2
+                        </option>
+
+                        <option value="JHS 3">
+                            JHS 3
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- ACADEMIC YEAR -->
+                <div class="form-group">
+
+                    <label for="academic_year">
+                        Academic Year
+                    </label>
+
+                    <select
+                        name="academic_year"
+                        id="academic_year"
+                        required
+                    >
+
+                        <option value="" selected disabled>
+                            Select Academic Year
+                        </option>
+
+                        <option value="2026/2027">
+                            2026/2027
+                        </option>
+
+                        <option value="2025/2026">
+                            2025/2026
+                        </option>
+
+                        <option value="2024/2025">
+                            2024/2025
+                        </option>
+
+                        <option value="2023/2024">
+                            2023/2024
+                        </option>
+
+                        <option value="2022/2023">
+                            2022/2023
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- REGISTRATION FEE -->
+            <div class="form-group">
+
+                <label for="registration_fee">
+                    Registration Fee
+                </label>
+
+                <div class="amount-input">
+
+                    <span>GH₵</span>
+
+                    <input
+                        type="number"
+                        name="registration_fee"
+                        id="registration_fee"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- TUITION FEE -->
+            <div class="form-group">
+
+                <label for="tuition_fee">
+                    Tuition Fee (Annual)
+                </label>
+
+                <div class="amount-input">
+
+                    <span>GH₵</span>
+
+                    <input
+                        type="number"
+                        name="tuition_fee"
+                        id="tuition_fee"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- EXAMINATION FEE -->
+            <div class="form-group">
+
+                <label for="examination_fee">
+                    Examination Fee
+                </label>
+
+                <div class="amount-input">
+
+                    <span>GH₵</span>
+
+                    <input
+                        type="number"
+                        name="examination_fee"
+                        id="examination_fee"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- LIBRARY FEE -->
+            <div class="form-group">
+
+                <label for="library_fee">
+                    Library Fee
+                </label>
+
+                <div class="amount-input">
+
+                    <span>GH₵</span>
+
+                    <input
+                        type="number"
+                        name="library_fee"
+                        id="library_fee"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIVITY FEE -->
+            <div class="form-group">
+
+                <label for="activity_fee">
+                    Activity Fee
+                </label>
+
+                <div class="amount-input">
+
+                    <span>GH₵</span>
+
+                    <input
+                        type="number"
+                        name="activity_fee"
+                        id="activity_fee"
+                        min="0"
+                        step="0.01"
+                        value="0"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'fees_structure' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    <i class="fas fa-save"></i>
+                    Save Fee Structure
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

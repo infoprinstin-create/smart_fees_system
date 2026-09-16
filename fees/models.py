@@ -158,3 +158,64 @@ class SchoolSettings(models.Model):
     def __str__(self):
         return self.school_name
 
+class FeeStructure(models.Model):
+
+    student_class = models.CharField(
+        max_length=100
+    )
+
+    academic_year = models.CharField(
+        max_length=20,
+        default="2026/2027"
+    )
+
+    registration_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    tuition_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    examination_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    library_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    activity_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    @property
+    def total_fee(self):
+        return (
+            self.registration_fee
+            + self.tuition_fee
+            + self.examination_fee
+            + self.library_fee
+            + self.activity_fee
+        )
+
+    def __str__(self):
+        return f"{self.student_class} - {self.academic_year}"

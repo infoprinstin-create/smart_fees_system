@@ -61,6 +61,12 @@ urlpatterns = [
     ),
 
     path(
+      "fees-structure/add/",
+       views.add_fee_structure,
+       name="add_fee_structure"
+    ),
+
+    path(
         "reports/",
         views.reports,
         name="reports"

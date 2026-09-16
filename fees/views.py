@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 
-from .models import Student, SchoolSettings
+from .models import Student, SchoolSettings, FeeStructure
 
 
 def logout_view(request):
@@ -72,6 +72,14 @@ def students(request):
 
     students = Student.objects.all().order_by("-date_registered")
 
+    # Attach the matching fee structure to every student
+    for student in students:
+
+        student.fee_structure = FeeStructure.objects.filter(
+            student_class=student.student_class,
+            academic_year=student.academic_year
+        ).first()
+
     return render(
         request,
         "fees/students.html",
@@ -90,7 +98,6 @@ def students(request):
         }
     )
 
-
 # =========================================================
 # STUDENT PROFILE
 # =========================================================
@@ -102,11 +109,19 @@ def student_profile(request, student_id):
         id=student_id
     )
 
+    # Find the fee structure for this student's
+    # class and academic year.
+    fee_structure = FeeStructure.objects.filter(
+        student_class=student.student_class,
+        academic_year=student.academic_year
+    ).first()
+
     return render(
         request,
         "fees/student_profile.html",
         {
-            "student": student
+            "student": student,
+            "fee_structure": fee_structure
         }
     )
 
@@ -347,9 +362,65 @@ def home(request):
 # =========================================================
 
 def fees_structure(request):
+
+    fee_structures = FeeStructure.objects.all().order_by(
+        "student_class"
+    )
+
     return render(
         request,
-        "fees/fees_structure.html"
+        "fees/fees_structure.html",
+        {
+            "fee_structures": fee_structures
+        }
+    )
+
+# =========================================================
+# ADD FEE STRUCTURE
+# =========================================================
+
+def add_fee_structure(request):
+
+    if request.method == "POST":
+
+        FeeStructure.objects.create(
+            student_class=request.POST.get("student_class", "").strip(),
+            academic_year=request.POST.get(
+                "academic_year",
+                "2026/2027"
+            ).strip(),
+
+            registration_fee=request.POST.get(
+                "registration_fee",
+                0
+            ),
+
+            tuition_fee=request.POST.get(
+                "tuition_fee",
+                0
+            ),
+
+            examination_fee=request.POST.get(
+                "examination_fee",
+                0
+            ),
+
+            library_fee=request.POST.get(
+                "library_fee",
+                0
+            ),
+
+            activity_fee=request.POST.get(
+                "activity_fee",
+                0
+            ),
+        )
+
+        return redirect("fees_structure")
+
+    return render(
+        request,
+        "fees/add_fee_structure.html"
     )
 
 

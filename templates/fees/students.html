@@ -1,4 +1,3 @@
-
 {% extends "fees/base.html" %}
 {% load static %}
 
@@ -206,7 +205,7 @@
                         <th>Name</th>
                         <th>Student ID</th>
                         <th>Class</th>
-                        <th>Gender</th>
+                        <th>Fee Structure</th>
                         <th>Fee Status</th>
                         <th>Balance</th>
                         <th>Actions</th>
@@ -283,13 +282,47 @@
 
                         <!-- CLASS -->
                         <td>
-                            {{ student.student_class }}
+
+                            <div class="student-class">
+
+                                <strong>
+                                    {{ student.student_class }}
+                                </strong>
+
+                                <span>
+                                    {{ student.academic_year }}
+                                </span>
+
+                            </div>
+
                         </td>
 
 
-                        <!-- GENDER -->
+                        <!-- FEE STRUCTURE -->
                         <td>
-                            {{ student.gender }}
+
+                            {% if student.fee_structure %}
+
+                                <div class="student-fee-structure">
+
+                                    <strong>
+                                        GH₵ {{ student.fee_structure.total_fee|floatformat:2 }}
+                                    </strong>
+
+                                    <span>
+                                        Total Fee
+                                    </span>
+
+                                </div>
+
+                            {% else %}
+
+                                <span class="fee-not-set">
+                                    Not Set
+                                </span>
+
+                            {% endif %}
+
                         </td>
 
 
@@ -329,7 +362,7 @@
                         <td>
 
                             <span class="student-balance">
-                                AED {{ student.balance|default:"0.00" }}
+                                GH₵ {{ student.balance|default:"0.00" }}
                             </span>
 
                         </td>
@@ -353,13 +386,13 @@
 
                                 <!-- EDIT -->
                                 <a
-    href="{% url 'edit_student' student.id %}"
-    class="action-btn edit"
-    title="Edit Student"
->
-    <i class="fa-solid fa-pen"></i>
-    <span>Edit</span>
-</a>
+                                    href="{% url 'edit_student' student.id %}"
+                                    class="action-btn edit"
+                                    title="Edit Student"
+                                >
+                                    <i class="fa-solid fa-pen"></i>
+                                    <span>Edit</span>
+                                </a>
 
 
                                 <!-- DELETE -->
@@ -468,4 +501,3 @@
 </div>
 
 {% endblock %}
-
