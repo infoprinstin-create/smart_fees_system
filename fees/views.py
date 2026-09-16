@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 
-from .models import Student
+from .models import Student, SchoolSettings
 
 
 def logout_view(request):
@@ -10,7 +10,58 @@ def logout_view(request):
 
 
 def settings_view(request):
-    return render(request, "fees/settings.html")
+
+    settings = SchoolSettings.objects.first()
+
+    if not settings:
+        settings = SchoolSettings.objects.create()
+
+    if request.method == "POST":
+
+        settings.school_name = request.POST.get(
+            "school_name",
+            ""
+        ).strip()
+
+        settings.address = request.POST.get(
+            "address",
+            ""
+        ).strip()
+
+        settings.phone = request.POST.get(
+            "phone",
+            ""
+        ).strip()
+
+        settings.email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        settings.academic_year = request.POST.get(
+            "academic_year",
+            ""
+        ).strip()
+
+        settings.school_motto = request.POST.get(
+            "school_motto",
+            ""
+        ).strip()
+
+        if request.FILES.get("school_logo"):
+            settings.logo = request.FILES.get("school_logo")
+
+        settings.save()
+
+        return redirect("settings")
+
+    return render(
+        request,
+        "fees/settings.html",
+        {
+            "school_settings": settings
+        }
+    )
 
 
 # =========================================================

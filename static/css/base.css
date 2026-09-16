@@ -948,3 +948,175 @@ body.dark-mode td {
         font-size: 12px;
     }
 }
+
+/* =========================================================
+   SCHOOL LOGO - SETTINGS IMAGE
+   ========================================================= */
+
+.school-logo-image {
+    width: 95px;
+    height: 95px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    overflow: hidden;
+}
+
+.school-logo-image img {
+    width: 82px;
+    height: 82px;
+
+    max-width: 82px;
+    max-height: 82px;
+
+    object-fit: cover;
+
+    display: block;
+
+    border-radius: 50%;
+
+    border: 3px solid #ffffff;
+
+    background: #ffffff;
+}
+
+
+
+/* =========================================================
+   SCHOOL SIDEBAR HEADER
+   ========================================================= */
+
+.sidebar-logo {
+    height: auto;
+    min-height: 145px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 15px 15px 14px;
+
+    text-align: center;
+
+    border-bottom:
+        1px solid var(--sidebar-border);
+
+    flex-shrink: 0;
+}
+
+
+/* SCHOOL NAME */
+
+.sidebar-logo .logo-text {
+    margin-left: 0;
+
+    width: 100%;
+
+    text-align: center;
+
+    white-space: normal;
+}
+
+.sidebar-logo .logo-text h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.sidebar-logo .logo-text span {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   COLLAPSED SIDEBAR LOGO
+   ========================================================= */
+
+.sidebar.collapsed .sidebar-logo {
+    min-height: 82px;
+
+    height: 82px;
+
+    padding: 8px 5px;
+
+    justify-content: center;
+}
+
+.sidebar.collapsed .school-logo-image {
+    width: 55px;
+    height: 55px;
+
+    margin: 0;
+}
+
+.sidebar.collapsed .school-logo-image img {
+    width: 48px;
+    height: 48px;
+
+    max-width: 48px;
+    max-height: 48px;
+}
+
+
+/* =========================================================
+   MOBILE SIDEBAR LOGO
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar-logo {
+        min-height: 145px;
+
+        padding: 15px;
+    }
+
+    .school-logo-image {
+        height: 90px;
+    }
+
+    .school-logo-image img {
+        width: 72px;
+        height: 72px;
+
+        max-width: 72px;
+        max-height: 72px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+    .school-logo-image img {
+        width: 65px;
+        height: 65px;
+
+        max-width: 65px;
+        max-height: 65px;
+    }
+
+}
