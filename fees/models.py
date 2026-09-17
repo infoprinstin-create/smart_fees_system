@@ -219,3 +219,69 @@ class FeeStructure(models.Model):
 
     def __str__(self):
         return f"{self.student_class} - {self.academic_year}"
+
+
+class Payment(models.Model):
+
+    TERM_CHOICES = [
+        ("First Term", "First Term"),
+        ("Second Term", "Second Term"),
+        ("Third Term", "Third Term"),
+    ]
+
+    PAYMENT_METHOD_CHOICES = [
+        ("Cash", "Cash"),
+        ("Bank Transfer", "Bank Transfer"),
+        ("Mobile Money", "Mobile Money"),
+        ("Cheque", "Cheque"),
+        ("Card", "Card"),
+    ]
+
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        related_name="payments"
+    )
+
+    academic_year = models.CharField(
+        max_length=20
+    )
+
+    term = models.CharField(
+        max_length=20,
+        choices=TERM_CHOICES
+    )
+
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    payment_method = models.CharField(
+        max_length=30,
+        choices=PAYMENT_METHOD_CHOICES
+    )
+
+    payment_date = models.DateField()
+
+    receipt_number = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    description = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.student} - "
+            f"{self.amount} - "
+            f"{self.academic_year}"
+        )

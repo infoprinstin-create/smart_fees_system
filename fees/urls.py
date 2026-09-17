@@ -55,6 +55,12 @@ urlpatterns = [
     ),
 
     path(
+    "student-payment-lookup/",
+    views.student_payment_lookup,
+    name="student_payment_lookup"
+    ),
+
+    path(
         "fees-structure/",
         views.fees_structure,
         name="fees_structure"

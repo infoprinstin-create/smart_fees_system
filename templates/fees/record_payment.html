@@ -5,14 +5,16 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/record_payment.css' %}">
-
 {% endblock %}
 
 {% block content %}
 
 <div class="record-payment-page">
 
-    <!-- PAGE HEADER -->
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
     <div class="page-header">
 
         <div>
@@ -22,19 +24,21 @@
 
         <div class="date-box">
             <i class="fas fa-calendar-days"></i>
-            <span>16 June 2025</span>
+            <span id="currentDate"></span>
         </div>
 
     </div>
 
 
-    <!-- PAYMENT FORM -->
     <form method="POST" class="payment-form">
 
         {% csrf_token %}
 
 
-        <!-- STUDENT INFORMATION -->
+        <!-- =================================================
+             STUDENT INFORMATION
+             ================================================= -->
+
         <div class="payment-card">
 
             <div class="section-title">
@@ -45,7 +49,9 @@
 
                 <div>
                     <h2>Student Information</h2>
-                    <p>Select the student making the payment.</p>
+                    <p>
+                        Search for a student using ID, name, or class.
+                    </p>
                 </div>
 
             </div>
@@ -53,28 +59,110 @@
 
             <div class="form-grid">
 
-                <!-- STUDENT -->
-                <div class="form-group full">
+
+                <!-- SEARCH BY -->
+
+                <div class="form-group">
+
+                    <label for="search_type">
+                        Search By
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-magnifying-glass"></i>
+
+                        <select
+                            id="search_type"
+                        >
+
+                            <option value="student_id">
+                                Student ID
+                            </option>
+
+                            <option value="name">
+                                Student Name
+                            </option>
+
+                            <option value="class">
+                                Class
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEARCH FIELD -->
+
+                <div class="form-group">
+
+                    <label for="student_search">
+                        Search Student <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-search"></i>
+
+                        <input
+                            type="text"
+                            id="student_search"
+                            placeholder="Enter Student ID"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+                    <small
+                        id="studentLookupMessage"
+                        class="lookup-message"
+                    ></small>
+
+                </div>
+
+
+                <!-- STUDENT SEARCH RESULTS -->
+
+                <div
+                    class="form-group full"
+                    id="studentResultsContainer"
+                    style="display: none;"
+                >
 
                     <label>
-                        Student <span>*</span>
+                        Select Student
+                    </label>
+
+                    <div
+                        id="studentResults"
+                        class="student-results"
+                    ></div>
+
+                </div>
+
+
+                <!-- STUDENT NAME -->
+
+                <div class="form-group">
+
+                    <label>
+                        Student Name
                     </label>
 
                     <div class="input-box">
 
                         <i class="fas fa-user"></i>
 
-                        <select name="student" required>
-
-                            <option value="">Select Student</option>
-
-                            <option>Emmanuel Mensah</option>
-                            <option>Ama Serwaa</option>
-                            <option>Isaac Oteng</option>
-                            <option>Esi Yeboah</option>
-                            <option>Kwame Asante</option>
-
-                        </select>
+                        <input
+                            type="text"
+                            id="student_name"
+                            placeholder="Student name"
+                            readonly
+                        >
 
                     </div>
 
@@ -82,9 +170,12 @@
 
 
                 <!-- CLASS -->
+
                 <div class="form-group">
 
-                    <label>Class</label>
+                    <label>
+                        Class
+                    </label>
 
                     <div class="input-box">
 
@@ -92,8 +183,9 @@
 
                         <input
                             type="text"
-                            name="class"
+                            id="student_class"
                             placeholder="Student class"
+                            readonly
                         >
 
                     </div>
@@ -101,47 +193,125 @@
                 </div>
 
 
-                <!-- STUDENT ID -->
-                <div class="form-group">
+                <!-- ACADEMIC YEAR -->
 
-                    <label>Student ID</label>
-
-                    <div class="input-box">
-
-                        <i class="fas fa-id-card"></i>
-
-                        <input
-                            type="text"
-                            name="student_id"
-                            placeholder="Student ID"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <!-- TERM -->
                 <div class="form-group">
 
                     <label>
-                        Term <span>*</span>
+                        Academic Year
                     </label>
 
                     <div class="input-box">
 
                         <i class="fas fa-calendar"></i>
 
-                        <select name="term" required>
-
-                            <option value="">Select Term</option>
-                            <option>First Term</option>
-                            <option>Second Term</option>
-                            <option>Third Term</option>
-
-                        </select>
+                        <input
+                            type="text"
+                            id="academic_year"
+                            placeholder="Academic year"
+                            readonly
+                        >
 
                     </div>
+
+                </div>
+
+
+                <!-- ACTUAL STUDENT ID SENT TO DJANGO -->
+
+                <input
+                    type="hidden"
+                    name="student_id"
+                    id="selected_student_id"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FEE SUMMARY
+             ================================================= -->
+
+        <div class="payment-card">
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
+
+                <div>
+                    <h2>Fee Summary</h2>
+                    <p>
+                        Current fee position for this student.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="fee-summary-grid">
+
+
+                <!-- TOTAL FEE -->
+
+                <div class="fee-summary-box">
+
+                    <span>
+                        Total Fee
+                    </span>
+
+                    <strong id="totalFee">
+                        GH₵ 0.00
+                    </strong>
+
+                </div>
+
+
+                <!-- TOTAL PAID -->
+
+                <div class="fee-summary-box">
+
+                    <span>
+                        Total Paid
+                    </span>
+
+                    <strong id="totalPaid">
+                        GH₵ 0.00
+                    </strong>
+
+                </div>
+
+
+                <!-- CURRENT BALANCE -->
+
+                <div class="fee-summary-box">
+
+                    <span>
+                        Current Balance
+                    </span>
+
+                    <strong id="currentBalance">
+                        GH₵ 0.00
+                    </strong>
+
+                </div>
+
+
+                <!-- TOTAL ARREARS -->
+
+                <div class="fee-summary-box arrears">
+
+                    <span>
+                        Total Arrears
+                    </span>
+
+                    <strong id="totalArrears">
+                        GH₵ 0.00
+                    </strong>
 
                 </div>
 
@@ -151,7 +321,10 @@
 
 
 
-        <!-- PAYMENT DETAILS -->
+        <!-- =================================================
+             PAYMENT DETAILS
+             ================================================= -->
+
         <div class="payment-card">
 
             <div class="section-title">
@@ -162,7 +335,9 @@
 
                 <div>
                     <h2>Payment Details</h2>
-                    <p>Enter the payment information below.</p>
+                    <p>
+                        Enter the payment information below.
+                    </p>
                 </div>
 
             </div>
@@ -170,10 +345,54 @@
 
             <div class="form-grid">
 
-                <!-- AMOUNT -->
+
+                <!-- TERM -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="term">
+                        Term <span>*</span>
+                    </label>
+
+                    <div class="input-box">
+
+                        <i class="fas fa-calendar"></i>
+
+                        <select
+                            name="term"
+                            id="term"
+                            required
+                        >
+
+                            <option value="">
+                                Select Term
+                            </option>
+
+                            <option value="First Term">
+                                First Term
+                            </option>
+
+                            <option value="Second Term">
+                                Second Term
+                            </option>
+
+                            <option value="Third Term">
+                                Third Term
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- AMOUNT -->
+
+                <div class="form-group">
+
+                    <label for="amount">
                         Amount Paid <span>*</span>
                     </label>
 
@@ -184,9 +403,10 @@
                         <input
                             type="number"
                             name="amount"
+                            id="amount"
                             placeholder="0.00"
                             step="0.01"
-                            min="0"
+                            min="0.01"
                             required
                         >
 
@@ -195,10 +415,12 @@
                 </div>
 
 
+
                 <!-- PAYMENT METHOD -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="payment_method">
                         Payment Method <span>*</span>
                     </label>
 
@@ -206,14 +428,35 @@
 
                         <i class="fas fa-credit-card"></i>
 
-                        <select name="payment_method" required>
+                        <select
+                            name="payment_method"
+                            id="payment_method"
+                            required
+                        >
 
-                            <option value="">Select Method</option>
-                            <option>Cash</option>
-                            <option>Bank Transfer</option>
-                            <option>Mobile Money</option>
-                            <option>Cheque</option>
-                            <option>Card</option>
+                            <option value="">
+                                Select Method
+                            </option>
+
+                            <option value="Cash">
+                                Cash
+                            </option>
+
+                            <option value="Bank Transfer">
+                                Bank Transfer
+                            </option>
+
+                            <option value="Mobile Money">
+                                Mobile Money
+                            </option>
+
+                            <option value="Cheque">
+                                Cheque
+                            </option>
+
+                            <option value="Card">
+                                Card
+                            </option>
 
                         </select>
 
@@ -222,10 +465,12 @@
                 </div>
 
 
+
                 <!-- PAYMENT DATE -->
+
                 <div class="form-group">
 
-                    <label>
+                    <label for="payment_date">
                         Payment Date <span>*</span>
                     </label>
 
@@ -236,6 +481,7 @@
                         <input
                             type="date"
                             name="payment_date"
+                            id="payment_date"
                             required
                         >
 
@@ -244,10 +490,14 @@
                 </div>
 
 
+
                 <!-- RECEIPT NUMBER -->
+
                 <div class="form-group">
 
-                    <label>Receipt Number</label>
+                    <label>
+                        Receipt Number
+                    </label>
 
                     <div class="input-box">
 
@@ -255,19 +505,29 @@
 
                         <input
                             type="text"
-                            name="receipt_number"
-                            placeholder="Enter receipt number"
+                            id="receipt_number_display"
+                            value="Automatically generated"
+                            readonly
                         >
 
                     </div>
 
+                    <small class="field-help">
+                        A receipt number will be generated automatically
+                        when the payment is saved.
+                    </small>
+
                 </div>
 
 
+
                 <!-- DESCRIPTION -->
+
                 <div class="form-group full">
 
-                    <label>Payment Description</label>
+                    <label for="description">
+                        Payment Description
+                    </label>
 
                     <div class="input-box textarea-box">
 
@@ -275,6 +535,7 @@
 
                         <textarea
                             name="description"
+                            id="description"
                             placeholder="Enter payment description or notes..."
                         ></textarea>
 
@@ -288,7 +549,10 @@
 
 
 
-        <!-- PAYMENT SUMMARY -->
+        <!-- =================================================
+             PAYMENT SUMMARY
+             ================================================= -->
+
         <div class="payment-card payment-summary-card">
 
             <div class="section-title">
@@ -299,7 +563,9 @@
 
                 <div>
                     <h2>Payment Summary</h2>
-                    <p>Review the payment before saving.</p>
+                    <p>
+                        Review the payment before saving.
+                    </p>
                 </div>
 
             </div>
@@ -307,38 +573,108 @@
 
             <div class="payment-summary">
 
+
+                <!-- STUDENT -->
+
                 <div class="summary-row">
 
-                    <span>Student</span>
+                    <span>
+                        Student
+                    </span>
 
-                    <strong>Select student</strong>
+                    <strong id="summaryStudent">
+                        Select student
+                    </strong>
 
                 </div>
 
 
+                <!-- STUDENT ID -->
+
                 <div class="summary-row">
 
-                    <span>Term</span>
+                    <span>
+                        Student ID
+                    </span>
 
-                    <strong>Select term</strong>
+                    <strong id="summaryStudentId">
+                        —
+                    </strong>
 
                 </div>
 
 
+                <!-- CLASS -->
+
                 <div class="summary-row">
 
-                    <span>Amount Paid</span>
+                    <span>
+                        Class
+                    </span>
 
-                    <strong>GH₵ 0.00</strong>
+                    <strong id="summaryClass">
+                        —
+                    </strong>
 
                 </div>
 
 
+                <!-- ACADEMIC YEAR -->
+
                 <div class="summary-row">
 
-                    <span>Payment Method</span>
+                    <span>
+                        Academic Year
+                    </span>
 
-                    <strong>Select method</strong>
+                    <strong id="summaryAcademicYear">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <!-- TERM -->
+
+                <div class="summary-row">
+
+                    <span>
+                        Term
+                    </span>
+
+                    <strong id="summaryTerm">
+                        Select term
+                    </strong>
+
+                </div>
+
+
+                <!-- AMOUNT -->
+
+                <div class="summary-row">
+
+                    <span>
+                        Amount Paid
+                    </span>
+
+                    <strong id="summaryAmount">
+                        GH₵ 0.00
+                    </strong>
+
+                </div>
+
+
+                <!-- METHOD -->
+
+                <div class="summary-row">
+
+                    <span>
+                        Payment Method
+                    </span>
+
+                    <strong id="summaryMethod">
+                        Select method
+                    </strong>
 
                 </div>
 
@@ -346,11 +682,17 @@
                 <div class="summary-divider"></div>
 
 
+                <!-- TOTAL -->
+
                 <div class="summary-total">
 
-                    <span>Total Payment</span>
+                    <span>
+                        Total Payment
+                    </span>
 
-                    <strong>GH₵ 0.00</strong>
+                    <strong id="summaryTotal">
+                        GH₵ 0.00
+                    </strong>
 
                 </div>
 
@@ -360,10 +702,16 @@
 
 
 
-        <!-- ACTION BUTTONS -->
+        <!-- =================================================
+             FORM BUTTONS
+             ================================================= -->
+
         <div class="form-actions">
 
-            <a href="{% url 'payments' %}" class="btn-cancel">
+            <a
+                href="{% url 'payments' %}"
+                class="btn-cancel"
+            >
 
                 <i class="fas fa-xmark"></i>
 
@@ -372,7 +720,12 @@
             </a>
 
 
-            <button type="submit" class="btn-save">
+            <button
+                type="submit"
+                class="btn-save"
+                id="recordPaymentButton"
+                disabled
+            >
 
                 <i class="fas fa-check"></i>
 
@@ -382,8 +735,795 @@
 
         </div>
 
+
     </form>
 
 </div>
+
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+        /* =================================================
+           ELEMENTS
+           ================================================= */
+
+        const searchType =
+            document.getElementById(
+                "search_type"
+            );
+
+        const searchInput =
+            document.getElementById(
+                "student_search"
+            );
+
+        const lookupMessage =
+            document.getElementById(
+                "studentLookupMessage"
+            );
+
+        const resultsContainer =
+            document.getElementById(
+                "studentResultsContainer"
+            );
+
+        const resultsBox =
+            document.getElementById(
+                "studentResults"
+            );
+
+        const selectedStudentId =
+            document.getElementById(
+                "selected_student_id"
+            );
+
+        const studentName =
+            document.getElementById(
+                "student_name"
+            );
+
+        const studentClass =
+            document.getElementById(
+                "student_class"
+            );
+
+        const academicYear =
+            document.getElementById(
+                "academic_year"
+            );
+
+        const totalFee =
+            document.getElementById(
+                "totalFee"
+            );
+
+        const totalPaid =
+            document.getElementById(
+                "totalPaid"
+            );
+
+        const currentBalance =
+            document.getElementById(
+                "currentBalance"
+            );
+
+        const totalArrears =
+            document.getElementById(
+                "totalArrears"
+            );
+
+        const recordPaymentButton =
+            document.getElementById(
+                "recordPaymentButton"
+            );
+
+        const termInput =
+            document.getElementById(
+                "term"
+            );
+
+        const amountInput =
+            document.getElementById(
+                "amount"
+            );
+
+        const methodInput =
+            document.getElementById(
+                "payment_method"
+            );
+
+        const paymentDateInput =
+            document.getElementById(
+                "payment_date"
+            );
+
+
+        const summaryStudent =
+            document.getElementById(
+                "summaryStudent"
+            );
+
+        const summaryStudentId =
+            document.getElementById(
+                "summaryStudentId"
+            );
+
+        const summaryClass =
+            document.getElementById(
+                "summaryClass"
+            );
+
+        const summaryAcademicYear =
+            document.getElementById(
+                "summaryAcademicYear"
+            );
+
+        const summaryTerm =
+            document.getElementById(
+                "summaryTerm"
+            );
+
+        const summaryAmount =
+            document.getElementById(
+                "summaryAmount"
+            );
+
+        const summaryMethod =
+            document.getElementById(
+                "summaryMethod"
+            );
+
+        const summaryTotal =
+            document.getElementById(
+                "summaryTotal"
+            );
+
+
+
+        /* =================================================
+           CURRENT DATE
+           ================================================= */
+
+        const today =
+            new Date();
+
+        const formattedDate =
+            today.toLocaleDateString(
+                "en-GB",
+                {
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        document.getElementById(
+            "currentDate"
+        ).textContent =
+            formattedDate;
+
+
+
+        /* =================================================
+           DEFAULT PAYMENT DATE
+           ================================================= */
+
+        const year =
+            today.getFullYear();
+
+        const month =
+            String(
+                today.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            );
+
+        const day =
+            String(
+                today.getDate()
+            ).padStart(
+                2,
+                "0"
+            );
+
+        paymentDateInput.value =
+            `${year}-${month}-${day}`;
+
+
+
+        /* =================================================
+           MONEY FORMAT
+           ================================================= */
+
+        function formatMoney(value) {
+
+            return "GH₵ " +
+                Number(
+                    value || 0
+                ).toLocaleString(
+                    "en-GH",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                );
+
+        }
+
+
+
+        /* =================================================
+           UPDATE PLACEHOLDER
+           ================================================= */
+
+        function updatePlaceholder() {
+
+            if (
+                searchType.value ===
+                "student_id"
+            ) {
+
+                searchInput.placeholder =
+                    "Enter Student ID e.g. ST00045";
+
+            }
+
+            else if (
+                searchType.value ===
+                "name"
+            ) {
+
+                searchInput.placeholder =
+                    "Enter student name";
+
+            }
+
+            else if (
+                searchType.value ===
+                "class"
+            ) {
+
+                searchInput.placeholder =
+                    "Enter class e.g. Primary 3";
+
+            }
+
+        }
+
+
+
+        /* =================================================
+           RESET STUDENT
+           ================================================= */
+
+        function resetStudent() {
+
+            selectedStudentId.value =
+                "";
+
+            studentName.value =
+                "";
+
+            studentClass.value =
+                "";
+
+            academicYear.value =
+                "";
+
+            totalFee.textContent =
+                "GH₵ 0.00";
+
+            totalPaid.textContent =
+                "GH₵ 0.00";
+
+            currentBalance.textContent =
+                "GH₵ 0.00";
+
+            totalArrears.textContent =
+                "GH₵ 0.00";
+
+            summaryStudent.textContent =
+                "Select student";
+
+            summaryStudentId.textContent =
+                "—";
+
+            summaryClass.textContent =
+                "—";
+
+            summaryAcademicYear.textContent =
+                "—";
+
+            resultsContainer.style.display =
+                "none";
+
+            resultsBox.innerHTML =
+                "";
+
+            recordPaymentButton.disabled =
+                true;
+
+        }
+
+
+
+        /* =================================================
+           DISPLAY SELECTED STUDENT
+           ================================================= */
+
+        function selectStudent(student) {
+
+            selectedStudentId.value =
+                student.student_id;
+
+            studentName.value =
+                student.name;
+
+            studentClass.value =
+                student.class;
+
+            academicYear.value =
+                student.academic_year;
+
+            summaryStudent.textContent =
+                student.name;
+
+            summaryStudentId.textContent =
+                student.student_id;
+
+            summaryClass.textContent =
+                student.class;
+
+            summaryAcademicYear.textContent =
+                student.academic_year;
+
+            resultsContainer.style.display =
+                "none";
+
+            lookupMessage.textContent =
+                "Student selected";
+
+            lookupMessage.className =
+                "lookup-message success";
+
+
+            getStudentFees(
+                student.student_id
+            );
+
+        }
+
+
+
+        /* =================================================
+           GET STUDENT FEES
+           ================================================= */
+
+        function getStudentFees(studentId) {
+
+            fetch(
+                "{% url 'student_payment_lookup' %}" +
+                "?search_type=student_id" +
+                "&search_value=" +
+                encodeURIComponent(studentId)
+            )
+
+            .then(
+                response =>
+                    response.json()
+            )
+
+            .then(
+                data => {
+
+                    if (
+                        !data.success
+                    ) {
+
+                        lookupMessage.textContent =
+                            data.message;
+
+                        lookupMessage.className =
+                            "lookup-message error";
+
+                        recordPaymentButton.disabled =
+                            true;
+
+                        return;
+                    }
+
+
+                    const fees =
+                        data.fees;
+
+
+                    totalFee.textContent =
+                        formatMoney(
+                            fees.total_fee
+                        );
+
+                    totalPaid.textContent =
+                        formatMoney(
+                            fees.total_paid
+                        );
+
+                    currentBalance.textContent =
+                        formatMoney(
+                            fees.balance
+                        );
+
+
+                    /*
+                     * Temporary arrears calculation.
+                     *
+                     * Later we will separate historical
+                     * arrears from the current academic year.
+                     */
+
+                    totalArrears.textContent =
+                        formatMoney(
+                            fees.balance
+                        );
+
+
+                    recordPaymentButton.disabled =
+                        false;
+
+                }
+            )
+
+            .catch(
+                error => {
+
+                    console.error(error);
+
+                    lookupMessage.textContent =
+                        "Unable to load student fee information.";
+
+                    lookupMessage.className =
+                        "lookup-message error";
+
+                    recordPaymentButton.disabled =
+                        true;
+
+                }
+            );
+
+        }
+
+
+
+        /* =================================================
+           CREATE STUDENT RESULT CARD
+           ================================================= */
+
+        function createStudentResult(student) {
+
+            const result =
+                document.createElement(
+                    "button"
+                );
+
+            result.type =
+                "button";
+
+            result.className =
+                "student-result";
+
+            result.innerHTML = `
+
+                <div class="student-result-icon">
+
+                    <i class="fas fa-user"></i>
+
+                </div>
+
+                <div class="student-result-info">
+
+                    <strong>
+                        ${student.name}
+                    </strong>
+
+                    <span>
+                        ID: ${student.student_id}
+                    </span>
+
+                    <span>
+                        ${student.class}
+                        •
+                        ${student.academic_year}
+                    </span>
+
+                </div>
+
+                <div class="student-result-arrow">
+
+                    <i class="fas fa-chevron-right"></i>
+
+                </div>
+
+            `;
+
+
+            result.addEventListener(
+                "click",
+                function () {
+
+                    selectStudent(
+                        student
+                    );
+
+                }
+            );
+
+
+            resultsBox.appendChild(
+                result
+            );
+
+        }
+
+
+
+        /* =================================================
+           SEARCH STUDENTS
+           ================================================= */
+
+        let searchTimer;
+
+
+        searchInput.addEventListener(
+            "input",
+            function () {
+
+                clearTimeout(
+                    searchTimer
+                );
+
+
+                const value =
+                    this.value.trim();
+
+
+                resetStudent();
+
+
+                if (!value) {
+
+                    lookupMessage.textContent =
+                        "";
+
+                    return;
+
+                }
+
+
+                lookupMessage.textContent =
+                    "Searching...";
+
+                lookupMessage.className =
+                    "lookup-message loading";
+
+
+                searchTimer =
+                    setTimeout(
+                        function () {
+
+                            fetch(
+                                "{% url 'student_payment_lookup' %}" +
+                                "?search_type=" +
+                                encodeURIComponent(
+                                    searchType.value
+                                ) +
+                                "&search_value=" +
+                                encodeURIComponent(
+                                    value
+                                )
+                            )
+
+                            .then(
+                                response =>
+                                    response.json()
+                            )
+
+                            .then(
+                                data => {
+
+                                    if (
+                                        !data.success
+                                    ) {
+
+                                        lookupMessage.textContent =
+                                            data.message;
+
+                                        lookupMessage.className =
+                                            "lookup-message error";
+
+                                        return;
+
+                                    }
+
+
+                                    /*
+                                     * One student found
+                                     */
+
+                                    if (
+                                        !data.multiple
+                                    ) {
+
+                                        selectStudent(
+                                            data.student
+                                        );
+
+                                        return;
+
+                                    }
+
+
+                                    /*
+                                     * Multiple students found
+                                     */
+
+                                    resultsBox.innerHTML =
+                                        "";
+
+                                    resultsContainer.style.display =
+                                        "block";
+
+
+                                    data.students.forEach(
+                                        function (
+                                            student
+                                        ) {
+
+                                            createStudentResult(
+                                                student
+                                            );
+
+                                        }
+                                    );
+
+
+                                    lookupMessage.textContent =
+                                        data.students.length +
+                                        " students found. Please select one.";
+
+                                    lookupMessage.className =
+                                        "lookup-message success";
+
+                                }
+                            )
+
+                            .catch(
+                                error => {
+
+                                    console.error(
+                                        error
+                                    );
+
+                                    lookupMessage.textContent =
+                                        "Unable to search for student.";
+
+                                    lookupMessage.className =
+                                        "lookup-message error";
+
+                                }
+                            );
+
+                        },
+                        400
+                    );
+
+            }
+        );
+
+
+
+        /* =================================================
+           CHANGE SEARCH TYPE
+           ================================================= */
+
+        searchType.addEventListener(
+            "change",
+            function () {
+
+                searchInput.value =
+                    "";
+
+                resetStudent();
+
+                lookupMessage.textContent =
+                    "";
+
+                updatePlaceholder();
+
+                searchInput.focus();
+
+            }
+        );
+
+
+
+        /* =================================================
+           TERM
+           ================================================= */
+
+        termInput.addEventListener(
+            "change",
+            function () {
+
+                summaryTerm.textContent =
+                    this.value ||
+                    "Select term";
+
+            }
+        );
+
+
+
+        /* =================================================
+           PAYMENT METHOD
+           ================================================= */
+
+        methodInput.addEventListener(
+            "change",
+            function () {
+
+                summaryMethod.textContent =
+                    this.value ||
+                    "Select method";
+
+            }
+        );
+
+
+
+        /* =================================================
+           AMOUNT
+           ================================================= */
+
+        amountInput.addEventListener(
+            "input",
+            function () {
+
+                const amount =
+                    Number(
+                        this.value || 0
+                    );
+
+                summaryAmount.textContent =
+                    formatMoney(
+                        amount
+                    );
+
+                summaryTotal.textContent =
+                    formatMoney(
+                        amount
+                    );
+
+            }
+        );
+
+
+
+        /* =================================================
+           INITIAL PLACEHOLDER
+           ================================================= */
+
+        updatePlaceholder();
+
+    }
+
+);
+
+</script>
 
 {% endblock %}
