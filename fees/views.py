@@ -73,33 +73,235 @@ def settings_view(request):
 
 def students(request):
 
-    students = Student.objects.all().order_by("-date_registered")
+    students = Student.objects.all().order_by(
+        "-date_registered"
+    )
 
-    # Attach the matching fee structure to every student
+    # =====================================================
+    # SEARCH
+    # =====================================================
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    if search:
+
+        students = students.filter(
+            models.Q(
+                first_name__icontains=search
+            )
+            |
+            models.Q(
+                last_name__icontains=search
+            )
+            |
+            models.Q(
+                student_id__icontains=search
+            )
+            |
+            models.Q(
+                registration_number__icontains=search
+            )
+        )
+
+
+    # =====================================================
+    # CLASS FILTER
+    # =====================================================
+
+    selected_class = request.GET.get(
+        "class",
+        ""
+    ).strip()
+
+    if selected_class:
+
+        students = students.filter(
+            student_class=selected_class
+        )
+
+
+    # =====================================================
+    # STATUS FILTER
+    # =====================================================
+
+    selected_status = request.GET.get(
+        "status",
+        ""
+    ).strip()
+
+    if selected_status:
+
+        students = students.filter(
+            status=selected_status
+        )
+
+
+    # =====================================================
+    # GENDER FILTER
+    # =====================================================
+
+    selected_gender = request.GET.get(
+        "gender",
+        ""
+    ).strip()
+
+    if selected_gender:
+
+        students = students.filter(
+            gender=selected_gender
+        )
+
+
+    # =====================================================
+    # CALCULATE FEES FOR EACH STUDENT
+    # =====================================================
+
     for student in students:
 
+        # Find matching fee structure
         student.fee_structure = FeeStructure.objects.filter(
             student_class=student.student_class,
             academic_year=student.academic_year
         ).first()
+
+
+        # -----------------------------------------------
+        # TOTAL FEE
+        # -----------------------------------------------
+
+        if student.fee_structure:
+
+            student.total_fee = (
+                student.fee_structure.total_fee
+            )
+
+        else:
+
+            student.total_fee = 0
+
+
+        # -----------------------------------------------
+        # TOTAL PAID
+        # -----------------------------------------------
+
+        student.total_paid = Payment.objects.filter(
+            student=student,
+            academic_year=student.academic_year
+        ).aggregate(
+            total=models.Sum("amount")
+        )["total"] or 0
+
+
+        # -----------------------------------------------
+        # BALANCE
+        # -----------------------------------------------
+
+        student.calculated_balance = (
+            student.total_fee - student.total_paid
+        )
+
+
+        # -----------------------------------------------
+        # FEE STATUS
+        # -----------------------------------------------
+
+        if student.total_fee <= 0:
+
+            student.calculated_fee_status = "Pending"
+
+        elif student.total_paid >= student.total_fee:
+
+            student.calculated_fee_status = "Paid"
+
+        else:
+
+            student.calculated_fee_status = "Pending"
+
+
+    # =====================================================
+    # CLASS OPTIONS
+    # =====================================================
+
+    classes = Student.objects.values_list(
+        "student_class",
+        flat=True
+    ).distinct().order_by(
+        "student_class"
+    )
+
+
+    # =====================================================
+    # STATISTICS
+    # =====================================================
+
+    all_students = Student.objects.all()
+
+    total_students = all_students.count()
+
+    active_students = all_students.filter(
+        status="Active"
+    ).count()
+
+    inactive_students = all_students.filter(
+        status="Inactive"
+    ).count()
+
+
+    # Get current academic year from School Settings
+    school_settings = SchoolSettings.objects.first()
+
+    if school_settings:
+
+        current_academic_year = (
+            school_settings.academic_year
+        )
+
+    else:
+
+        current_academic_year = "2026/2027"
+
+
+    new_admissions = all_students.filter(
+        academic_year=current_academic_year
+    ).count()
+
+
+    # =====================================================
+    # RETURN PAGE
+    # =====================================================
 
     return render(
         request,
         "fees/students.html",
         {
             "students": students,
-            "total_students": students.count(),
-            "active_students": students.filter(
-                status="Active"
-            ).count(),
-            "inactive_students": students.filter(
-                status="Inactive"
-            ).count(),
-            "new_admissions": students.filter(
-                academic_year="2026/2027"
-            ).count(),
+
+            "total_students": total_students,
+
+            "active_students": active_students,
+
+            "inactive_students": inactive_students,
+
+            "new_admissions": new_admissions,
+
+            "classes": classes,
+
+            "search": search,
+
+            "selected_class": selected_class,
+
+            "selected_status": selected_status,
+
+            "selected_gender": selected_gender,
         }
     )
+
+# =========================================================
+# STUDENT PROFILE
+# =========================================================
 
 # =========================================================
 # STUDENT PROFILE
@@ -112,22 +314,107 @@ def student_profile(request, student_id):
         id=student_id
     )
 
-    # Find the fee structure for this student's
-    # class and academic year.
+    # =====================================================
+    # FEE STRUCTURE
+    # =====================================================
+
     fee_structure = FeeStructure.objects.filter(
         student_class=student.student_class,
         academic_year=student.academic_year
     ).first()
+
+
+    # =====================================================
+    # TOTAL FEE
+    # =====================================================
+
+    if fee_structure:
+
+        total_fee = fee_structure.total_fee
+
+    else:
+
+        total_fee = 0
+
+
+    # =====================================================
+    # PAYMENT HISTORY
+    # =====================================================
+
+    payments = Payment.objects.filter(
+        student=student,
+        academic_year=student.academic_year
+    ).order_by(
+        "-payment_date",
+        "-id"
+    )
+
+
+    # =====================================================
+    # TOTAL PAID
+    # =====================================================
+
+    total_paid = payments.aggregate(
+        total=models.Sum("amount")
+    )["total"] or 0
+
+
+    # =====================================================
+    # BALANCE
+    # =====================================================
+
+    balance = total_fee - total_paid
+
+
+    # =====================================================
+    # FEE STATUS
+    # =====================================================
+
+    if total_fee <= 0:
+
+        fee_status = "Pending"
+
+    elif total_paid >= total_fee:
+
+        fee_status = "Paid"
+
+    else:
+
+        fee_status = "Pending"
+
+
+    # =====================================================
+    # PAYMENT COUNT
+    # =====================================================
+
+    payment_count = payments.count()
+
+
+    # =====================================================
+    # RETURN PROFILE
+    # =====================================================
 
     return render(
         request,
         "fees/student_profile.html",
         {
             "student": student,
-            "fee_structure": fee_structure
+
+            "fee_structure": fee_structure,
+
+            "payments": payments,
+
+            "total_fee": total_fee,
+
+            "total_paid": total_paid,
+
+            "balance": balance,
+
+            "fee_status": fee_status,
+
+            "payment_count": payment_count,
         }
     )
-
 
 # =========================================================
 # EDIT STUDENT
@@ -336,9 +623,197 @@ def add_student(request):
 # =========================================================
 
 def payments(request):
+
+    payments = Payment.objects.select_related(
+        "student"
+    ).all().order_by(
+        "-payment_date",
+        "-id"
+    )
+
+    # ==========================================
+    # SEARCH
+    # ==========================================
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    if search:
+
+        payments = payments.filter(
+
+            models.Q(
+                student__student_id__icontains=search
+            )
+
+            |
+
+            models.Q(
+                student__first_name__icontains=search
+            )
+
+            |
+
+            models.Q(
+                student__last_name__icontains=search
+            )
+
+            |
+
+            models.Q(
+                receipt_number__icontains=search
+            )
+
+        )
+
+
+    # ==========================================
+    # CLASS FILTER
+    # ==========================================
+
+    student_class = request.GET.get(
+        "student_class",
+        ""
+    ).strip()
+
+    if student_class:
+
+        payments = payments.filter(
+            student__student_class=student_class
+        )
+
+
+    # ==========================================
+    # ACADEMIC YEAR FILTER
+    # ==========================================
+
+    academic_year = request.GET.get(
+        "academic_year",
+        ""
+    ).strip()
+
+    if academic_year:
+
+        payments = payments.filter(
+            academic_year=academic_year
+        )
+
+
+    # ==========================================
+    # TERM FILTER
+    # ==========================================
+
+    term = request.GET.get(
+        "term",
+        ""
+    ).strip()
+
+    if term:
+
+        payments = payments.filter(
+            term=term
+        )
+
+
+    # ==========================================
+    # PAYMENT METHOD FILTER
+    # ==========================================
+
+    payment_method = request.GET.get(
+        "payment_method",
+        ""
+    ).strip()
+
+    if payment_method:
+
+        payments = payments.filter(
+            payment_method=payment_method
+        )
+
+
+    # ==========================================
+    # STATISTICS
+    # ==========================================
+
+    total_payments = payments.count()
+
+    total_collected = payments.aggregate(
+        total=models.Sum("amount")
+    )["total"] or 0
+
+
+    today = timezone.localdate()
+
+    today_payments = payments.filter(
+        payment_date=today
+    )
+
+    today_collected = today_payments.aggregate(
+        total=models.Sum("amount")
+    )["total"] or 0
+
+
+    # ==========================================
+    # FILTER OPTIONS
+    # ==========================================
+
+    classes = Student.objects.values_list(
+        "student_class",
+        flat=True
+    ).distinct().order_by(
+        "student_class"
+    )
+
+
+    academic_years = Payment.objects.values_list(
+        "academic_year",
+        flat=True
+    ).distinct().order_by(
+        "-academic_year"
+    )
+
+
+    payment_methods = [
+        "Cash",
+        "Bank Transfer",
+        "Mobile Money",
+        "Cheque",
+        "Card",
+    ]
+
+
     return render(
         request,
-        "fees/payments.html"
+        "fees/payments.html",
+        {
+            "payments": payments,
+
+            "total_payments": total_payments,
+
+            "total_collected": total_collected,
+
+            "today_payments": today_payments.count(),
+
+            "today_collected": today_collected,
+
+            "classes": classes,
+
+            "academic_years": academic_years,
+
+            "payment_methods": payment_methods,
+
+            "search": search,
+
+            "selected_class": student_class,
+
+            "selected_academic_year": academic_year,
+
+            "selected_term": term,
+
+            "selected_payment_method": payment_method,
+        }
     )
 
 

@@ -1,12 +1,8 @@
-
 {% extends "fees/base.html" %}
 {% load static %}
+{% load humanize %}
 
-{% block title %}Student Profile - Smart Fee{% endblock %}
-
-{% block breadcrumb %}
-Student Profile
-{% endblock %}
+{% block title %}Student Profile{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/student_profile.css' %}">
@@ -16,22 +12,49 @@ Student Profile
 
 <div class="student-profile-page">
 
-    <!-- PAGE HEADER -->
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
     <div class="profile-page-header">
 
         <div>
-            <h1>Student Profile</h1>
+
+            <a
+                href="{% url 'students' %}"
+                class="back-link"
+            >
+                <i class="fa-solid fa-arrow-left"></i>
+                Back to Students
+            </a>
+
+            <h1>
+                Student Profile
+            </h1>
 
             <p>
-                View student information, fee details and payment history.
+                View student information, fees and payment history.
             </p>
+
         </div>
+
 
         <div class="profile-header-actions">
 
-            <a href="{% url 'students' %}" class="back-button">
-                <i class="fa-solid fa-arrow-left"></i>
-                <span>Back to Students</span>
+            <a
+                href="{% url 'edit_student' student.id %}"
+                class="profile-edit-btn"
+            >
+                <i class="fa-solid fa-pen"></i>
+                Edit Student
+            </a>
+
+            <a
+                href="{% url 'record_payment' %}"
+                class="profile-payment-btn"
+            >
+                <i class="fa-solid fa-plus"></i>
+                Record Payment
             </a>
 
         </div>
@@ -39,78 +62,95 @@ Student Profile
     </div>
 
 
-    <!-- STUDENT HERO CARD -->
-    <section class="student-hero-card">
+    <!-- =====================================================
+         STUDENT OVERVIEW
+    ====================================================== -->
 
-        <div class="student-hero-left">
+    <div class="student-overview-card">
 
-            <div class="student-photo">
+        <div class="student-main-info">
+
+            <div class="large-student-photo">
 
                 {% if student.photo %}
+
                     <img
                         src="{{ student.photo.url }}"
                         alt="{{ student.first_name }} {{ student.last_name }}"
                     >
+
                 {% else %}
-                    <div class="default-student-photo">
+
+                    <div class="profile-default-photo">
                         <i class="fa-solid fa-user"></i>
                     </div>
+
                 {% endif %}
 
             </div>
 
 
-            <div class="student-hero-details">
+            <div class="student-main-details">
 
-                <div class="student-status-row">
+                <div class="student-name-row">
 
-                    <span class="status-badge
-                        {% if student.status == 'Active' %}
-                            active
-                        {% else %}
-                            inactive
-                        {% endif %}
-                    ">
-                        <span class="status-dot"></span>
-                        {{ student.status }}
-                    </span>
+                    <h2>
+                        {{ student.first_name }}
+                        {{ student.last_name }}
+                    </h2>
 
-                    <span class="academic-badge">
-                        {{ student.academic_year }}
-                    </span>
+                    {% if student.status == "Active" %}
+
+                        <span class="status-badge active">
+                            <i class="fa-solid fa-circle"></i>
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-badge inactive">
+                            <i class="fa-solid fa-circle"></i>
+                            Inactive
+                        </span>
+
+                    {% endif %}
 
                 </div>
 
 
-                <h2>
-                    {{ student.first_name }} {{ student.last_name }}
-                </h2>
-
-
-                <p class="student-id">
-                    <i class="fa-solid fa-id-card"></i>
+                <p class="student-id-display">
                     Student ID:
                     <strong>{{ student.student_id }}</strong>
                 </p>
 
 
-                <div class="hero-meta">
+                <div class="student-quick-info">
 
                     <div>
-                        <span>Class</span>
-                        <strong>{{ student.student_class }}</strong>
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>
+                            {{ student.student_class }}
+
+                            {% if student.stream %}
+                                — {{ student.stream }}
+                            {% endif %}
+                        </span>
                     </div>
 
-                    <div>
-                        <span>Stream</span>
-                        <strong>
-                            {{ student.stream|default:"Not assigned" }}
-                        </strong>
-                    </div>
 
                     <div>
-                        <span>Gender</span>
-                        <strong>{{ student.gender }}</strong>
+                        <i class="fa-solid fa-calendar"></i>
+                        <span>
+                            {{ student.academic_year }}
+                        </span>
+                    </div>
+
+
+                    <div>
+                        <i class="fa-solid fa-venus-mars"></i>
+                        <span>
+                            {{ student.gender }}
+                        </span>
                     </div>
 
                 </div>
@@ -120,642 +160,676 @@ Student Profile
         </div>
 
 
-        <div class="student-hero-right">
+        <!-- REGISTRATION -->
+        <div class="registration-info">
 
-            <div class="registration-info">
+            <span>
+                Registration Number
+            </span>
 
-                <span>Registration Number</span>
+            <strong>
+                {% if student.registration_number %}
+                    {{ student.registration_number }}
+                {% else %}
+                    —
+                {% endif %}
+            </strong>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FEE SUMMARY
+    ====================================================== -->
+
+    <div class="section-heading">
+
+        <div>
+            <i class="fa-solid fa-wallet"></i>
+
+            <div>
+                <h3>
+                    Fee Summary
+                </h3>
+
+                <span>
+                    Current fee position for this student
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="fee-summary-grid">
+
+        <!-- TOTAL FEE -->
+
+        <div class="fee-summary-card blue">
+
+            <div class="fee-summary-icon">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+            </div>
+
+            <div>
+                <span>
+                    Total Fee
+                </span>
 
                 <strong>
-                    {{ student.registration_number|default:"Not assigned" }}
+                    GH₵ {{ total_fee|floatformat:2|intcomma }}
                 </strong>
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL PAID -->
+
+        <div class="fee-summary-card green">
+
+            <div class="fee-summary-icon">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+                <span>
+                    Total Paid
+                </span>
+
+                <strong>
+                    GH₵ {{ total_paid|floatformat:2|intcomma }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- BALANCE -->
+
+        <div class="fee-summary-card orange">
+
+            <div class="fee-summary-icon">
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+
+            <div>
+                <span>
+                    Current Balance
+                </span>
+
+                <strong>
+                    GH₵ {{ balance|floatformat:2|intcomma }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- PAYMENT COUNT -->
+
+        <div class="fee-summary-card purple">
+
+            <div class="fee-summary-icon">
+                <i class="fa-solid fa-receipt"></i>
+            </div>
+
+            <div>
+                <span>
+                    Payments Made
+                </span>
+
+                <strong>
+                    {{ payment_count }}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN PROFILE GRID
+    ====================================================== -->
+
+    <div class="profile-content-grid">
+
+
+        <!-- =================================================
+             PERSONAL INFORMATION
+        ================================================== -->
+
+        <div class="profile-card">
+
+            <div class="profile-card-header">
+
+                <div>
+                    <i class="fa-solid fa-user"></i>
+
+                    <div>
+                        <h3>
+                            Personal Information
+                        </h3>
+
+                        <span>
+                            Student details
+                        </span>
+                    </div>
+                </div>
 
             </div>
 
 
-            <div class="registration-info">
+            <div class="information-grid">
 
-                <span>Registered On</span>
+                <div class="information-item">
 
-                <strong>
-                    {{ student.date_registered|date:"d M Y" }}
-                </strong>
+                    <span>First Name</span>
+
+                    <strong>
+                        {{ student.first_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Last Name</span>
+
+                    <strong>
+                        {{ student.last_name }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Date of Birth</span>
+
+                    <strong>
+                        {% if student.date_of_birth %}
+                            {{ student.date_of_birth|date:"d M Y" }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Gender</span>
+
+                    <strong>
+                        {{ student.gender }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Class</span>
+
+                    <strong>
+                        {{ student.student_class }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Stream</span>
+
+                    <strong>
+                        {% if student.stream %}
+                            {{ student.stream }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Academic Year</span>
+
+                    <strong>
+                        {{ student.academic_year }}
+                    </strong>
+
+                </div>
+
+
+                <div class="information-item">
+
+                    <span>Date Registered</span>
+
+                    <strong>
+                        {{ student.date_registered|date:"d M Y" }}
+                    </strong>
+
+                </div>
 
             </div>
 
         </div>
 
-    </section>
+
+        <!-- =================================================
+             PARENT INFORMATION
+        ================================================== -->
+
+        <div class="profile-card">
+
+            <div class="profile-card-header">
+
+                <div>
+                    <i class="fa-solid fa-users"></i>
+
+                    <div>
+                        <h3>
+                            Parent / Guardian
+                        </h3>
+
+                        <span>
+                            Contact information
+                        </span>
+                    </div>
+                </div>
+
+            </div>
 
 
-    <!-- FEE SUMMARY -->
-    <section class="profile-card fee-summary-card">
+            <div class="guardian-details">
+
+                <div class="guardian-item">
+
+                    <div class="guardian-icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+
+                    <div>
+                        <span>
+                            Parent / Guardian Name
+                        </span>
+
+                        <strong>
+                            {% if student.parent_name %}
+                                {{ student.parent_name }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="guardian-item">
+
+                    <div class="guardian-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+
+                    <div>
+                        <span>
+                            Contact Number
+                        </span>
+
+                        <strong>
+                            {% if student.parent_contact %}
+                                {{ student.parent_contact }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                </div>
+
+
+                <div class="guardian-item">
+
+                    <div class="guardian-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div>
+                        <span>
+                            Address
+                        </span>
+
+                        <strong>
+                            {% if student.address %}
+                                {{ student.address }}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         FEE STRUCTURE
+    ====================================================== -->
+
+    <div class="profile-card fee-structure-card">
 
         <div class="profile-card-header">
 
             <div>
-                <span class="section-kicker">FINANCIAL OVERVIEW</span>
-                <h2>Fee Summary</h2>
-            </div>
+                <i class="fa-solid fa-file-invoice"></i>
 
-            <div class="fee-status-label">
-                <i class="fa-solid fa-circle-info"></i>
-                {{ student.fee_status }}
-            </div>
-
-        </div>
-
-
-        <div class="fee-summary-grid">
-
-            <!-- TOTAL FEES -->
-            <div class="fee-summary-box total-fees">
-
-                <div class="summary-top">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-
-                    <span>Total Fees</span>
-                </div>
-
-                <strong>AED 0.00</strong>
-
-                <small>
-                    Assigned fees
-                </small>
-
-            </div>
-
-
-            <!-- PAID -->
-            <div class="fee-summary-box amount-paid">
-
-                <div class="summary-top">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-
-                    <span>Amount Paid</span>
-                </div>
-
-                <strong>AED 0.00</strong>
-
-                <small>
-                    Payments received
-                </small>
-
-            </div>
-
-
-            <!-- BALANCE -->
-            <div class="fee-summary-box outstanding">
-
-                <div class="summary-top">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-clock"></i>
-                    </div>
-
-                    <span>Outstanding</span>
-                </div>
-
-                <strong>
-                    AED {{ student.balance|floatformat:2 }}
-                </strong>
-
-                <small>
-                    Remaining balance
-                </small>
-
-            </div>
-
-
-            <!-- PROGRESS -->
-            <div class="fee-summary-box payment-progress">
-
-                <div class="summary-top">
-                    <div class="summary-icon">
-                        <i class="fa-solid fa-chart-pie"></i>
-                    </div>
-
-                    <span>Payment Progress</span>
-                </div>
-
-                <strong>0%</strong>
-
-                <div class="progress-bar">
-                    <div class="progress-value" style="width: 0%;"></div>
-                </div>
-
-                <small>
-                    Fee payment progress
-                </small>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- MAIN PROFILE LAYOUT -->
-    <div class="profile-main-layout">
-
-
-        <!-- LEFT COLUMN -->
-        <div class="profile-left-column">
-
-
-            <!-- STUDENT INFORMATION -->
-            <section class="profile-card">
-
-                <div class="profile-card-header">
-
-                    <div>
-                        <span class="section-kicker">PERSONAL DETAILS</span>
-                        <h2>Student Information</h2>
-                    </div>
-
-                </div>
-
-
-                <div class="information-grid">
-
-                    <div class="information-item">
-                        <div class="information-icon blue">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-
-                        <div>
-                            <span>Full Name</span>
-                            <strong>
-                                {{ student.first_name }} {{ student.last_name }}
-                            </strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon purple">
-                            <i class="fa-solid fa-id-card"></i>
-                        </div>
-
-                        <div>
-                            <span>Student ID</span>
-                            <strong>{{ student.student_id }}</strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon orange">
-                            <i class="fa-regular fa-calendar"></i>
-                        </div>
-
-                        <div>
-                            <span>Date of Birth</span>
-                            <strong>
-                                {% if student.date_of_birth %}
-                                    {{ student.date_of_birth|date:"d M Y" }}
-                                {% else %}
-                                    Not provided
-                                {% endif %}
-                            </strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon green">
-                            <i class="fa-solid fa-venus-mars"></i>
-                        </div>
-
-                        <div>
-                            <span>Gender</span>
-                            <strong>{{ student.gender }}</strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon blue">
-                            <i class="fa-solid fa-school"></i>
-                        </div>
-
-                        <div>
-                            <span>Class</span>
-                            <strong>{{ student.student_class }}</strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon purple">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                        </div>
-
-                        <div>
-                            <span>Stream</span>
-                            <strong>
-                                {{ student.stream|default:"Not assigned" }}
-                            </strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon orange">
-                            <i class="fa-solid fa-calendar-days"></i>
-                        </div>
-
-                        <div>
-                            <span>Academic Year</span>
-                            <strong>{{ student.academic_year }}</strong>
-                        </div>
-                    </div>
-
-
-                    <div class="information-item">
-                        <div class="information-icon green">
-                            <i class="fa-solid fa-calendar-plus"></i>
-                        </div>
-
-                        <div>
-                            <span>Date Registered</span>
-                            <strong>
-                                {{ student.date_registered|date:"d M Y" }}
-                            </strong>
-                        </div>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- FEE DETAILS -->
-            <section class="profile-card">
-
-                <div class="profile-card-header">
-
-                    <div>
-                        <span class="section-kicker">FEES</span>
-                        <h2>Fee Details</h2>
-                    </div>
-
-                    <a href="{% url 'fees_structure' %}" class="small-header-button">
-                        <i class="fa-solid fa-list"></i>
+                <div>
+                    <h3>
                         Fee Structure
-                    </a>
+                    </h3>
 
+                    <span>
+                        Fees assigned to {{ student.student_class }}
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+
+        {% if fee_structure %}
+
+            <div class="fee-breakdown">
+
+                <div class="fee-line">
+                    <span>Registration Fee</span>
+                    <strong>
+                        GH₵ {{ fee_structure.registration_fee|floatformat:2|intcomma }}
+                    </strong>
                 </div>
 
 
-                <div class="fee-table-wrapper">
+                <div class="fee-line">
+                    <span>Tuition Fee</span>
+                    <strong>
+                        GH₵ {{ fee_structure.tuition_fee|floatformat:2|intcomma }}
+                    </strong>
+                </div>
 
-                    <table class="fee-table">
 
-                        <thead>
+                <div class="fee-line">
+                    <span>Examination Fee</span>
+                    <strong>
+                        GH₵ {{ fee_structure.examination_fee|floatformat:2|intcomma }}
+                    </strong>
+                </div>
+
+
+                <div class="fee-line">
+                    <span>Library Fee</span>
+                    <strong>
+                        GH₵ {{ fee_structure.library_fee|floatformat:2|intcomma }}
+                    </strong>
+                </div>
+
+
+                <div class="fee-line">
+                    <span>Activity Fee</span>
+                    <strong>
+                        GH₵ {{ fee_structure.activity_fee|floatformat:2|intcomma }}
+                    </strong>
+                </div>
+
+
+                <div class="fee-line total">
+
+                    <span>
+                        Total Fee
+                    </span>
+
+                    <strong>
+                        GH₵ {{ total_fee|floatformat:2|intcomma }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="no-fee-structure">
+
+                <i class="fa-solid fa-file-circle-xmark"></i>
+
+                <h3>
+                    No Fee Structure Assigned
+                </h3>
+
+                <p>
+                    There is currently no fee structure matching this student's class and academic year.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         PAYMENT HISTORY
+    ====================================================== -->
+
+    <div class="profile-card payment-history-card">
+
+        <div class="profile-card-header payment-history-header">
+
+            <div>
+                <i class="fa-solid fa-clock-rotate-left"></i>
+
+                <div>
+                    <h3>
+                        Payment History
+                    </h3>
+
+                    <span>
+                        All payments made by this student
+                    </span>
+                </div>
+            </div>
+
+
+            <a
+                href="{% url 'record_payment' %}"
+                class="small-payment-btn"
+            >
+                <i class="fa-solid fa-plus"></i>
+                New Payment
+            </a>
+
+        </div>
+
+
+        {% if payments %}
+
+            <div class="payment-history-table-wrapper">
+
+                <table class="payment-history-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Receipt Number</th>
+
+                            <th>Date</th>
+
+                            <th>Academic Year</th>
+
+                            <th>Term</th>
+
+                            <th>Amount</th>
+
+                            <th>Payment Method</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for payment in payments %}
+
                             <tr>
-                                <th>Description</th>
-                                <th>Term</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+
+                                <td>
+                                    {{ forloop.counter }}
+                                </td>
 
 
-                        <tbody>
+                                <td>
 
-                            <tr>
+                                    <span class="profile-receipt">
+                                        {{ payment.receipt_number|default:"—" }}
+                                    </span>
 
-                                <td colspan="5" class="empty-fee-state">
+                                </td>
 
-                                    <div class="empty-fee-icon">
-                                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                                    </div>
 
-                                    <strong>No fee records yet</strong>
+                                <td>
+                                    {{ payment.payment_date|date:"d M Y" }}
+                                </td>
 
-                                    <span>
-                                        Fee assignments will appear here.
+
+                                <td>
+                                    {{ payment.academic_year }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="profile-term">
+                                        {{ payment.term }}
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong class="history-amount">
+                                        GH₵ {{ payment.amount|floatformat:2|intcomma }}
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="profile-method">
+                                        {{ payment.payment_method }}
                                     </span>
 
                                 </td>
 
                             </tr>
 
+                        {% endfor %}
 
-                            <tr class="total-row">
+                    </tbody>
 
-                                <td colspan="2">
-                                    Total
-                                </td>
+                </table>
 
-                                <td>
-                                    AED 0.00
-                                </td>
+            </div>
 
-                                <td></td>
+        {% else %}
 
-                                <td></td>
+            <div class="no-payments">
 
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
+                <div class="no-payments-icon">
+                    <i class="fa-solid fa-receipt"></i>
                 </div>
 
-            </section>
-
-
-            <!-- ADDITIONAL INFORMATION -->
-            <section class="profile-card">
-
-                <div class="profile-card-header">
-
-                    <div>
-                        <span class="section-kicker">NOTES</span>
-                        <h2>Additional Information</h2>
-                    </div>
-
-                </div>
-
-
-                <div class="additional-information">
-
-                    {% if student.additional_information %}
-
-                        <p>
-                            {{ student.additional_information }}
-                        </p>
-
-                    {% else %}
-
-                        <div class="empty-information">
-
-                            <i class="fa-regular fa-note-sticky"></i>
-
-                            <span>
-                                No additional information has been added
-                                for this student.
-                            </span>
-
-                        </div>
-
-                    {% endif %}
-
-                </div>
-
-            </section>
-
-        </div>
-
-
-        <!-- RIGHT COLUMN -->
-        <div class="profile-right-column">
-
-
-            <!-- QUICK ACTIONS -->
-            <section class="profile-card">
-
-                <div class="profile-card-header">
-
-                    <div>
-                        <span class="section-kicker">ACTIONS</span>
-                        <h2>Quick Actions</h2>
-                    </div>
-
-                </div>
-
-
-                <div class="quick-actions">
-
-                    <a href="{% url 'record_payment' %}"
-                       class="quick-action blue-action">
-
-                        <div class="quick-action-icon">
-                            <i class="fa-solid fa-credit-card"></i>
-                        </div>
-
-                        <div>
-                            <strong>Record Payment</strong>
-                            <span>Add a new student payment</span>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-right arrow"></i>
-
-                    </a>
-
-
-                    <a href="{% url 'fees_structure' %}"
-                       class="quick-action green-action">
-
-                        <div class="quick-action-icon">
-                            <i class="fa-solid fa-file-invoice"></i>
-                        </div>
-
-                        <div>
-                            <strong>Fee Structure</strong>
-                            <span>View school fee structure</span>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-right arrow"></i>
-
-                    </a>
-
-
-                    <a href="{% url 'payments' %}"
-                       class="quick-action purple-action">
-
-                        <div class="quick-action-icon">
-                            <i class="fa-solid fa-clock-rotate-left"></i>
-                        </div>
-
-                        <div>
-                            <strong>Payment History</strong>
-                            <span>View previous payments</span>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-right arrow"></i>
-
-                    </a>
-
-
-                    <a href="#"
-                       class="quick-action orange-action">
-
-                        <div class="quick-action-icon">
-                            <i class="fa-solid fa-user-pen"></i>
-                        </div>
-
-                        <div>
-                            <strong>Update Profile</strong>
-                            <span>Edit student information</span>
-                        </div>
-
-                        <i class="fa-solid fa-chevron-right arrow"></i>
-
-                    </a>
-
-                </div>
-
-            </section>
-
-
-            <!-- PARENT / GUARDIAN -->
-            <section class="profile-card">
-
-                <div class="profile-card-header">
-
-                    <div>
-                        <span class="section-kicker">CONTACT</span>
-                        <h2>Parent / Guardian</h2>
-                    </div>
-
-                </div>
-
-
-                <div class="guardian-card">
-
-                    <div class="guardian-icon">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-
-
-                    <div class="guardian-details">
-
-                        <span>Name</span>
-
-                        <strong>
-                            {{ student.parent_name|default:"Not provided" }}
-                        </strong>
-
-
-                        <span>Contact</span>
-
-                        <strong>
-                            {{ student.parent_contact|default:"No contact provided" }}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                {% if student.address %}
-
-                    <div class="address-box">
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                        <div>
-                            <span>Address</span>
-                            <strong>{{ student.address }}</strong>
-                        </div>
-
-                    </div>
-
-                {% endif %}
-
-            </section>
-
-
-            <!-- STATUS -->
-            <section class="status-card">
-
-                <div class="status-card-header">
-
-                    <div class="status-card-icon">
-                        <i class="fa-solid fa-shield-check"></i>
-                    </div>
-
-                    <div>
-                        <span>ACCOUNT STATUS</span>
-                        <h2>{{ student.status }}</h2>
-                    </div>
-
-                </div>
-
-
-                <div class="status-lines">
-
-                    <div>
-                        <span>Student Status</span>
-
-                        <strong>
-                            {{ student.status }}
-                        </strong>
-                    </div>
-
-
-                    <div>
-                        <span>Fee Status</span>
-
-                        <strong>
-                            {{ student.fee_status }}
-                        </strong>
-                    </div>
-
-
-                    <div>
-                        <span>Registered</span>
-
-                        <strong>
-                            {{ student.date_registered|date:"d M Y" }}
-                        </strong>
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- RECENT PAYMENTS -->
-            <section class="profile-card">
-
-                <div class="profile-card-header payment-header">
-
-                    <div>
-                        <span class="section-kicker">TRANSACTIONS</span>
-                        <h2>Recent Payments</h2>
-                    </div>
-
-                    <a href="{% url 'payments' %}" class="view-all">
-                        View All
-                    </a>
-
-                </div>
-
-
-                <div class="recent-payments">
-
-                    <div class="empty-payment-state">
-
-                        <div class="empty-payment-icon">
-                            <i class="fa-solid fa-receipt"></i>
-                        </div>
-
-                        <strong>No payments yet</strong>
-
-                        <span>
-                            Student payments will appear here.
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-        </div>
+                <h3>
+                    No Payments Yet
+                </h3>
+
+                <p>
+                    No payment has been recorded for this student.
+                </p>
+
+                <a
+                    href="{% url 'record_payment' %}"
+                    class="profile-payment-btn"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                    Record Payment
+                </a>
+
+            </div>
+
+        {% endif %}
 
     </div>
+
+
+    <!-- =====================================================
+         ADDITIONAL INFORMATION
+    ====================================================== -->
+
+    {% if student.additional_information %}
+
+        <div class="profile-card additional-info-card">
+
+            <div class="profile-card-header">
+
+                <div>
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    <div>
+                        <h3>
+                            Additional Information
+                        </h3>
+
+                        <span>
+                            Other information about the student
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="additional-information">
+
+                {{ student.additional_information|linebreaksbr }}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
 
 </div>
 
 {% endblock %}
-

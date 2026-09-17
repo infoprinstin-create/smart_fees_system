@@ -133,13 +133,18 @@
                     All Classes
                 </option>
 
-                {% for class in classes %}
+                {% for class_name in classes %}
 
-                    <option value="{{ class.id }}">
-                        {{ class.name }}
-                    </option>
+    <option
+        value="{{ class_name }}"
+        {% if selected_class == class_name %}
+            selected
+        {% endif %}
+    >
+        {{ class_name }}
+    </option>
 
-                {% endfor %}
+{% endfor %}
 
             </select>
 
@@ -326,46 +331,39 @@
                         </td>
 
 
-                        <!-- FEE STATUS -->
                         <td>
 
-                            {% if student.fee_status == "Paid" %}
+    {% if student.calculated_fee_status == "Paid" %}
 
-                                <span class="fee-badge paid">
-                                    Paid
-                                </span>
+        <span class="fee-badge paid">
+            Paid
+        </span>
 
-                            {% elif student.fee_status == "Pending" %}
+    {% elif student.calculated_fee_status == "Pending" %}
 
-                                <span class="fee-badge pending">
-                                    Pending
-                                </span>
+        <span class="fee-badge pending">
+            Pending
+        </span>
 
-                            {% elif student.fee_status == "Overdue" %}
+    {% else %}
 
-                                <span class="fee-badge overdue">
-                                    Overdue
-                                </span>
+        <span class="fee-badge pending">
+            Pending
+        </span>
 
-                            {% else %}
+    {% endif %}
 
-                                <span class="fee-badge pending">
-                                    Pending
-                                </span>
-
-                            {% endif %}
-
-                        </td>
+</td>
 
 
                         <!-- BALANCE -->
                         <td>
 
-                            <span class="student-balance">
-                                GH₵ {{ student.balance|default:"0.00" }}
-                            </span>
+    <span class="student-balance">
+        GH₵ {{ student.calculated_balance|floatformat:2 }}
+    </span>
 
-                        </td>
+</td>
 
 
                         <!-- ACTIONS -->
