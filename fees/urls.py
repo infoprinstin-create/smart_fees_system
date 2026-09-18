@@ -66,6 +66,18 @@ urlpatterns = [
         name="fees_structure"
     ),
 
+        path(
+        "create-bill/",
+        views.create_bill,
+        name="create_bill"
+    ),
+
+    path(
+    "bill-fee-lookup/",
+    views.bill_fee_lookup,
+    name="bill_fee_lookup"
+    ),
+
     path(
       "fees-structure/add/",
        views.add_fee_structure,

@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.db import models
 from django.utils import timezone
 
-from .models import Student, SchoolSettings, FeeStructure, Payment
+from .models import Student, SchoolSettings, FeeStructure, Payment, Bill
 
 
 def logout_view(request):
@@ -506,6 +506,11 @@ def edit_student(request, student_id):
             "Active"
         )
 
+        student.discount = request.POST.get(
+            "discount",
+            0
+        ) or 0
+
         # Only replace the photo if a new photo was selected.
         if request.FILES.get("student_photo"):
             student.photo = request.FILES.get(
@@ -604,6 +609,11 @@ def add_student(request):
             additional_information=request.POST.get(
                 "additional_information"
             ),
+
+            discount=request.POST.get(
+                "discount",
+                0
+            ) or 0,
 
             photo=request.FILES.get(
                 "student_photo"
@@ -1128,10 +1138,19 @@ def add_fee_structure(request):
     if request.method == "POST":
 
         FeeStructure.objects.create(
-            student_class=request.POST.get("student_class", "").strip(),
+            student_class=request.POST.get(
+                "student_class",
+                ""
+            ).strip(),
+
             academic_year=request.POST.get(
                 "academic_year",
                 "2026/2027"
+            ).strip(),
+
+            term=request.POST.get(
+                "term",
+                "First Term"
             ).strip(),
 
             registration_fee=request.POST.get(
@@ -1166,7 +1185,6 @@ def add_fee_structure(request):
         request,
         "fees/add_fee_structure.html"
     )
-
 
 # =========================================================
 # REPORTS
@@ -1290,3 +1308,142 @@ def record_payment(request):
         request,
         "fees/record_payment.html"
     )
+
+# =========================================================
+# CREATE BILL
+# =========================================================
+
+def create_bill(request):
+
+    return render(
+        request,
+        "fees/create_bill.html"
+    )
+
+# =========================================================
+# BILL FEE LOOKUP
+# =========================================================
+
+def bill_fee_lookup(request):
+
+    student_id = request.GET.get("student_id")
+    academic_year = request.GET.get("academic_year")
+    term = request.GET.get("term")
+
+    if not student_id:
+        return JsonResponse({
+            "success": False,
+            "message": "Student not selected."
+        })
+
+    if not academic_year:
+        return JsonResponse({
+            "success": False,
+            "message": "Academic year not selected."
+        })
+
+    if not term:
+        return JsonResponse({
+            "success": False,
+            "message": "Term not selected."
+        })
+
+    try:
+        student = Student.objects.get(id=student_id)
+    except Student.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Student not found."
+        })
+
+    try:
+        fee_structure = FeeStructure.objects.get(
+            student_class=student.student_class,
+            academic_year=academic_year,
+            term=term
+        )
+    except FeeStructure.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "No fee structure has been created for "
+                f"{student.student_class}, {academic_year}, {term}."
+            )
+        })
+
+    # Original term fee
+    original_total = fee_structure.total_fee
+
+    # Current student discount
+    discount_percent = student.discount or 0
+
+    # Calculate discount
+    discount_amount = (
+        original_total * discount_percent / 100
+    )
+
+    # Final amount required
+    amount_due = original_total - discount_amount
+
+    # Payments made for THIS student, academic year and term
+    total_paid = Payment.objects.filter(
+        student=student,
+        academic_year=academic_year,
+        term=term
+    ).aggregate(
+        total=models.Sum("amount")
+    )["total"] or 0
+
+    # Amount still owed
+    amount_owed = amount_due - total_paid
+
+    # Prevent negative balance
+    if amount_owed < 0:
+        amount_owed = 0
+
+    return JsonResponse({
+        "success": True,
+
+        "student": {
+            "id": student.id,
+            "name": f"{student.first_name} {student.last_name}",
+            "student_id": student.student_id,
+            "class": student.student_class,
+        },
+
+        "fees": {
+            "registration_fee": str(
+                fee_structure.registration_fee
+            ),
+            "tuition_fee": str(
+                fee_structure.tuition_fee
+            ),
+            "examination_fee": str(
+                fee_structure.examination_fee
+            ),
+            "library_fee": str(
+                fee_structure.library_fee
+            ),
+            "activity_fee": str(
+                fee_structure.activity_fee
+            ),
+            "original_total": str(
+                original_total
+            ),
+            "discount_percent": str(
+                discount_percent
+            ),
+            "discount_amount": str(
+                discount_amount
+            ),
+            "amount_due": str(
+                amount_due
+            ),
+            "total_paid": str(
+                total_paid
+            ),
+            "amount_owed": str(
+                amount_owed
+            ),
+        }
+    })

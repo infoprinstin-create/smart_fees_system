@@ -1,10 +1,9 @@
+
 /* =========================================================
    ADD FEE STRUCTURE PAGE
-
    Blue Theme
    Light Mode + Dark Mode
    Desktop + Tablet + Mobile
-
    ========================================================= */
 
 
@@ -16,12 +15,11 @@
 
     width: 100%;
     max-width: 1200px;
-
     margin: 0 auto;
-
     padding: 30px;
 
     color: var(--text-color, #1f2937);
+
 }
 
 
@@ -36,8 +34,8 @@
     justify-content: space-between;
 
     gap: 25px;
-
     margin-bottom: 28px;
+
 }
 
 
@@ -51,6 +49,7 @@
     letter-spacing: -0.5px;
 
     color: var(--text-color, #111827);
+
 }
 
 
@@ -61,6 +60,7 @@
     font-size: 14px;
 
     color: var(--muted-text, #6b7280);
+
 }
 
 
@@ -72,6 +72,7 @@
 
     display: flex;
     align-items: center;
+
 }
 
 
@@ -108,6 +109,7 @@
         transform 0.2s ease,
         box-shadow 0.2s ease,
         filter 0.2s ease;
+
 }
 
 
@@ -119,12 +121,14 @@
 
     box-shadow:
         0 10px 24px rgba(37, 99, 235, 0.35);
+
 }
 
 
 .fee-structure-page .btn-add-fee i {
 
     font-size: 13px;
+
 }
 
 
@@ -136,25 +140,22 @@
 
     background: var(--card-bg, #ffffff);
 
-    border: 1px solid var(--border-color, #e5e7eb);
+    border:
+        1px solid var(--border-color, #e5e7eb);
 
     border-radius: 18px;
 
     padding: 30px;
 
     box-shadow:
-
         0 10px 30px rgba(15, 23, 42, 0.07),
-
         0 2px 6px rgba(15, 23, 42, 0.03);
 
     transition:
-
         background 0.3s ease,
-
         border-color 0.3s ease,
-
         box-shadow 0.3s ease;
+
 }
 
 
@@ -165,7 +166,6 @@
 .fee-structure-page .card-title {
 
     display: flex;
-
     align-items: center;
 
     padding-bottom: 20px;
@@ -174,6 +174,7 @@
 
     border-bottom:
         1px solid var(--border-color, #e5e7eb);
+
 }
 
 
@@ -182,10 +183,10 @@
     margin: 0;
 
     font-size: 19px;
-
     font-weight: 800;
 
     color: var(--text-color, #111827);
+
 }
 
 
@@ -196,11 +197,13 @@
 .fee-structure-page .fee-form {
 
     width: 100%;
+
 }
 
 
 /* =========================================================
-   TWO-COLUMN FORM ROW
+   CLASS / ACADEMIC YEAR / TERM
+   THREE COLUMNS ON DESKTOP
    ========================================================= */
 
 .fee-structure-page .form-row {
@@ -208,11 +211,12 @@
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(3, minmax(0, 1fr));
 
     gap: 22px;
 
     margin-bottom: 22px;
+
 }
 
 
@@ -223,12 +227,14 @@
 .fee-structure-page .form-group {
 
     margin-bottom: 22px;
+
 }
 
 
 .fee-structure-page .form-row .form-group {
 
     margin-bottom: 0;
+
 }
 
 
@@ -239,10 +245,10 @@
     margin-bottom: 8px;
 
     font-size: 13px;
-
     font-weight: 700;
 
     color: var(--text-color, #374151);
+
 }
 
 
@@ -271,16 +277,13 @@
     outline: none;
 
     font-family: inherit;
-
     font-size: 14px;
 
     transition:
-
         border-color 0.2s ease,
-
         box-shadow 0.2s ease,
-
         background 0.2s ease;
+
 }
 
 
@@ -288,6 +291,7 @@
 .fee-structure-page .form-group select:hover {
 
     border-color: #2563eb;
+
 }
 
 
@@ -300,16 +304,18 @@
 
     box-shadow:
         0 0 0 3px rgba(37, 99, 235, 0.12);
+
 }
 
 
 /* =========================================================
-   SELECT ARROW
+   SELECT
    ========================================================= */
 
 .fee-structure-page .form-group select {
 
     cursor: pointer;
+
 }
 
 
@@ -337,18 +343,17 @@
     overflow: hidden;
 
     transition:
-
         border-color 0.2s ease,
-
         box-shadow 0.2s ease,
-
         background 0.2s ease;
+
 }
 
 
 .fee-structure-page .amount-input:hover {
 
     border-color: #2563eb;
+
 }
 
 
@@ -360,6 +365,7 @@
 
     box-shadow:
         0 0 0 3px rgba(37, 99, 235, 0.12);
+
 }
 
 
@@ -386,11 +392,11 @@
     color: #2563eb;
 
     font-size: 18px;
-
     font-weight: 800;
 
     border-right:
         1px solid var(--input-border, #d1d5db);
+
 }
 
 
@@ -403,7 +409,6 @@
     flex: 1;
 
     width: 100%;
-
     height: 100%;
 
     padding: 0 14px;
@@ -419,12 +424,14 @@
     color: var(--text-color, #111827);
 
     box-shadow: none !important;
+
 }
 
 
 .fee-structure-page .amount-input input:focus {
 
     box-shadow: none !important;
+
 }
 
 
@@ -443,6 +450,7 @@ input::-webkit-outer-spin-button {
     -webkit-appearance: none;
 
     margin: 0;
+
 }
 
 
@@ -453,6 +461,7 @@ input[type="number"] {
     appearance: textfield;
 
     -moz-appearance: textfield;
+
 }
 
 
@@ -476,6 +485,7 @@ input[type="number"] {
 
     border-top:
         1px solid var(--border-color, #e5e7eb);
+
 }
 
 
@@ -510,16 +520,13 @@ input[type="number"] {
     text-decoration: none;
 
     font-size: 14px;
-
     font-weight: 700;
 
     transition:
-
         background 0.2s ease,
-
         transform 0.2s ease,
-
         border-color 0.2s ease;
+
 }
 
 
@@ -531,6 +538,7 @@ input[type="number"] {
     border-color: #9ca3af;
 
     transform: translateY(-1px);
+
 }
 
 
@@ -543,7 +551,6 @@ input[type="number"] {
     display: inline-flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 9px;
@@ -571,19 +578,16 @@ input[type="number"] {
     font-family: inherit;
 
     font-size: 14px;
-
     font-weight: 700;
 
     box-shadow:
         0 7px 18px rgba(37, 99, 235, 0.25);
 
     transition:
-
         transform 0.2s ease,
-
         box-shadow 0.2s ease,
-
         filter 0.2s ease;
+
 }
 
 
@@ -595,24 +599,24 @@ input[type="number"] {
 
     box-shadow:
         0 10px 24px rgba(37, 99, 235, 0.35);
+
 }
 
 
 .fee-structure-page .save-btn:active {
 
     transform: translateY(0);
+
 }
 
 
 /* =========================================================
    DARK MODE
-   .dark-mode
    ========================================================= */
 
 .dark-mode .fee-structure-page {
 
     --text-color: #f3f4f6;
-
     --muted-text: #9ca3af;
 
     --card-bg: #171b23;
@@ -626,6 +630,7 @@ input[type="number"] {
     --cancel-bg: #252c37;
 
     --cancel-hover: #303846;
+
 }
 
 
@@ -634,10 +639,9 @@ input[type="number"] {
 .fee-main-card {
 
     box-shadow:
-
         0 15px 40px rgba(0, 0, 0, 0.30),
-
         0 2px 8px rgba(0, 0, 0, 0.20);
+
 }
 
 
@@ -650,6 +654,7 @@ span {
         rgba(37, 99, 235, 0.14);
 
     color: #60a5fa;
+
 }
 
 
@@ -658,6 +663,7 @@ span {
 .cancel-btn {
 
     color: #e5e7eb;
+
 }
 
 
@@ -667,6 +673,7 @@ span {
 input::placeholder {
 
     color: #6b7280;
+
 }
 
 
@@ -677,7 +684,6 @@ input::placeholder {
 [data-theme="dark"] .fee-structure-page {
 
     --text-color: #f3f4f6;
-
     --muted-text: #9ca3af;
 
     --card-bg: #171b23;
@@ -691,6 +697,7 @@ input::placeholder {
     --cancel-bg: #252c37;
 
     --cancel-hover: #303846;
+
 }
 
 
@@ -699,10 +706,9 @@ input::placeholder {
 .fee-main-card {
 
     box-shadow:
-
         0 15px 40px rgba(0, 0, 0, 0.30),
-
         0 2px 8px rgba(0, 0, 0, 0.20);
+
 }
 
 
@@ -715,6 +721,7 @@ span {
         rgba(37, 99, 235, 0.14);
 
     color: #60a5fa;
+
 }
 
 
@@ -727,6 +734,7 @@ span {
     .fee-structure-page {
 
         padding: 24px 20px;
+
     }
 
 
@@ -735,6 +743,7 @@ span {
     h1 {
 
         font-size: 27px;
+
     }
 
 
@@ -742,7 +751,20 @@ span {
     .fee-main-card {
 
         padding: 25px;
+
     }
+
+
+    /* Two columns on tablet */
+
+    .fee-structure-page
+    .form-row {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+    }
+
 }
 
 
@@ -755,6 +777,7 @@ span {
     .fee-structure-page {
 
         padding: 18px 14px;
+
     }
 
 
@@ -770,6 +793,7 @@ span {
         gap: 18px;
 
         margin-bottom: 22px;
+
     }
 
 
@@ -778,6 +802,7 @@ span {
     h1 {
 
         font-size: 24px;
+
     }
 
 
@@ -788,6 +813,7 @@ span {
         font-size: 13px;
 
         line-height: 1.5;
+
     }
 
 
@@ -797,6 +823,7 @@ span {
     .header-actions {
 
         width: 100%;
+
     }
 
 
@@ -804,6 +831,7 @@ span {
     .btn-add-fee {
 
         width: 100%;
+
     }
 
 
@@ -815,6 +843,7 @@ span {
         padding: 20px 16px;
 
         border-radius: 14px;
+
     }
 
 
@@ -826,6 +855,7 @@ span {
         margin-bottom: 20px;
 
         padding-bottom: 16px;
+
     }
 
 
@@ -834,6 +864,7 @@ span {
     h2 {
 
         font-size: 17px;
+
     }
 
 
@@ -847,6 +878,7 @@ span {
         gap: 0;
 
         margin-bottom: 0;
+
     }
 
 
@@ -855,6 +887,7 @@ span {
     .form-group {
 
         margin-bottom: 22px;
+
     }
 
 
@@ -869,6 +902,7 @@ span {
     select {
 
         height: 46px;
+
     }
 
 
@@ -876,6 +910,7 @@ span {
     .amount-input {
 
         height: 46px;
+
     }
 
 
@@ -891,6 +926,7 @@ span {
         margin-top: 25px;
 
         padding-top: 20px;
+
     }
 
 
@@ -903,7 +939,9 @@ span {
         width: 100%;
 
         height: 48px;
+
     }
+
 }
 
 
@@ -916,6 +954,7 @@ span {
     .fee-structure-page {
 
         padding: 15px 10px;
+
     }
 
 
@@ -923,6 +962,7 @@ span {
     .fee-main-card {
 
         padding: 17px 13px;
+
     }
 
 
@@ -931,6 +971,7 @@ span {
     h1 {
 
         font-size: 22px;
+
     }
 
 
@@ -943,5 +984,8 @@ span {
         padding: 0 8px;
 
         font-size: 17px;
+
     }
+
 }
+

@@ -95,6 +95,12 @@ class Student(models.Model):
         default="Pending"
     )
 
+    discount = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
     balance = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -160,13 +166,22 @@ class SchoolSettings(models.Model):
 
 class FeeStructure(models.Model):
 
-    student_class = models.CharField(
-        max_length=100
-    )
+    TERM_CHOICES = [
+        ("First Term", "First Term"),
+        ("Second Term", "Second Term"),
+        ("Third Term", "Third Term"),
+    ]
+
+    student_class = models.CharField(max_length=100)
 
     academic_year = models.CharField(
         max_length=20,
         default="2026/2027"
+    )
+
+    term = models.CharField(
+        max_length=20,
+        choices=TERM_CHOICES
     )
 
     registration_fee = models.DecimalField(
@@ -209,6 +224,7 @@ class FeeStructure(models.Model):
 
     @property
     def total_fee(self):
+
         return (
             self.registration_fee
             + self.tuition_fee
@@ -218,8 +234,12 @@ class FeeStructure(models.Model):
         )
 
     def __str__(self):
-        return f"{self.student_class} - {self.academic_year}"
 
+        return (
+            f"{self.student_class} - "
+            f"{self.academic_year} - "
+            f"{self.term}"
+        )
 
 class Payment(models.Model):
 
@@ -284,4 +304,63 @@ class Payment(models.Model):
             f"{self.student} - "
             f"{self.amount} - "
             f"{self.academic_year}"
+        )
+
+class Bill(models.Model):
+
+    TERM_CHOICES = [
+        ("First Term", "First Term"),
+        ("Second Term", "Second Term"),
+        ("Third Term", "Third Term"),
+    ]
+
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.PROTECT,
+        related_name="bills"
+    )
+
+    academic_year = models.CharField(max_length=20)
+
+    term = models.CharField(
+        max_length=20,
+        choices=TERM_CHOICES
+    )
+    
+    # Original amount before discount
+    base_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    # Discount that was active when this bill was created
+    discount_percent = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    # Actual money removed because of the discount
+    discount_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    # Final amount the student is required to pay
+    amount_due = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.student} - "
+            f"{self.academic_year} - "
+            f"{self.term} - "
+            f"{self.billing_month}"
         )

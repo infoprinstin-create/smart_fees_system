@@ -50,114 +50,147 @@
             {% csrf_token %}
 
 
-            <!-- CLASS & ACADEMIC YEAR -->
-            <div class="form-row">
+            <!-- CLASS, ACADEMIC YEAR & TERM -->
+<div class="form-row">
 
-                <!-- CLASS -->
-                <div class="form-group">
+    <!-- CLASS -->
+    <div class="form-group">
 
-                    <label for="student_class">
-                        Class
-                    </label>
+        <label for="student_class">
+            Class
+        </label>
 
-                    <select
-                        name="student_class"
-                        id="student_class"
-                        required
-                    >
+        <select
+            name="student_class"
+            id="student_class"
+            required
+        >
 
-                        <option value="" selected disabled>
-                            Select Class
-                        </option>
+            <option value="" selected disabled>
+                Select Class
+            </option>
 
-                        <option value="Playgroup">
-                            Playgroup
-                        </option>
+            <option value="Playgroup">
+                Playgroup
+            </option>
 
-                        <option value="KG">
-                            KG
-                        </option>
+            <option value="KG">
+                KG
+            </option>
 
-                        <option value="Primary 1">
-                            Primary 1
-                        </option>
+            <option value="Primary 1">
+                Primary 1
+            </option>
 
-                        <option value="Primary 2">
-                            Primary 2
-                        </option>
+            <option value="Primary 2">
+                Primary 2
+            </option>
 
-                        <option value="Primary 3">
-                            Primary 3
-                        </option>
+            <option value="Primary 3">
+                Primary 3
+            </option>
 
-                        <option value="Primary 4">
-                            Primary 4
-                        </option>
+            <option value="Primary 4">
+                Primary 4
+            </option>
 
-                        <option value="Primary 5">
-                            Primary 5
-                        </option>
+            <option value="Primary 5">
+                Primary 5
+            </option>
 
-                        <option value="JHS 1">
-                            JHS 1
-                        </option>
+            <option value="JHS 1">
+                JHS 1
+            </option>
 
-                        <option value="JHS 2">
-                            JHS 2
-                        </option>
+            <option value="JHS 2">
+                JHS 2
+            </option>
 
-                        <option value="JHS 3">
-                            JHS 3
-                        </option>
+            <option value="JHS 3">
+                JHS 3
+            </option>
 
-                    </select>
+        </select>
 
-                </div>
+    </div>
 
 
-                <!-- ACADEMIC YEAR -->
-                <div class="form-group">
+    <!-- ACADEMIC YEAR -->
+    <div class="form-group">
 
-                    <label for="academic_year">
-                        Academic Year
-                    </label>
+        <label for="academic_year">
+            Academic Year
+        </label>
 
-                    <select
-                        name="academic_year"
-                        id="academic_year"
-                        required
-                    >
+        <select
+            name="academic_year"
+            id="academic_year"
+            required
+        >
 
-                        <option value="" selected disabled>
-                            Select Academic Year
-                        </option>
+            <option value="" selected disabled>
+                Select Academic Year
+            </option>
 
-                        <option value="2026/2027">
-                            2026/2027
-                        </option>
+            <option value="2026/2027">
+                2026/2027
+            </option>
 
-                        <option value="2025/2026">
-                            2025/2026
-                        </option>
+            <option value="2025/2026">
+                2025/2026
+            </option>
 
-                        <option value="2024/2025">
-                            2024/2025
-                        </option>
+            <option value="2024/2025">
+                2024/2025
+            </option>
 
-                        <option value="2023/2024">
-                            2023/2024
-                        </option>
+            <option value="2023/2024">
+                2023/2024
+            </option>
 
-                        <option value="2022/2023">
-                            2022/2023
-                        </option>
+            <option value="2022/2023">
+                2022/2023
+            </option>
 
-                    </select>
+        </select>
 
-                </div>
+    </div>
 
-            </div>
 
+    <!-- TERM -->
+    <div class="form-group">
+
+        <label for="term">
+            Term
+        </label>
+
+        <select
+            name="term"
+            id="term"
+            required
+        >
+
+            <option value="" selected disabled>
+                Select Term
+            </option>
+
+            <option value="First Term">
+                First Term
+            </option>
+
+            <option value="Second Term">
+                Second Term
+            </option>
+
+            <option value="Third Term">
+                Third Term
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
 
             <!-- REGISTRATION FEE -->
             <div class="form-group">
