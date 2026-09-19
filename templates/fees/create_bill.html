@@ -1205,6 +1205,105 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+// ===============================
+// GET CSRF COOKIE
+// ===============================
+
+function getCookie(name) {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== "") {
+
+        const cookies = document.cookie.split(";");
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+// ===============================
+// CREATE BILL
+// ===============================
+
+document.getElementById("create-bill-button").addEventListener("click", function () {
+
+    if (!selectedStudent) {
+        alert("Please select a student first.");
+        return;
+    }
+
+    const academicYearValue = academicYear.value;
+    const termValue = term.value;
+    const discountValue = discount.value;
+
+    if (!academicYearValue) {
+        alert("Please select an academic year.");
+        return;
+    }
+
+    if (!termValue) {
+        alert("Please select a term.");
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("student_id", selectedStudent.id);
+    formData.append("academic_year", academicYearValue);
+    formData.append("term", termValue);
+    formData.append("discount_percent", discountValue);
+
+    fetch("{% url 'create_bill' %}", {
+        method: "POST",
+        body: formData,
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if (data.success) {
+
+            alert(
+                "Bill created successfully!\n\n" +
+                "Bill ID: " + data.bill_id
+            );
+
+            window.location.href = "{% url 'fees_structure' %}";
+
+        } else {
+
+            alert(data.message || "Unable to create bill.");
+
+        }
+
+    })
+    .catch(error => {
+
+        console.error("Error:", error);
+
+        alert(
+            "Something went wrong while creating the bill."
+        );
+
+    });
+
+});
+
 </script>
 
 {% endblock %}

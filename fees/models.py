@@ -326,7 +326,7 @@ class Bill(models.Model):
         max_length=20,
         choices=TERM_CHOICES
     )
-    
+
     # Original amount before discount
     base_amount = models.DecimalField(
         max_digits=10,
@@ -358,9 +358,8 @@ class Bill(models.Model):
     )
 
     def __str__(self):
-        return (
+            return (
             f"{self.student} - "
             f"{self.academic_year} - "
-            f"{self.term} - "
-            f"{self.billing_month}"
+            f"{self.term}"
         )

@@ -6,16 +6,11 @@
    ========================================================= */
 
 .fee-structure-page {
-
     width: 100%;
     max-width: 1500px;
-
     margin: 0 auto;
-
     padding: 22px;
-
     box-sizing: border-box;
-
     font-family: "Inter", sans-serif;
 }
 
@@ -31,39 +26,24 @@
    ========================================================= */
 
 .fee-structure-page .page-header {
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 20px;
-
     margin-bottom: 22px;
 }
 
-
 .fee-structure-page .page-header h1 {
-
     margin: 0 0 5px;
-
     color: var(--text);
-
     font-size: 30px;
-
     font-weight: 700;
-
     letter-spacing: -0.6px;
 }
 
-
 .fee-structure-page .page-header p {
-
     margin: 0;
-
     color: var(--text-light);
-
     font-size: 14px;
 }
 
@@ -73,234 +53,211 @@
    ========================================================= */
 
 .fee-structure-page .header-actions {
-
     display: flex;
-
     align-items: center;
-
-    gap: 12px;
+    gap: 10px;
 }
 
 
+/* =========================================================
+   ACADEMIC YEAR BOX
+   ========================================================= */
+
 .fee-structure-page .academic-year-box {
-
     height: 44px;
-
     min-width: 290px;
-
     padding: 0 14px;
-
     display: flex;
-
     align-items: center;
-
     gap: 10px;
-
     border: 1px solid var(--border);
-
     border-radius: 9px;
-
     background: var(--card-bg, #ffffff);
-
     color: var(--text);
-
     font-size: 12px;
-
-    box-shadow:
-        0 5px 15px rgba(15, 23, 42, 0.05);
-
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.05);
     transition:
         background 0.2s ease,
         border-color 0.2s ease;
 }
 
-
 .fee-structure-page .academic-year-box i:first-child {
-
     color: #2563eb;
-
     font-size: 15px;
 }
 
-
 .fee-structure-page .academic-year-box i:last-child {
-
     margin-left: auto;
-
     color: #64748b;
-
     font-size: 10px;
 }
 
 
 /* =========================================================
-   ADD FEE BUTTON
+   TOP HEADER BUTTONS
+   ADD FEE STRUCTURE + CREATE BILL
    ========================================================= */
 
-.btn-add-fee {
+.fee-structure-page .header-actions > .quick-action {
+    min-height: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0 16px;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
+    gap: 8px;
 
-    padding: 12px 20px;
+    border: 1px solid transparent;
+    border-radius: 9px;
 
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: #ffffff;
-
-    border: none;
-    border-radius: 10px;
-
+    color: #ffffff !important;
     text-decoration: none;
 
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
 
-    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.20);
+    white-space: nowrap;
 
-    transition: all 0.25s ease;
+    cursor: pointer;
+
+    box-shadow: 0 5px 14px rgba(15, 23, 42, 0.12);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease,
+        background 0.2s ease;
 }
 
-.btn-add-fee i {
-    font-size: 14px;
+
+/* ADD FEE STRUCTURE */
+
+.fee-structure-page .header-actions > .quick-action:first-of-type {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-color: #1d4ed8;
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.25);
 }
 
-.btn-add-fee:hover {
-    color: #ffffff;
-    background: linear-gradient(135deg, #1d4ed8, #1e40af);
 
+/* CREATE BILL */
+
+.fee-structure-page .header-actions > .quick-action:last-of-type {
+    background: linear-gradient(135deg, #0f766e, #047857);
+    border-color: #047857;
+    box-shadow: 0 5px 14px rgba(5, 150, 105, 0.22);
+}
+
+
+/* HEADER BUTTON ICONS */
+
+.fee-structure-page .header-actions > .quick-action i {
+    width: auto;
+    margin: 0;
+    color: #ffffff !important;
+    font-size: 13px;
+    text-align: center;
+}
+
+
+/* HEADER BUTTON TEXT */
+
+.fee-structure-page .header-actions > .quick-action span {
+    color: #ffffff !important;
+}
+
+
+/* HEADER BUTTON HOVER */
+
+.fee-structure-page .header-actions > .quick-action:hover {
     transform: translateY(-2px);
-
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.28);
+    filter: brightness(1.06);
+    color: #ffffff !important;
 }
+
+.fee-structure-page .header-actions > .quick-action:first-of-type:hover {
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.32);
+}
+
+.fee-structure-page .header-actions > .quick-action:last-of-type:hover {
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.30);
+}
+
 
 /* =========================================================
    SUMMARY CARDS
    ========================================================= */
 
 .fee-structure-page .summary-grid {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 15px;
-
     margin-bottom: 20px;
 }
 
-
 .fee-structure-page .summary-card {
-
     min-height: 104px;
-
     padding: 16px;
-
     display: flex;
-
     align-items: center;
-
     gap: 15px;
-
     border: 1px solid var(--border);
-
     border-radius: 10px;
-
     background: var(--card-bg, #ffffff);
-
-    box-shadow:
-        0 8px 20px rgba(15, 23, 42, 0.06);
-
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
 }
 
-
 .fee-structure-page .summary-card:hover {
-
     transform: translateY(-3px);
-
-    box-shadow:
-        0 12px 28px rgba(15, 23, 42, 0.09);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.09);
 }
 
-
 .fee-structure-page .summary-icon {
-
     width: 58px;
-
     height: 58px;
-
     flex-shrink: 0;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 10px;
-
     color: #fff;
-
     font-size: 23px;
 }
 
-
 .fee-structure-page .summary-icon.blue {
-
-    background:
-        linear-gradient(145deg, #2384f5, #0667df);
+    background: linear-gradient(145deg, #2384f5, #0667df);
 }
-
 
 .fee-structure-page .summary-icon.green {
-
-    background:
-        linear-gradient(145deg, #32b978, #159b62);
+    background: linear-gradient(145deg, #32b978, #159b62);
 }
-
 
 .fee-structure-page .summary-icon.purple {
-
-    background:
-        linear-gradient(145deg, #8b45e8, #7029cc);
+    background: linear-gradient(145deg, #8b45e8, #7029cc);
 }
-
 
 .fee-structure-page .summary-icon.orange {
-
-    background:
-        linear-gradient(145deg, #ffad24, #f39200);
+    background: linear-gradient(145deg, #ffad24, #f39200);
 }
 
-
 .fee-structure-page .summary-label {
-
     display: block;
-
     margin-bottom: 7px;
-
     color: #173563;
-
     font-size: 11px;
-
     font-weight: 600;
 }
 
-
 .fee-structure-page .summary-card strong {
-
     display: block;
-
     color: #0e2c59;
-
     font-size: 23px;
-
     font-weight: 700;
-
     line-height: 1.1;
 }
 
@@ -310,14 +267,9 @@
    ========================================================= */
 
 .fee-structure-page .fee-content-grid {
-
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr) 300px;
-
+    grid-template-columns: minmax(0, 1fr) 300px;
     gap: 18px;
-
     align-items: start;
 }
 
@@ -328,45 +280,29 @@
 
 .fee-structure-page .fee-main-card,
 .fee-structure-page .side-card {
-
     border: 1px solid var(--border);
-
     border-radius: 10px;
-
     background: var(--card-bg, #ffffff);
-
-    box-shadow:
-        0 8px 20px rgba(15, 23, 42, 0.05);
-
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
     transition:
         background 0.2s ease,
         border-color 0.2s ease;
 }
 
-
 .fee-structure-page .fee-main-card {
-
     min-width: 0;
-
     padding: 16px;
 }
 
-
 .fee-structure-page .card-title {
-
     margin-bottom: 14px;
 }
 
-
 .fee-structure-page .card-title h2,
 .fee-structure-page .side-card h2 {
-
     margin: 0;
-
     color: #122f5d;
-
     font-size: 16px;
-
     font-weight: 700;
 }
 
@@ -376,136 +312,82 @@
    ========================================================= */
 
 .fee-structure-page .search-area {
-
     display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr) 140px;
-
+    grid-template-columns: minmax(0, 1fr) 140px;
     gap: 10px;
-
     margin-bottom: 12px;
 }
 
-
 .fee-structure-page .search-box {
-
     position: relative;
-
     width: 100%;
 }
 
-
 .fee-structure-page .search-box i {
-
     position: absolute;
-
     left: 13px;
-
     top: 50%;
-
     z-index: 2;
-
     transform: translateY(-50%);
-
     color: #41688f;
-
     font-size: 14px;
 }
 
-
 .fee-structure-page .search-box input,
 .fee-structure-page .search-area select {
-
     width: 100%;
-
     height: 39px;
-
     border: 1px solid #d8e2ee;
-
     border-radius: 8px;
-
     outline: none;
-
     background: #f8fbff;
-
     color: #19365e;
-
     font-family: inherit;
-
     font-size: 11px;
-
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
 }
 
-
 .fee-structure-page .search-box input {
-
     padding: 0 12px 0 36px;
 }
 
-
 .fee-structure-page .search-area select {
-
     padding: 0 30px 0 12px;
-
     cursor: pointer;
 }
 
-
 .fee-structure-page .search-box input:focus,
 .fee-structure-page .search-area select:focus {
-
     border-color: #60a5fa;
-
-    box-shadow:
-        0 0 0 3px rgba(96, 165, 250, 0.12);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.12);
 }
 
 
 /* =========================================================
    TABLE
-   IMPORTANT:
-   NO WHITE TABLE BORDERS
-   NO VERTICAL GRID LINES
    ========================================================= */
 
 .fee-structure-page .table-wrapper {
-
     width: 100%;
-
     overflow-x: auto;
-
     border: 0;
-
     border-radius: 8px;
-
     background: transparent;
-
     -webkit-overflow-scrolling: touch;
 }
 
-
-/* Remove scrollbar visual on supported browsers */
-
 .fee-structure-page .table-wrapper::-webkit-scrollbar {
-
     height: 7px;
 }
 
-
 .fee-structure-page .table-wrapper::-webkit-scrollbar-track {
-
     background: transparent;
 }
 
-
 .fee-structure-page .table-wrapper::-webkit-scrollbar-thumb {
-
     background: #cbd5e1;
-
     border-radius: 20px;
 }
 
@@ -515,17 +397,11 @@
    ========================================================= */
 
 .fee-structure-page .fee-table {
-
     width: 100%;
-
     min-width: 850px;
-
     border-collapse: separate;
-
     border-spacing: 0;
-
     table-layout: auto;
-
     background: transparent;
 }
 
@@ -535,47 +411,27 @@
    ========================================================= */
 
 .fee-structure-page .fee-table thead {
-
     background: #edf4ff;
 }
 
-
 .fee-structure-page .fee-table th {
-
     height: 48px;
-
     padding: 8px 7px;
-
     color: #19365e;
-
     font-size: 10px;
-
     font-weight: 700;
-
     text-align: left;
-
     line-height: 1.25;
-
     white-space: nowrap;
-
-    /* NO WHITE BORDER */
     border: 0;
-
-    border-bottom:
-        1px solid #d9e6f5;
+    border-bottom: 1px solid #d9e6f5;
 }
 
-
-/* Rounded top corners */
-
 .fee-structure-page .fee-table thead th:first-child {
-
     border-top-left-radius: 7px;
 }
 
-
 .fee-structure-page .fee-table thead th:last-child {
-
     border-top-right-radius: 7px;
 }
 
@@ -585,80 +441,38 @@
    ========================================================= */
 
 .fee-structure-page .fee-table td {
-
     height: 47px;
-
     padding: 7px;
-
     color: #263f63;
-
     font-size: 10px;
-
     white-space: nowrap;
-
-    /* NO VERTICAL BORDERS */
     border-left: 0;
-
     border-right: 0;
-
-    /* ONLY A VERY SUBTLE ROW SEPARATOR */
     border-top: 0;
-
-    border-bottom:
-        1px solid #edf2f7;
-
+    border-bottom: 1px solid #edf2f7;
     background: transparent;
 }
-
-
-/* =========================================================
-   TABLE ROW
-   ========================================================= */
 
 .fee-structure-page .fee-table tbody tr {
-
     background: transparent;
-
-    transition:
-        background 0.15s ease;
+    transition: background 0.15s ease;
 }
-
 
 .fee-structure-page .fee-table tbody tr:hover {
-
-    background:
-        rgba(239, 246, 255, 0.75);
+    background: rgba(239, 246, 255, 0.75);
 }
 
-
-/* Last row has no separator */
-
 .fee-structure-page .fee-table tbody tr:last-child td {
-
     border-bottom: 0;
 }
 
-
-/* =========================================================
-   TABLE STRONG TEXT
-   ========================================================= */
-
 .fee-structure-page .fee-table td strong {
-
     color: #102f5d;
-
     font-size: 10px;
 }
 
-
-/* =========================================================
-   TOTAL FEE
-   ========================================================= */
-
 .fee-structure-page .fee-table .total-fee {
-
     color: #145dcc;
-
     font-weight: 800;
 }
 
@@ -668,47 +482,29 @@
    ========================================================= */
 
 .fee-structure-page .class-badge {
-
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
-
     min-width: 48px;
-
     min-height: 25px;
-
     padding: 4px 10px;
-
     border-radius: 20px;
-
     font-size: 10px;
-
     font-weight: 600;
 }
 
-
 .fee-structure-page .blue-badge {
-
     background: #dcecff;
-
     color: #0870d8;
 }
 
-
 .fee-structure-page .green-badge {
-
     background: #d9f5e9;
-
     color: #159568;
 }
 
-
 .fee-structure-page .purple-badge {
-
     background: #e9ddff;
-
     color: #7637cf;
 }
 
@@ -718,63 +514,40 @@
    ========================================================= */
 
 .fee-structure-page .table-actions {
-
     display: flex;
-
     align-items: center;
-
     gap: 6px;
 }
 
-
 .fee-structure-page .table-actions button {
-
     width: 28px;
-
     height: 28px;
-
     display: inline-flex;
-
     align-items: center;
-
     justify-content: center;
-
     border: 0;
-
     border-radius: 6px;
-
     color: #fff;
-
     cursor: pointer;
-
     transition:
         transform 0.2s ease,
         filter 0.2s ease;
 }
 
-
 .fee-structure-page .edit-btn {
-
     background: #1478e8;
 }
 
-
 .fee-structure-page .delete-btn {
-
     background: #f44350;
 }
 
-
 .fee-structure-page .table-actions button:hover {
-
     transform: translateY(-2px);
-
     filter: brightness(1.05);
 }
 
-
 .fee-structure-page .table-actions i {
-
     font-size: 11px;
 }
 
@@ -784,76 +557,45 @@
    ========================================================= */
 
 .fee-structure-page .table-footer {
-
     min-height: 42px;
-
     padding-top: 12px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
 }
 
-
 .fee-structure-page .table-footer > span {
-
     color: #54708f;
-
     font-size: 10px;
 }
 
-
 .fee-structure-page .pagination {
-
     display: flex;
-
     align-items: center;
-
     gap: 5px;
 }
 
-
 .fee-structure-page .pagination button {
-
     width: 30px;
-
     height: 30px;
-
     border: 1px solid #dce5ef;
-
     border-radius: 6px;
-
     background: #f8fbff;
-
     color: #426383;
-
     font-size: 12px;
-
     cursor: pointer;
-
-    transition:
-        0.2s ease;
+    transition: 0.2s ease;
 }
 
-
 .fee-structure-page .pagination button:hover {
-
     border-color: #60a5fa;
-
     color: #126fda;
 }
 
-
 .fee-structure-page .pagination button.active {
-
     border-color: #1478e8;
-
     background: #1478e8;
-
     color: #fff;
 }
 
@@ -863,25 +605,17 @@
    ========================================================= */
 
 .fee-structure-page .fee-sidebar {
-
     display: flex;
-
     flex-direction: column;
-
     gap: 15px;
-
     min-width: 0;
 }
 
-
 .fee-structure-page .side-card {
-
     padding: 16px;
 }
 
-
 .fee-structure-page .side-card h2 {
-
     margin-bottom: 12px;
 }
 
@@ -891,107 +625,65 @@
    ========================================================= */
 
 .fee-structure-page .fee-category {
-
     min-height: 55px;
-
     display: grid;
-
-    grid-template-columns:
-        38px minmax(0, 1fr) 12px;
-
+    grid-template-columns: 38px minmax(0, 1fr) 12px;
     align-items: center;
-
     gap: 9px;
-
-    border-bottom:
-        1px solid #edf2f7;
+    border-bottom: 1px solid #edf2f7;
 }
 
-
 .fee-structure-page .fee-category:last-child {
-
     border-bottom: 0;
 }
 
-
 .fee-structure-page .category-icon {
-
     width: 36px;
-
     height: 36px;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 8px;
-
     color: #fff;
-
     font-size: 15px;
 }
 
-
 .fee-structure-page .category-icon.green {
-
     background: #2bb77b;
 }
 
-
 .fee-structure-page .category-icon.blue {
-
     background: #147cf0;
 }
 
-
 .fee-structure-page .category-icon.purple {
-
     background: #8242db;
 }
 
-
 .fee-structure-page .category-icon.orange {
-
     background: #f6a315;
 }
 
-
 .fee-structure-page .category-icon.red {
-
     background: #ef5260;
 }
 
-
 .fee-structure-page .fee-category strong {
-
     display: block;
-
     margin-bottom: 3px;
-
     color: #19365e;
-
     font-size: 10px;
-
     font-weight: 600;
 }
 
-
 .fee-structure-page .fee-category span {
-
     display: block;
-
     color: #71839a;
-
     font-size: 9px;
 }
 
-
 .fee-structure-page .fee-category > i {
-
     color: #466581;
-
     font-size: 9px;
 }
 
@@ -1001,148 +693,90 @@
    ========================================================= */
 
 .fee-structure-page .note-card {
-
     display: flex;
-
     align-items: flex-start;
-
     gap: 12px;
-
-    background:
-        rgba(239, 246, 255, 0.78);
-
+    background: rgba(239, 246, 255, 0.78);
     border-color: #d5e5f7;
 }
 
-
 .fee-structure-page .note-icon {
-
     width: 31px;
-
     height: 31px;
-
     flex-shrink: 0;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 50%;
-
     background: #1878e8;
-
     color: #fff;
 }
 
-
 .fee-structure-page .note-icon i {
-
     font-size: 12px;
 }
 
-
 .fee-structure-page .note-card strong {
-
     display: block;
-
     margin: 2px 0 9px;
-
     color: #1471d7;
-
     font-size: 11px;
 }
 
-
 .fee-structure-page .note-card p {
-
     margin: 0;
-
     color: #405e82;
-
     font-size: 9px;
-
     line-height: 1.65;
 }
 
 
 /* =========================================================
-   QUICK ACTIONS
+   SIDEBAR QUICK ACTIONS
    ========================================================= */
 
-.fee-structure-page .quick-action {
-
+.fee-structure-page .side-card > .quick-action {
     min-height: 41px;
-
     margin-bottom: 8px;
-
     padding: 0 13px;
-
     display: flex;
-
     align-items: center;
-
     gap: 11px;
-
     border-radius: 7px;
-
     color: #fff;
-
     text-decoration: none;
-
     font-size: 10px;
-
     font-weight: 600;
-
     transition:
         transform 0.2s ease,
         filter 0.2s ease;
 }
 
-
-.fee-structure-page .quick-action:last-child {
-
+.fee-structure-page .side-card > .quick-action:last-child {
     margin-bottom: 0;
 }
 
-
-.fee-structure-page .quick-action:hover {
-
+.fee-structure-page .side-card > .quick-action:hover {
     transform: translateX(2px);
-
     filter: brightness(1.04);
 }
 
-
-.fee-structure-page .quick-action i {
-
+.fee-structure-page .side-card > .quick-action i {
     width: 18px;
-
     text-align: center;
-
     font-size: 15px;
 }
 
-
 .fee-structure-page .blue-action {
-
-    background:
-        linear-gradient(135deg, #1580f3, #0669df);
+    background: linear-gradient(135deg, #1580f3, #0669df);
 }
-
 
 .fee-structure-page .green-action {
-
-    background:
-        linear-gradient(135deg, #28b678, #159b61);
+    background: linear-gradient(135deg, #28b678, #159b61);
 }
 
-
 .fee-structure-page .purple-action {
-
-    background:
-        linear-gradient(135deg, #8b42df, #702ac7);
+    background: linear-gradient(135deg, #8b42df, #702ac7);
 }
 
 
@@ -1153,46 +787,55 @@
 body.dark-mode .fee-structure-page .summary-card,
 body.dark-mode .fee-structure-page .fee-main-card,
 body.dark-mode .fee-structure-page .side-card {
-
-    background:
-        rgba(17, 24, 39, 0.82);
-
-    border-color:
-        rgba(148, 163, 184, 0.14);
-
-    box-shadow:
-        0 15px 35px rgba(0, 0, 0, 0.25);
+    background: rgba(17, 24, 39, 0.82);
+    border-color: rgba(148, 163, 184, 0.14);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
 }
 
-
-body.dark-mode
-.fee-structure-page
-.academic-year-box {
-
-    background:
-        rgba(15, 23, 42, 0.8);
-
-    border-color:
-        rgba(148, 163, 184, 0.20);
-
+body.dark-mode .fee-structure-page .academic-year-box {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(148, 163, 184, 0.20);
     color: #e2e8f0;
 }
 
 
-body.dark-mode
-.fee-structure-page
-.search-box input,
+/* =========================================================
+   DARK MODE HEADER BUTTONS
+   ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.search-area select {
+body.dark-mode .fee-structure-page .header-actions > .quick-action {
+    color: #ffffff !important;
+    border-color: transparent;
+}
 
-    background:
-        rgba(15, 23, 42, 0.8);
+body.dark-mode .fee-structure-page .header-actions > .quick-action:first-of-type {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-color: #3b82f6;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+}
 
-    border-color:
-        rgba(148, 163, 184, 0.20);
+body.dark-mode .fee-structure-page .header-actions > .quick-action:last-of-type {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #10b981;
+    color: #ffffff !important;
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.30);
+}
 
+body.dark-mode .fee-structure-page .header-actions > .quick-action:hover {
+    color: #ffffff !important;
+    filter: brightness(1.08);
+}
+
+
+/* =========================================================
+   DARK MODE SEARCH
+   ========================================================= */
+
+body.dark-mode .fee-structure-page .search-box input,
+body.dark-mode .fee-structure-page .search-area select {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(148, 163, 184, 0.20);
     color: #e2e8f0;
 }
 
@@ -1201,111 +844,51 @@ body.dark-mode
    DARK MODE TEXT
    ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.summary-label,
-
-body.dark-mode
-.fee-structure-page
-.summary-card strong,
-
-body.dark-mode
-.fee-structure-page
-.card-title h2,
-
-body.dark-mode
-.fee-structure-page
-.side-card h2,
-
-body.dark-mode
-.fee-structure-page
-.fee-category strong,
-
-body.dark-mode
-.fee-structure-page
-.fee-table th,
-
-body.dark-mode
-.fee-structure-page
-.fee-table td,
-
-body.dark-mode
-.fee-structure-page
-.fee-table td strong {
-
+body.dark-mode .fee-structure-page .summary-label,
+body.dark-mode .fee-structure-page .summary-card strong,
+body.dark-mode .fee-structure-page .card-title h2,
+body.dark-mode .fee-structure-page .side-card h2,
+body.dark-mode .fee-structure-page .fee-category strong,
+body.dark-mode .fee-structure-page .fee-table th,
+body.dark-mode .fee-structure-page .fee-table td,
+body.dark-mode .fee-structure-page .fee-table td strong {
     color: #e2e8f0;
 }
 
 
 /* =========================================================
    DARK TABLE
-   NO WHITE BORDERS
    ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.fee-table {
-
+body.dark-mode .fee-structure-page .fee-table {
     background: transparent;
-
     border: 0;
 }
 
-
-body.dark-mode
-.fee-structure-page
-.fee-table thead {
-
-    background:
-        rgba(30, 64, 115, 0.55);
+body.dark-mode .fee-structure-page .fee-table thead {
+    background: rgba(30, 64, 115, 0.55);
 }
 
-
-body.dark-mode
-.fee-structure-page
-.fee-table th {
-
+body.dark-mode .fee-structure-page .fee-table th {
     color: #dbeafe;
-
     border: 0;
-
-    border-bottom:
-        1px solid rgba(96, 165, 250, 0.16);
+    border-bottom: 1px solid rgba(96, 165, 250, 0.16);
 }
 
-
-body.dark-mode
-.fee-structure-page
-.fee-table td {
-
+body.dark-mode .fee-structure-page .fee-table td {
     color: #cbd5e1;
-
     border-left: 0;
-
     border-right: 0;
-
     border-top: 0;
-
-    border-bottom:
-        1px solid rgba(148, 163, 184, 0.09);
-
+    border-bottom: 1px solid rgba(148, 163, 184, 0.09);
     background: transparent;
 }
 
-
-body.dark-mode
-.fee-structure-page
-.fee-table tbody tr:hover {
-
-    background:
-        rgba(37, 99, 235, 0.10);
+body.dark-mode .fee-structure-page .fee-table tbody tr:hover {
+    background: rgba(37, 99, 235, 0.10);
 }
 
-
-body.dark-mode
-.fee-structure-page
-.fee-table tbody tr:last-child td {
-
+body.dark-mode .fee-structure-page .fee-table tbody tr:last-child td {
     border-bottom: 0;
 }
 
@@ -1314,12 +897,8 @@ body.dark-mode
    DARK TABLE WRAPPER
    ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.table-wrapper {
-
+body.dark-mode .fee-structure-page .table-wrapper {
     border: 0;
-
     background: transparent;
 }
 
@@ -1328,19 +907,11 @@ body.dark-mode
    DARK FEE CATEGORIES
    ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.fee-category {
-
-    border-bottom:
-        1px solid rgba(148, 163, 184, 0.10);
+body.dark-mode .fee-structure-page .fee-category {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.10);
 }
 
-
-body.dark-mode
-.fee-structure-page
-.fee-category span {
-
+body.dark-mode .fee-structure-page .fee-category span {
     color: #94a3b8;
 }
 
@@ -1349,22 +920,12 @@ body.dark-mode
    DARK NOTE
    ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.note-card {
-
-    background:
-        rgba(30, 58, 92, 0.45);
-
-    border-color:
-        rgba(96, 165, 250, 0.20);
+body.dark-mode .fee-structure-page .note-card {
+    background: rgba(30, 58, 92, 0.45);
+    border-color: rgba(96, 165, 250, 0.20);
 }
 
-
-body.dark-mode
-.fee-structure-page
-.note-card p {
-
+body.dark-mode .fee-structure-page .note-card p {
     color: #a8bad0;
 }
 
@@ -1373,16 +934,9 @@ body.dark-mode
    DARK PAGINATION
    ========================================================= */
 
-body.dark-mode
-.fee-structure-page
-.pagination button {
-
-    background:
-        rgba(15, 23, 42, 0.75);
-
-    border-color:
-        rgba(148, 163, 184, 0.16);
-
+body.dark-mode .fee-structure-page .pagination button {
+    background: rgba(15, 23, 42, 0.75);
+    border-color: rgba(148, 163, 184, 0.16);
     color: #cbd5e1;
 }
 
@@ -1394,34 +948,21 @@ body.dark-mode
 @media (max-width: 1200px) {
 
     .fee-structure-page .fee-content-grid {
-
-        grid-template-columns:
-            minmax(0, 1fr) 270px;
+        grid-template-columns: minmax(0, 1fr) 270px;
     }
 
-
     .fee-structure-page .summary-card {
-
         padding: 14px;
-
         gap: 11px;
     }
 
-
     .fee-structure-page .summary-icon {
-
         width: 52px;
-
         height: 52px;
-
         font-size: 20px;
     }
 
-
-    .fee-structure-page
-    .summary-card
-    strong {
-
+    .fee-structure-page .summary-card strong {
         font-size: 20px;
     }
 }
@@ -1434,29 +975,19 @@ body.dark-mode
 @media (max-width: 1000px) {
 
     .fee-structure-page .summary-grid {
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-
     .fee-structure-page .fee-content-grid {
-
         grid-template-columns: 1fr;
     }
 
-
     .fee-structure-page .fee-sidebar {
-
         display: grid;
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-
     .fee-structure-page .note-card {
-
         grid-column: 1 / -1;
     }
 }
@@ -1469,116 +1000,73 @@ body.dark-mode
 @media (max-width: 700px) {
 
     .fee-structure-page {
-
         padding: 16px 12px 30px;
     }
 
-
     .fee-structure-page .page-header {
-
         flex-direction: column;
-
         align-items: stretch;
-
         gap: 14px;
     }
 
-
-    .fee-structure-page
-    .page-header
-    h1 {
-
+    .fee-structure-page .page-header h1 {
         font-size: 25px;
     }
 
-
-    .fee-structure-page
-    .page-header
-    p {
-
+    .fee-structure-page .page-header p {
         font-size: 12px;
-
         line-height: 1.5;
     }
 
-
     .fee-structure-page .header-actions {
-
         width: 100%;
-
         flex-direction: column;
-
         align-items: stretch;
     }
 
-
-    .fee-structure-page
-    .academic-year-box {
-
+    .fee-structure-page .academic-year-box {
         width: 100%;
-
         min-width: 0;
     }
 
+    /* TOP BUTTONS ON MOBILE */
 
-    .fee-structure-page
-    .btn-add-fee {
-
+    .fee-structure-page .header-actions > .quick-action {
         width: 100%;
+        min-height: 46px;
+        height: 46px;
+        justify-content: center;
+        font-size: 12px;
     }
 
-
-    .fee-structure-page
-    .summary-grid {
-
+    .fee-structure-page .summary-grid {
         grid-template-columns: 1fr;
-
         gap: 10px;
     }
 
-
-    .fee-structure-page
-    .summary-card {
-
+    .fee-structure-page .summary-card {
         min-height: 90px;
     }
 
-
-    .fee-structure-page
-    .search-area {
-
+    .fee-structure-page .search-area {
         grid-template-columns: 1fr;
     }
 
-
-    .fee-structure-page
-    .fee-main-card {
-
+    .fee-structure-page .fee-main-card {
         padding: 12px;
     }
 
-
-    .fee-structure-page
-    .table-footer {
-
+    .fee-structure-page .table-footer {
         flex-direction: column;
-
         align-items: flex-start;
     }
 
-
-    .fee-structure-page
-    .fee-sidebar {
-
+    .fee-structure-page .fee-sidebar {
         display: flex;
-
         flex-direction: column;
     }
 
-
-    .fee-structure-page
-    .note-card {
-
+    .fee-structure-page .note-card {
         grid-column: auto;
     }
 }
@@ -1591,40 +1079,28 @@ body.dark-mode
 @media (max-width: 400px) {
 
     .fee-structure-page {
-
         padding: 12px 8px 25px;
     }
 
-
-    .fee-structure-page
-    .page-header
-    h1 {
-
+    .fee-structure-page .page-header h1 {
         font-size: 22px;
     }
 
-
-    .fee-structure-page
-    .summary-card
-    strong {
-
+    .fee-structure-page .summary-card strong {
         font-size: 18px;
     }
 
-
-    .fee-structure-page
-    .summary-label {
-
+    .fee-structure-page .summary-label {
         font-size: 10px;
     }
 
-
-    .fee-structure-page
-    .fee-main-card,
-
-    .fee-structure-page
-    .side-card {
-
+    .fee-structure-page .fee-main-card,
+    .fee-structure-page .side-card {
         padding: 11px;
+    }
+
+    .fee-structure-page .header-actions > .quick-action {
+        min-height: 44px;
+        height: 44px;
     }
 }

@@ -506,11 +506,6 @@ def edit_student(request, student_id):
             "Active"
         )
 
-        student.discount = request.POST.get(
-            "discount",
-            0
-        ) or 0
-
         # Only replace the photo if a new photo was selected.
         if request.FILES.get("student_photo"):
             student.photo = request.FILES.get(
@@ -609,11 +604,6 @@ def add_student(request):
             additional_information=request.POST.get(
                 "additional_information"
             ),
-
-            discount=request.POST.get(
-                "discount",
-                0
-            ) or 0,
 
             photo=request.FILES.get(
                 "student_photo"
@@ -1315,10 +1305,92 @@ def record_payment(request):
 
 def create_bill(request):
 
-    return render(
-        request,
-        "fees/create_bill.html"
-    )
+    if request.method == "POST":
+
+        student_id = request.POST.get("student_id")
+        academic_year = request.POST.get("academic_year")
+        term = request.POST.get("term")
+        discount_percent = request.POST.get("discount_percent", 0)
+
+        if not student_id:
+            return JsonResponse({
+                "success": False,
+                "message": "Student not selected."
+            })
+
+        if not academic_year:
+            return JsonResponse({
+                "success": False,
+                "message": "Academic year not selected."
+            })
+
+        if not term:
+            return JsonResponse({
+                "success": False,
+                "message": "Term not selected."
+            })
+
+        try:
+            student = Student.objects.get(id=student_id)
+        except Student.DoesNotExist:
+            return JsonResponse({
+                "success": False,
+                "message": "Student not found."
+            })
+
+        try:
+            fee_structure = FeeStructure.objects.get(
+                student_class=student.student_class,
+                academic_year=academic_year,
+                term=term
+            )
+        except FeeStructure.DoesNotExist:
+            return JsonResponse({
+                "success": False,
+                "message": (
+                    "No fee structure has been created for "
+                    f"{student.student_class}, "
+                    f"{academic_year}, "
+                    f"{term}."
+                )
+            })
+
+        original_total = fee_structure.total_fee
+
+        try:
+            discount_percent = float(discount_percent)
+        except (TypeError, ValueError):
+            discount_percent = 0
+
+        if discount_percent < 0:
+            discount_percent = 0
+
+        if discount_percent > 100:
+            discount_percent = 100
+
+        discount_amount = (
+            original_total * discount_percent / 100
+        )
+
+        amount_due = original_total - discount_amount
+
+        bill = Bill.objects.create(
+            student=student,
+            academic_year=academic_year,
+            term=term,
+            base_amount=original_total,
+            discount_percent=discount_percent,
+            discount_amount=discount_amount,
+            amount_due=amount_due,
+        )
+
+        return JsonResponse({
+            "success": True,
+            "message": "Bill created successfully.",
+            "bill_id": bill.id,
+        })
+
+    return render(request, "fees/create_bill.html")
 
 # =========================================================
 # BILL FEE LOOKUP
