@@ -101,6 +101,11 @@ urlpatterns = [
         views.home,
         name="home"
     ),
+
+    path("fees-structure/", views.fees_structure, name="fees_structure"),
+    path("fees-structure/add/", views.add_fee_structure, name="add_fee_structure"),
+    path("bus-fees/", views.bus_fees, name="bus_fees"),
+
 ]
 
 

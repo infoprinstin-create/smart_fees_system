@@ -1,0 +1,715 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/bus_fees.css' %}">
+
+<div class="bus-fees-page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="bus-fees-header">
+
+        <div class="bus-fees-title">
+
+            <h1>Bus Fees</h1>
+
+            <p>
+                Weekly bus fee collection and attendance
+            </p>
+
+        </div>
+
+
+        <div class="bus-fees-controls">
+
+            <!-- CLASS -->
+            <form method="get">
+
+                <input
+                    type="hidden"
+                    name="date"
+                    value="{{ monday|date:'Y-m-d' }}"
+                >
+
+                <select
+                    name="student_class"
+                    class="bus-class-select"
+                    onchange="this.form.submit()"
+                >
+
+                    <option value="">
+                        Select Class
+                    </option>
+
+                    {% for class_name in classes %}
+
+                        <option
+                            value="{{ class_name }}"
+                            {% if selected_class == class_name %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ class_name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </form>
+
+
+            <!-- PREVIOUS WEEK -->
+            <button
+                type="button"
+                class="week-button"
+                onclick="changeWeek(-7)"
+            >
+                ← Previous
+            </button>
+
+
+            <!-- WEEK -->
+            <div class="week-button current-week">
+
+                {{ monday|date:"d M Y" }}
+                -
+                {{ friday|date:"d M Y" }}
+
+            </div>
+
+
+            <!-- NEXT WEEK -->
+            <button
+                type="button"
+                class="week-button"
+                onclick="changeWeek(7)"
+            >
+                Next →
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLE
+         ===================================================== -->
+
+    <div class="bus-fee-card">
+
+        {% if selected_class %}
+
+            {% if students %}
+
+                <table class="bus-fee-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th class="student-column">
+                                Student
+                            </th>
+
+
+                            {% for day in week_dates %}
+
+                                <th>
+
+                                    {{ day|date:"l" }}
+
+                                    <span class="day-date">
+                                        {{ day|date:"d M" }}
+                                    </span>
+
+                                </th>
+
+                            {% endfor %}
+
+
+                            <th>
+                                Total
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for student in students %}
+
+                            <tr>
+
+                                <!-- STUDENT -->
+
+                                <td class="student-column">
+
+                                    <span class="student-name">
+                                        {{ student.first_name }}
+                                        {{ student.last_name }}
+                                    </span>
+
+                                    <span class="student-id">
+                                        {{ student.student_id }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- MONDAY - FRIDAY -->
+
+                                {% for day in week_dates %}
+
+                                    <td>
+
+                                        <div
+                                            class="fee-status"
+                                            data-student="{{ student.id }}"
+                                            data-date="{{ day|date:'Y-m-d' }}"
+                                            title="Click to mark as paid"
+                                        >
+                                        </div>
+
+                                    </td>
+
+                                {% endfor %}
+
+
+                                <!-- TOTAL -->
+
+                                <td class="total-amount">
+                                    GH₵0.00
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- =================================================
+                     LEGEND
+                     ================================================= -->
+
+                <div class="bus-fee-legend">
+
+                    <div class="legend-item">
+
+                        <span class="legend-box green"></span>
+
+                        Paid
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span class="legend-box red"></span>
+
+                        Absent
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span class="legend-box orange"></span>
+
+                        Present - Not Paid
+
+                    </div>
+
+
+                    <div class="legend-item">
+
+                        <span class="legend-box yellow"></span>
+
+                        Advance Paid
+
+                    </div>
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <h3>No students found</h3>
+
+                    <p>
+                        There are no active students in
+                        {{ selected_class }}.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <h3>Select a class</h3>
+
+                <p>
+                    Choose a class above to display its students
+                    and weekly bus-fee records.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     TEMPORARY CLICK TEST
+     ========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const boxes = document.querySelectorAll(".fee-status");
+
+
+    boxes.forEach(function (box) {
+
+        /* =====================================================
+           SINGLE CLICK
+           Mark as PAID
+           ===================================================== */
+
+        box.addEventListener("click", function () {
+
+            /*
+             * We delay the single click slightly.
+             * This allows the browser to determine
+             * whether the user is doing a double click.
+             */
+
+            clearTimeout(box.clickTimer);
+
+            box.clickTimer = setTimeout(function () {
+
+                box.classList.remove(
+                    "absent",
+                    "unpaid",
+                    "advance"
+                );
+
+                box.classList.toggle("paid");
+
+
+                if (box.classList.contains("paid")) {
+
+                    box.innerHTML = "✓";
+                    box.title = "Paid";
+
+                } else {
+
+                    box.innerHTML = "";
+                    box.title = "Click to mark as paid";
+
+                }
+
+            }, 250);
+
+        });
+
+
+        /* =====================================================
+           DOUBLE CLICK
+           Open status menu
+           ===================================================== */
+
+        box.addEventListener("dblclick", function (event) {
+
+            event.preventDefault();
+
+            clearTimeout(box.clickTimer);
+
+            showStatusMenu(box);
+
+        });
+
+    });
+
+});
+
+
+/* =========================================================
+   STATUS MENU
+   ========================================================= */
+
+function showStatusMenu(box) {
+
+    /* Remove any existing menu */
+
+    const oldMenu =
+        document.querySelector(".bus-status-menu");
+
+    if (oldMenu) {
+        oldMenu.remove();
+    }
+
+
+    /* Create menu */
+
+    const menu =
+        document.createElement("div");
+
+    menu.className =
+        "bus-status-menu";
+
+
+    menu.innerHTML = `
+
+        <div class="status-menu-title">
+            Change Status
+        </div>
+
+        <button
+            type="button"
+            class="status-option status-paid"
+            onclick="setBusStatus(this, 'paid')"
+        >
+            <span>✓</span>
+            Paid
+        </button>
+
+
+        <button
+            type="button"
+            class="status-option status-absent"
+            onclick="setBusStatus(this, 'absent')"
+        >
+            <span>✕</span>
+            Absent
+        </button>
+
+
+        <button
+            type="button"
+            class="status-option status-unpaid"
+            onclick="setBusStatus(this, 'unpaid')"
+        >
+            <span>!</span>
+            Present - Not Paid
+        </button>
+
+
+        <button
+            type="button"
+            class="status-option status-advance"
+            onclick="setBusStatus(this, 'advance')"
+        >
+            <span>↗</span>
+            Advance Paid
+        </button>
+
+
+        <button
+            type="button"
+            class="status-option status-clear"
+            onclick="setBusStatus(this, 'clear')"
+        >
+            <span>○</span>
+            Clear
+        </button>
+
+    `;
+
+
+    /*
+     * Store which box the menu belongs to.
+     */
+
+    menu.dataset.student =
+        box.dataset.student;
+
+    menu.dataset.date =
+        box.dataset.date;
+
+
+    /*
+     * Put the menu into the page.
+     */
+
+    document.body.appendChild(menu);
+
+
+    /*
+     * Position the menu near the box.
+     */
+
+    const rect =
+        box.getBoundingClientRect();
+
+
+    let left =
+        rect.left + window.scrollX;
+
+    let top =
+        rect.bottom + window.scrollY + 8;
+
+
+    /*
+     * Prevent the menu from going
+     * outside the right side of the screen.
+     */
+
+    if (
+        left + 190 >
+        window.innerWidth
+    ) {
+
+        left =
+            window.innerWidth - 205;
+
+    }
+
+
+    menu.style.left =
+        left + "px";
+
+    menu.style.top =
+        top + "px";
+
+
+    /*
+     * Close menu when clicking elsewhere.
+     */
+
+    setTimeout(function () {
+
+        document.addEventListener(
+            "click",
+            closeStatusMenu
+        );
+
+    }, 10);
+
+}
+
+
+/* =========================================================
+   CHANGE STATUS
+   ========================================================= */
+
+function setBusStatus(button, status) {
+
+    const menu =
+        button.closest(".bus-status-menu");
+
+
+    const studentId =
+        menu.dataset.student;
+
+    const selectedDate =
+        menu.dataset.date;
+
+
+    /*
+     * Find the original box.
+     */
+
+    const box =
+        document.querySelector(
+            '.fee-status[data-student="' +
+            studentId +
+            '"][data-date="' +
+            selectedDate +
+            '"]'
+        );
+
+
+    if (!box) {
+        return;
+    }
+
+
+    /*
+     * Remove all existing colors.
+     */
+
+    box.classList.remove(
+        "paid",
+        "absent",
+        "unpaid",
+        "advance"
+    );
+
+
+    /*
+     * Apply selected status.
+     */
+
+    if (status === "paid") {
+
+        box.classList.add("paid");
+
+        box.innerHTML = "✓";
+
+        box.title = "Paid";
+
+    }
+
+
+    else if (status === "absent") {
+
+        box.classList.add("absent");
+
+        box.innerHTML = "✕";
+
+        box.title = "Absent";
+
+    }
+
+
+    else if (status === "unpaid") {
+
+        box.classList.add("unpaid");
+
+        box.innerHTML = "!";
+
+        box.title =
+            "Present - Not Paid";
+
+    }
+
+
+    else if (status === "advance") {
+
+        box.classList.add("advance");
+
+        box.innerHTML = "↗";
+
+        box.title =
+            "Advance Paid";
+
+    }
+
+
+    else if (status === "clear") {
+
+        box.innerHTML = "";
+
+        box.title =
+            "Click to mark as paid";
+
+    }
+
+
+    /*
+     * Close menu.
+     */
+
+    menu.remove();
+
+    document.removeEventListener(
+        "click",
+        closeStatusMenu
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE STATUS MENU
+   ========================================================= */
+
+function closeStatusMenu(event) {
+
+    const menu =
+        document.querySelector(".bus-status-menu");
+
+
+    if (
+        menu &&
+        !menu.contains(event.target)
+    ) {
+
+        menu.remove();
+
+        document.removeEventListener(
+            "click",
+            closeStatusMenu
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   WEEK NAVIGATION
+   ========================================================= */
+
+function changeWeek(days) {
+
+    const selectedClass =
+        "{{ selected_class|escapejs }}";
+
+
+    const currentDate =
+        new Date(
+            "{{ monday|date:'Y-m-d' }}T00:00:00"
+        );
+
+
+    currentDate.setDate(
+        currentDate.getDate() + days
+    );
+
+
+    const year =
+        currentDate.getFullYear();
+
+
+    const month =
+        String(
+            currentDate.getMonth() + 1
+        ).padStart(2, "0");
+
+
+    const day =
+        String(
+            currentDate.getDate()
+        ).padStart(2, "0");
+
+
+    const newDate =
+        `${year}-${month}-${day}`;
+
+
+    window.location.href =
+        "?student_class="
+        + encodeURIComponent(selectedClass)
+        + "&date="
+        + newDate;
+
+}
+
+</script>
+
+
+{% endblock %}

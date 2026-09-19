@@ -1,0 +1,785 @@
+/* =========================================================
+   SMART FEE - BUS FEES PAGE
+   Modern Weekly Bus Fee Collection
+   Light Mode + Dark Mode
+   Desktop + Tablet + Mobile
+   ========================================================= */
+
+.bus-fees-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.bus-fees-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+}
+
+.bus-fees-title h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.bus-fees-title p {
+    margin: 7px 0 0;
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+
+/* =========================================================
+   CONTROLS
+   ========================================================= */
+
+.bus-fees-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.bus-class-select,
+.week-button {
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 9px;
+    border: 1px solid #d8dee8;
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.bus-class-select {
+    min-width: 175px;
+    cursor: pointer;
+    outline: none;
+}
+
+.bus-class-select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.week-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.18s ease;
+}
+
+.week-button:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+}
+
+.current-week {
+    min-width: 190px;
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.bus-fee-card {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e5eaf0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.06),
+        0 2px 6px rgba(15, 23, 42, 0.03);
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.bus-fee-table {
+    width: 100%;
+    min-width: 850px;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.bus-fee-table th,
+.bus-fee-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #edf1f5;
+    text-align: center;
+}
+
+.bus-fee-table th {
+    background: #f8fafc;
+    font-size: 12px;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    white-space: nowrap;
+}
+
+.bus-fee-table tbody tr {
+    transition: background 0.15s ease;
+}
+
+.bus-fee-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.bus-fee-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   STUDENT COLUMN
+   ========================================================= */
+
+.student-column {
+    text-align: left !important;
+    min-width: 230px;
+    padding-left: 20px !important;
+}
+
+.student-name {
+    display: block;
+    font-weight: 700;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.student-id {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.day-date {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+
+/* =========================================================
+   FEE BOX
+   ========================================================= */
+
+.fee-status {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 10px;
+
+    border: 2px solid #dbe2ea;
+    background: #f8fafc;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease,
+        border-color 0.15s ease;
+
+    user-select: none;
+}
+
+.fee-status:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 5px 12px rgba(15, 23, 42, 0.12);
+}
+
+.fee-status:active {
+    transform: scale(0.94);
+}
+
+
+/* =========================================================
+   BOX STATES
+   ========================================================= */
+
+/* PAID */
+.fee-status.paid {
+    background: #22c55e;
+    border-color: #16a34a;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.25);
+}
+
+/* ABSENT */
+.fee-status.absent {
+    background: #ef4444;
+    border-color: #dc2626;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.22);
+}
+
+/* PRESENT BUT NOT PAID */
+.fee-status.unpaid {
+    background: #f97316;
+    border-color: #ea580c;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(249, 115, 22, 0.22);
+}
+
+/* ADVANCE PAYMENT */
+.fee-status.advance {
+    background: #facc15;
+    border-color: #eab308;
+    color: #3f3f46;
+    box-shadow: 0 4px 10px rgba(250, 204, 21, 0.22);
+}
+
+
+/* =========================================================
+   TOTAL
+   ========================================================= */
+
+.total-amount {
+    font-weight: 800;
+    font-size: 14px;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   LEGEND
+   ========================================================= */
+
+.bus-fee-legend {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 14px 20px;
+    border-top: 1px solid #edf1f5;
+    background: #fbfdff;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.legend-box {
+    width: 13px;
+    height: 13px;
+    border-radius: 4px;
+}
+
+.legend-box.green {
+    background: #22c55e;
+}
+
+.legend-box.red {
+    background: #ef4444;
+}
+
+.legend-box.orange {
+    background: #f97316;
+}
+
+.legend-box.yellow {
+    background: #facc15;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 70px 20px;
+    text-align: center;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark-mode .bus-fees-page {
+    color: #f8fafc;
+}
+
+body.dark-mode .bus-fee-card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: none;
+}
+
+body.dark-mode .bus-class-select,
+body.dark-mode .week-button {
+    background: #1e293b;
+    border-color: #475569;
+    color: #f8fafc;
+}
+
+body.dark-mode .week-button:hover {
+    background: #273449;
+}
+
+body.dark-mode .current-week {
+    background: #172554;
+    border-color: #1d4ed8;
+    color: #93c5fd;
+}
+
+body.dark-mode .bus-fee-table th {
+    background: #172033;
+    color: #cbd5e1;
+}
+
+body.dark-mode .bus-fee-table th,
+body.dark-mode .bus-fee-table td {
+    border-color: #334155;
+}
+
+body.dark-mode .bus-fee-table tbody tr:hover {
+    background: #243247;
+}
+
+body.dark-mode .student-name {
+    color: #f8fafc;
+}
+
+body.dark-mode .student-id,
+body.dark-mode .day-date {
+    color: #94a3b8;
+}
+
+body.dark-mode .fee-status {
+    background: #273449;
+    border-color: #475569;
+}
+
+body.dark-mode .fee-status.paid {
+    background: #22c55e;
+    border-color: #16a34a;
+}
+
+body.dark-mode .fee-status.absent {
+    background: #ef4444;
+    border-color: #dc2626;
+}
+
+body.dark-mode .fee-status.unpaid {
+    background: #f97316;
+    border-color: #ea580c;
+}
+
+body.dark-mode .fee-status.advance {
+    background: #facc15;
+    border-color: #eab308;
+    color: #3f3f46;
+}
+
+body.dark-mode .total-amount {
+    color: #f8fafc;
+}
+
+body.dark-mode .bus-fee-legend {
+    background: #172033;
+    border-color: #334155;
+}
+
+body.dark-mode .legend-item {
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .bus-fees-page {
+        padding: 18px;
+    }
+
+    .bus-fees-header {
+        align-items: flex-start;
+    }
+
+    .bus-fees-controls {
+        width: 100%;
+    }
+
+    .bus-class-select,
+    .week-button {
+        flex: 1;
+    }
+
+    .current-week {
+        min-width: 150px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .bus-fees-page {
+        padding: 12px;
+    }
+
+    .bus-fees-title h1 {
+        font-size: 24px;
+    }
+
+    .bus-fees-title p {
+        font-size: 13px;
+    }
+
+    .bus-fees-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        width: 100%;
+    }
+
+    .bus-class-select {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .current-week {
+        min-width: 0;
+    }
+
+    .bus-fee-card {
+        border-radius: 12px;
+    }
+
+    .bus-fee-table {
+        min-width: 780px;
+    }
+
+    .student-column {
+        min-width: 190px;
+        padding-left: 14px !important;
+    }
+
+    .fee-status {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+    }
+
+    .bus-fee-legend {
+        gap: 12px;
+        padding: 12px 14px;
+    }
+}
+
+/* =========================================================
+   BUS STATUS POPUP
+   ========================================================= */
+
+.bus-status-menu {
+    position: absolute;
+    z-index: 9999;
+
+    width: 220px;
+    padding: 10px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+
+    box-shadow:
+        0 15px 35px rgba(15, 23, 42, 0.18),
+        0 3px 10px rgba(15, 23, 42, 0.08);
+
+    animation: busMenuAppear 0.15s ease-out;
+}
+
+
+/* =========================================================
+   POPUP ANIMATION
+   ========================================================= */
+
+@keyframes busMenuAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================================
+   POPUP TITLE
+   ========================================================= */
+
+.status-menu-title {
+
+    padding: 6px 9px 10px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    color: #64748b;
+
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   STATUS BUTTONS
+   ========================================================= */
+
+.status-option {
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 9px;
+
+    margin: 3px 0;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: #334155;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.status-option:hover {
+
+    background: #f1f5f9;
+
+    transform: translateX(2px);
+}
+
+
+/* =========================================================
+   ICON BOX
+   ========================================================= */
+
+.status-option span {
+
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 900;
+}
+
+
+/* =========================================================
+   PAID
+   ========================================================= */
+
+.status-paid span {
+
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+
+/* =========================================================
+   ABSENT
+   ========================================================= */
+
+.status-absent span {
+
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+/* =========================================================
+   PRESENT - NOT PAID
+   ========================================================= */
+
+.status-unpaid span {
+
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+
+/* =========================================================
+   ADVANCE PAID
+   ========================================================= */
+
+.status-advance span {
+
+    background: #fef3c7;
+    color: #ca8a04;
+}
+
+
+/* =========================================================
+   CLEAR
+   ========================================================= */
+
+.status-clear span {
+
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark-mode .bus-status-menu {
+
+    background: #1e293b;
+
+    border-color: #475569;
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+
+body.dark-mode .status-menu-title {
+
+    color: #94a3b8;
+
+    border-color: #334155;
+}
+
+
+body.dark-mode .status-option {
+
+    color: #e2e8f0;
+}
+
+
+body.dark-mode .status-option:hover {
+
+    background: #273449;
+}
+
+
+body.dark-mode .status-paid span {
+
+    background: #14532d;
+    color: #4ade80;
+}
+
+
+body.dark-mode .status-absent span {
+
+    background: #7f1d1d;
+    color: #f87171;
+}
+
+
+body.dark-mode .status-unpaid span {
+
+    background: #7c2d12;
+    color: #fb923c;
+}
+
+
+body.dark-mode .status-advance span {
+
+    background: #713f12;
+    color: #facc15;
+}
+
+
+body.dark-mode .status-clear span {
+
+    background: #334155;
+    color: #94a3b8;
+}

@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.db import models
 from django.utils import timezone
 
-from .models import Student, SchoolSettings, FeeStructure, Payment, Bill
+from .models import Student, SchoolSettings, FeeStructure, Payment, Bill,  BusFeeStructure, BusFeeRecord
 
 
 def logout_view(request):
@@ -1519,3 +1519,65 @@ def bill_fee_lookup(request):
             ),
         }
     })
+
+from datetime import date, timedelta
+
+
+def bus_fees(request):
+
+    selected_class = request.GET.get("student_class", "").strip()
+
+    selected_date = request.GET.get("date", "").strip()
+
+    if selected_date:
+        try:
+            current_date = date.fromisoformat(selected_date)
+        except ValueError:
+            current_date = date.today()
+    else:
+        current_date = date.today()
+
+    # Find the Monday of the selected week
+    monday = current_date - timedelta(days=current_date.weekday())
+
+    # Monday to Friday
+    week_dates = [
+        monday + timedelta(days=i)
+        for i in range(5)
+    ]
+
+    # Get available classes from students
+    classes = (
+        Student.objects
+        .values_list("student_class", flat=True)
+        .distinct()
+        .order_by("student_class")
+    )
+
+    # Get students for selected class
+    if selected_class:
+        students = (
+            Student.objects
+            .filter(
+                student_class=selected_class,
+                status="Active"
+            )
+            .order_by("first_name", "last_name")
+        )
+    else:
+        students = []
+
+    context = {
+        "selected_class": selected_class,
+        "classes": classes,
+        "students": students,
+        "week_dates": week_dates,
+        "monday": monday,
+        "friday": week_dates[-1],
+    }
+
+    return render(
+        request,
+        "fees/bus_fees.html",
+        context
+    )
