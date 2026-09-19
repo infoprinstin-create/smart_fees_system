@@ -1,0 +1,987 @@
+.bus-summary-page {
+width: 100%;
+max-width: 1500px;
+margin: 0 auto;
+padding: 24px;
+box-sizing: border-box;
+}
+
+/* HEADER */
+
+.bus-page-header {
+margin-bottom: 22px;
+}
+
+.bus-page-title {
+display: flex;
+align-items: center;
+gap: 14px;
+}
+
+.bus-icon {
+width: 54px;
+height: 54px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+background: #eff6ff;
+border: 1px solid #dbeafe;
+
+border-radius: 15px;
+
+font-size: 27px;
+
+}
+
+.bus-page-title h1 {
+margin: 0;
+
+color: #0f172a;
+
+font-size: 27px;
+font-weight: 800;
+
+}
+
+.bus-page-title p {
+margin: 5px 0 0;
+
+color: #64748b;
+
+font-size: 14px;
+
+}
+
+/* WEEK CONTROL */
+
+.week-control-card {
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+padding: 14px 18px;
+
+background: #ffffff;
+
+border: 1px solid #e5e7eb;
+border-radius: 14px;
+
+margin-bottom: 20px;
+
+box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+
+}
+
+.week-btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+
+min-height: 38px;
+padding: 0 14px;
+
+background: #eff6ff;
+color: #2563eb;
+
+border: 1px solid #dbeafe;
+border-radius: 9px;
+
+text-decoration: none;
+
+font-size: 12px;
+font-weight: 700;
+
+}
+
+.week-btn {
+background: #2563eb;
+color: #ffffff;
+}
+
+.current-week {
+text-align: center;
+}
+
+.current-week span {
+display: block;
+
+margin-bottom: 3px;
+
+color: #94a3b8;
+
+font-size: 10px;
+font-weight: 800;
+
+letter-spacing: 1px;
+
+}
+
+.current-week strong {
+color: #0f172a;
+
+font-size: 15px;
+
+}
+
+/* OVERVIEW */
+
+.weekly-overview {
+display: grid;
+
+grid-template-columns: repeat(5, minmax(0, 1fr));
+
+gap: 14px;
+
+margin-bottom: 24px;
+
+}
+
+.overview-card {
+display: flex;
+align-items: center;
+gap: 12px;
+
+min-height: 82px;
+
+padding: 15px;
+
+background: #ffffff;
+
+border: 1px solid #e5e7eb;
+border-radius: 14px;
+
+box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+
+}
+
+.overview-icon {
+width: 43px;
+height: 43px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+flex-shrink: 0;
+
+background: #eff6ff;
+
+border-radius: 11px;
+
+color: #2563eb;
+
+font-size: 20px;
+font-weight: 900;
+
+}
+
+.paid-icon {
+background: #dcfce7;
+color: #16a34a;
+}
+
+.absent-icon {
+background: #fee2e2;
+color: #dc2626;
+}
+
+.unpaid-icon {
+background: #ffedd5;
+color: #ea580c;
+}
+
+.money-icon {
+background: #dbeafe;
+color: #2563eb;
+}
+
+.overview-card small {
+display: block;
+
+margin-bottom: 4px;
+
+color: #64748b;
+
+font-size: 11px;
+font-weight: 700;
+
+}
+
+.overview-card strong {
+color: #0f172a;
+
+font-size: 20px;
+font-weight: 800;
+
+}
+
+/* SECTION */
+
+.collection-section {
+background: #ffffff;
+
+border: 1px solid #e5e7eb;
+border-radius: 16px;
+
+overflow: hidden;
+
+box-shadow: 0 7px 24px rgba(15, 23, 42, 0.06);
+
+}
+
+.section-header {
+padding: 21px 23px;
+
+border-bottom: 1px solid #eef2f7;
+
+}
+
+.section-header h2 {
+margin: 0;
+
+color: #0f172a;
+
+font-size: 18px;
+font-weight: 800;
+
+}
+
+.section-header p {
+margin: 5px 0 0;
+
+color: #64748b;
+
+font-size: 13px;
+
+}
+
+/* CLASS CARDS */
+
+.class-summary-grid {
+display: grid;
+
+grid-template-columns: repeat(2, minmax(0, 1fr));
+
+gap: 16px;
+
+padding: 20px;
+
+}
+
+.class-summary-card {
+padding: 18px;
+
+background: #ffffff;
+
+border: 1px solid #e2e8f0;
+border-radius: 14px;
+
+box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+
+transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+}
+
+.class-summary-card {
+transform: translateY(-2px);
+
+box-shadow: 0 9px 22px rgba(15, 23, 42, 0.08);
+
+}
+
+/* CARD TOP */
+
+.class-card-top {
+display: flex;
+align-items: center;
+justify-content: space-between;
+
+gap: 15px;
+
+padding-bottom: 16px;
+
+border-bottom: 1px solid #eef2f7;
+
+}
+
+.class-name-box {
+display: flex;
+align-items: center;
+gap: 11px;
+}
+
+.class-small-icon {
+width: 42px;
+height: 42px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+background: #eff6ff;
+
+border-radius: 10px;
+
+font-size: 18px;
+
+}
+
+.class-name-box h3 {
+margin: 0;
+
+color: #0f172a;
+
+font-size: 16px;
+font-weight: 800;
+
+}
+
+.class-name-box span {
+display: block;
+
+margin-top: 3px;
+
+color: #94a3b8;
+
+font-size: 11px;
+
+}
+
+.class-collection {
+text-align: right;
+}
+
+.class-collection small {
+display: block;
+
+margin-bottom: 3px;
+
+color: #94a3b8;
+
+font-size: 10px;
+font-weight: 700;
+
+text-transform: uppercase;
+
+}
+
+.class-collection strong {
+color: #2563eb;
+
+font-size: 17px;
+font-weight: 800;
+
+}
+
+/* CLASS STATS */
+
+.class-stats {
+display: grid;
+
+grid-template-columns: repeat(4, 1fr);
+
+gap: 8px;
+
+padding: 16px 0;
+
+}
+
+.class-stat {
+padding: 10px 5px;
+
+text-align: center;
+
+border-radius: 9px;
+
+background: #f8fafc;
+
+}
+
+.stat-number {
+display: block;
+
+margin-bottom: 3px;
+
+font-size: 17px;
+font-weight: 800;
+
+}
+
+.stat-label {
+display: block;
+
+color: #64748b;
+
+font-size: 9px;
+font-weight: 700;
+
+text-transform: uppercase;
+
+}
+
+.paid-stat .stat-number {
+color: #16a34a;
+}
+
+.absent-stat .stat-number {
+color: #dc2626;
+}
+
+.unpaid-stat .stat-number {
+color: #ea580c;
+}
+
+.advance-stat .stat-number {
+color: #ca8a04;
+}
+
+/* FOOTER */
+
+.class-card-footer {
+padding-top: 13px;
+
+border-top: 1px solid #eef2f7;
+
+}
+
+.details-btn {
+width: 100%;
+
+min-height: 38px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+gap: 8px;
+
+background: #eff6ff;
+
+color: #2563eb;
+
+border: 1px solid #dbeafe;
+border-radius: 9px;
+
+text-decoration: none;
+
+font-size: 12px;
+font-weight: 700;
+
+}
+
+.details-btn {
+background: #2563eb;
+color: #ffffff;
+}
+
+.details-btn span {
+font-size: 15px;
+}
+
+/* EMPTY */
+
+.empty-summary {
+padding: 70px 25px;
+
+text-align: center;
+
+}
+
+.empty-summary-icon {
+width: 65px;
+height: 65px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+margin: 0 auto 15px;
+
+background: #eff6ff;
+
+border-radius: 17px;
+
+font-size: 29px;
+
+}
+
+.empty-summary h3 {
+margin: 0;
+
+color: #0f172a;
+
+font-size: 18px;
+font-weight: 800;
+
+}
+
+.empty-summary p {
+margin: 7px 0 0;
+
+color: #64748b;
+
+font-size: 13px;
+
+}
+
+/* DARK MODE */
+
+body.dark-mode .bus-page-title h1 {
+color: #f8fafc;
+}
+
+body.dark-mode .bus-page-title p {
+color: #94a3b8;
+}
+
+body.dark-mode .bus-icon {
+background: #172554;
+border-color: #1e3a8a;
+}
+
+body.dark-mode .week-control-card,
+body.dark-mode .overview-card,
+body.dark-mode .collection-section,
+body.dark-mode .class-summary-card {
+background: #1e293b;
+border-color: #334155;
+}
+
+body.dark-mode .current-week strong {
+color: #f8fafc;
+}
+
+body.dark-mode .overview-card small,
+body.dark-mode .section-header p,
+body.dark-mode .class-name-box span,
+body.dark-mode .class-collection small,
+body.dark-mode .stat-label {
+color: #94a3b8;
+}
+
+body.dark-mode .overview-card strong,
+body.dark-mode .section-header h2,
+body.dark-mode .class-name-box h3 {
+color: #f8fafc;
+}
+
+body.dark-mode .section-header,
+body.dark-mode .class-card-top,
+body.dark-mode .class-card-footer {
+border-color: #334155;
+}
+
+body.dark-mode .class-stat {
+background: #172033;
+}
+
+body.dark-mode .class-small-icon {
+background: #172554;
+}
+
+body.dark-mode .empty-summary h3 {
+color: #f8fafc;
+}
+
+body.dark-mode .empty-summary p {
+color: #94a3b8;
+}
+
+body.dark-mode .empty-summary-icon {
+background: #172554;
+}
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+
+.weekly-overview {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.class-summary-grid {
+    grid-template-columns: 1fr;
+}
+
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+.bus-summary-page {
+    padding: 15px;
+}
+
+.bus-page-title h1 {
+    font-size: 21px;
+}
+
+.bus-page-title p {
+    font-size: 12px;
+}
+
+.bus-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 23px;
+}
+
+.week-control-card {
+    padding: 10px;
+
+    gap: 8px;
+}
+
+.week-btn {
+    padding: 0 9px;
+
+    font-size: 10px;
+}
+
+.current-week strong {
+    font-size: 11px;
+}
+
+.weekly-overview {
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+}
+
+.overview-card {
+    min-height: 70px;
+
+    padding: 11px;
+}
+
+.overview-icon {
+    width: 36px;
+    height: 36px;
+
+    font-size: 16px;
+}
+
+.overview-card strong {
+    font-size: 16px;
+}
+
+.class-summary-grid {
+    padding: 12px;
+}
+
+.class-summary-card {
+    padding: 14px;
+}
+
+.class-card-top {
+    align-items: flex-start;
+}
+
+.class-stats {
+    gap: 5px;
+}
+
+.stat-number {
+    font-size: 15px;
+}
+
+.stat-label {
+    font-size: 8px;
+}
+
+}
+
+/* SMALL MOBILE */
+
+@media (max-width: 420px) {
+
+.weekly-overview {
+    grid-template-columns: 1fr;
+}
+
+.week-control-card {
+    flex-direction: column;
+}
+
+.week-btn {
+    width: 100%;
+}
+
+.current-week {
+    order: -1;
+}
+
+.class-card-top {
+    flex-direction: column;
+}
+
+.class-collection {
+    width: 100%;
+    text-align: left;
+}
+
+.class-stats {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+}
+
+
+/* =========================================================
+   BUS FEE SETTINGS
+   ADMINISTRATION
+   ========================================================= */
+
+.bus-fee-settings-card {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+}
+
+.settings-card-header {
+    margin-bottom: 20px;
+}
+
+.settings-card-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.settings-card-header p {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+
+/* SETTINGS FORM */
+
+.bus-fee-settings-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+
+/* DAILY FEE INPUT */
+
+.fee-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fee-input-group label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #334155;
+}
+
+.fee-input-wrapper {
+    display: flex;
+    align-items: center;
+    width: 210px;
+    height: 48px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+    overflow: hidden;
+    transition: 0.2s ease;
+}
+
+.fee-input-wrapper:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    background: #ffffff;
+}
+
+.fee-input-wrapper span {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    background: #eff6ff;
+    border-right: 1px solid #dbeafe;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.fee-input-wrapper input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0 13px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+
+/* WEEKLY FEE */
+
+.weekly-fee-display {
+    min-width: 190px;
+    min-height: 48px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.weekly-fee-display span {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.weekly-fee-display strong {
+    margin-top: 2px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #2563eb;
+}
+
+.weekly-fee-display small {
+    margin-top: 2px;
+    font-size: 10px;
+    color: #64748b;
+}
+
+
+/* SAVE BUTTON */
+
+.save-bus-fee-btn {
+    height: 48px;
+    padding: 0 22px;
+    border: none;
+    border-radius: 10px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.20);
+}
+
+.save-bus-fee-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.save-bus-fee-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark-mode .bus-fee-settings-card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: none;
+}
+
+body.dark-mode .settings-card-header h2 {
+    color: #f8fafc;
+}
+
+body.dark-mode .settings-card-header p {
+    color: #94a3b8;
+}
+
+body.dark-mode .fee-input-group label {
+    color: #cbd5e1;
+}
+
+body.dark-mode .fee-input-wrapper {
+    background: #0f172a;
+    border-color: #475569;
+}
+
+body.dark-mode .fee-input-wrapper:focus-within {
+    border-color: #60a5fa;
+    background: #0f172a;
+}
+
+body.dark-mode .fee-input-wrapper span {
+    background: #172554;
+    border-color: #1e3a8a;
+    color: #60a5fa;
+}
+
+body.dark-mode .fee-input-wrapper input {
+    color: #f8fafc;
+}
+
+body.dark-mode .weekly-fee-display {
+    background: #172554;
+    border-color: #1e3a8a;
+}
+
+body.dark-mode .weekly-fee-display span,
+body.dark-mode .weekly-fee-display small {
+    color: #94a3b8;
+}
+
+body.dark-mode .weekly-fee-display strong {
+    color: #60a5fa;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .bus-fee-settings-card {
+        padding: 18px;
+    }
+
+    .bus-fee-settings-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .fee-input-group,
+    .fee-input-wrapper,
+    .weekly-fee-display,
+    .save-bus-fee-btn {
+        width: 100%;
+    }
+
+    .fee-input-wrapper {
+        width: 100%;
+    }
+
+    .weekly-fee-display {
+        width: 100%;
+    }
+
+    .save-bus-fee-btn {
+        width: 100%;
+    }
+
+}
+

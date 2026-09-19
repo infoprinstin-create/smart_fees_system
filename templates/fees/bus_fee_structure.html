@@ -1,0 +1,493 @@
+
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/bus_fee_structure.css' %}"
+>
+
+<div class="bus-summary-page">
+
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="bus-page-header">
+
+        <div class="bus-page-title">
+
+            <div class="bus-icon">
+                🚌
+            </div>
+
+            <div>
+
+                <h1>
+                    Bus Fee Structure
+                </h1>
+
+                <p>
+                    Bus fee settings and weekly collection summary
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BUS FEE SETTINGS
+         ===================================================== -->
+
+    <div class="bus-fee-settings-card">
+
+        <div class="settings-card-header">
+
+            <div>
+
+                <h2>
+                    Bus Fee Settings
+                </h2>
+
+                <p>
+                    Set the daily bus fee for all students.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <form
+            method="POST"
+            class="bus-fee-settings-form"
+        >
+
+            {% csrf_token %}
+
+            <div class="fee-input-group">
+
+                <label for="daily_fee">
+                    Daily Bus Fee
+                </label>
+
+                <div class="fee-input-wrapper">
+
+                    <span>
+                        GH₵
+                    </span>
+
+                    <input
+                        type="number"
+                        id="daily_fee"
+                        name="daily_fee"
+                        value="{{ daily_fee }}"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="weekly-fee-display">
+
+                <span>
+                    Weekly Fee
+                </span>
+
+                <strong>
+                    GH₵{{ weekly_fee|floatformat:2 }}
+                </strong>
+
+                <small>
+                    Daily fee × 5 school days
+                </small>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="save-bus-fee-btn"
+            >
+                Save Bus Fee
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         WEEK CONTROLS
+         ===================================================== -->
+
+    <div class="week-control-card">
+
+        <a
+            href="?date={{ previous_week|date:'Y-m-d' }}"
+            class="week-btn"
+        >
+            ← Previous Week
+        </a>
+
+
+        <div class="current-week">
+
+            <span>
+                WEEK
+            </span>
+
+            <strong>
+
+                {{ monday|date:"d M Y" }}
+
+                -
+
+                {{ friday|date:"d M Y" }}
+
+            </strong>
+
+        </div>
+
+
+        <a
+            href="?date={{ next_week|date:'Y-m-d' }}"
+            class="week-btn"
+        >
+            Next Week →
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         WEEK SUMMARY
+         ===================================================== -->
+
+    <div class="weekly-overview">
+
+
+        <!-- TOTAL STUDENTS -->
+
+        <div class="overview-card">
+
+            <span class="overview-icon">
+                👨‍🎓
+            </span>
+
+            <div>
+
+                <small>
+                    Total Students
+                </small>
+
+                <strong>
+                    {{ total_students|default:"0" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- PRESENT -->
+
+        <div class="overview-card">
+
+            <span class="overview-icon paid-icon">
+                ✓
+            </span>
+
+            <div>
+
+                <small>
+                    Present & Paid
+                </small>
+
+                <strong>
+                    {{ total_paid|default:"0" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- ABSENT -->
+
+        <div class="overview-card">
+
+            <span class="overview-icon absent-icon">
+                ×
+            </span>
+
+            <div>
+
+                <small>
+                    Absent
+                </small>
+
+                <strong>
+                    {{ total_absent|default:"0" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOT PAID -->
+
+        <div class="overview-card">
+
+            <span class="overview-icon unpaid-icon">
+                !
+            </span>
+
+            <div>
+
+                <small>
+                    Not Paid
+                </small>
+
+                <strong>
+                    {{ total_unpaid|default:"0" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- COLLECTION -->
+
+        <div class="overview-card collection-card">
+
+            <span class="overview-icon money-icon">
+                ₵
+            </span>
+
+            <div>
+
+                <small>
+                    Weekly Collection
+                </small>
+
+                <strong>
+                    GH₵{{ total_collection|default:"0.00" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         CLASS SUMMARY
+         ===================================================== -->
+
+    <div class="collection-section">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Collection by Class
+                </h2>
+
+                <p>
+                    Weekly bus fee collection and attendance summary
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if class_summaries %}
+
+
+            <div class="class-summary-grid">
+
+
+                {% for class in class_summaries %}
+
+
+                    <div class="class-summary-card">
+
+
+                        <!-- CARD TOP -->
+
+                        <div class="class-card-top">
+
+
+                            <div class="class-name-box">
+
+                                <div class="class-small-icon">
+                                    🎓
+                                </div>
+
+
+                                <div>
+
+                                    <h3>
+                                        {{ class.student_class }}
+                                    </h3>
+
+                                    <span>
+                                        {{ class.total_students }}
+                                        Students
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="class-collection">
+
+                                <small>
+                                    Collected
+                                </small>
+
+                                <strong>
+                                    GH₵{{ class.collection|default:"0.00" }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- STATISTICS -->
+
+                        <div class="class-stats">
+
+
+                            <div class="class-stat paid-stat">
+
+                                <span class="stat-number">
+                                    {{ class.present }}
+                                </span>
+
+                                <span class="stat-label">
+                                    Present
+                                </span>
+
+                            </div>
+
+
+                            <div class="class-stat absent-stat">
+
+                                <span class="stat-number">
+                                    {{ class.absent }}
+                                </span>
+
+                                <span class="stat-label">
+                                    Absent
+                                </span>
+
+                            </div>
+
+
+                            <div class="class-stat unpaid-stat">
+
+                                <span class="stat-number">
+                                    {{ class.not_paid }}
+                                </span>
+
+                                <span class="stat-label">
+                                    Not Paid
+                                </span>
+
+                            </div>
+
+
+                            <div class="class-stat advance-stat">
+
+                                <span class="stat-number">
+                                    {{ class.advance_days }}
+                                </span>
+
+                                <span class="stat-label">
+                                    Advance Days
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- DETAILS BUTTON -->
+
+                        <div class="class-card-footer">
+
+                            <a
+                                href="{% url 'bus_fees' %}?date={{ monday|date:'Y-m-d' }}&student_class={{ class.student_class|urlencode }}"
+                                class="details-btn"
+                            >
+                                View Detailed
+                                <span>
+                                    →
+                                </span>
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- EMPTY -->
+
+            <div class="empty-summary">
+
+                <div class="empty-summary-icon">
+                    🚌
+                </div>
+
+                <h3>
+                    No Collection Data
+                </h3>
+
+                <p>
+                    There are no bus fee records available for this week.
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+</div>
+
+{% endblock %}
+

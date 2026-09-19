@@ -783,3 +783,95 @@ body.dark-mode .status-clear span {
     background: #334155;
     color: #94a3b8;
 }
+
+/* =========================================================
+   BUS FEE AMOUNT INFORMATION
+   ========================================================= */
+
+.bus-fee-information {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 260px));
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.fee-info-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 15px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.fee-info-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.fee-info-card strong {
+    font-size: 18px;
+    color: #2563eb;
+}
+
+.day-fee {
+    display: block;
+    margin-top: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.daily-amount {
+    display: block;
+    margin-top: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.amount-due {
+    font-weight: 800;
+    color: #dc2626;
+    white-space: nowrap;
+}
+
+
+/* DARK MODE */
+
+body.dark-mode .fee-info-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+body.dark-mode .fee-info-label {
+    color: #94a3b8;
+}
+
+body.dark-mode .fee-info-card strong {
+    color: #60a5fa;
+}
+
+body.dark-mode .day-fee,
+body.dark-mode .daily-amount {
+    color: #94a3b8;
+}
+
+body.dark-mode .amount-due {
+    color: #f87171;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .bus-fee-information {
+        grid-template-columns: 1fr;
+    }
+
+}

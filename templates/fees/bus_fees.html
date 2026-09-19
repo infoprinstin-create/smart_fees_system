@@ -1,21 +1,24 @@
 {% extends "fees/base.html" %}
+
 {% load static %}
 
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'css/bus_fees.css' %}">
+<link
+    rel="stylesheet"
+    href="{% static 'css/bus_fees.css' %}"
+>
 
 <div class="bus-fees-page">
 
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
-
+    <!-- HEADER -->
     <div class="bus-fees-header">
 
         <div class="bus-fees-title">
 
-            <h1>Bus Fees</h1>
+            <h1>
+                Bus Fees
+            </h1>
 
             <p>
                 Weekly bus fee collection and attendance
@@ -63,7 +66,7 @@
             </form>
 
 
-            <!-- PREVIOUS WEEK -->
+            <!-- PREVIOUS -->
             <button
                 type="button"
                 class="week-button"
@@ -83,7 +86,7 @@
             </div>
 
 
-            <!-- NEXT WEEK -->
+            <!-- NEXT -->
             <button
                 type="button"
                 class="week-button"
@@ -98,13 +101,41 @@
     </div>
 
 
-    <!-- =====================================================
-         TABLE
-         ===================================================== -->
+    {% if selected_class %}
 
-    <div class="bus-fee-card">
+        <!-- FEE INFORMATION -->
+        <div class="bus-fee-information">
 
-        {% if selected_class %}
+            <div class="fee-info-card">
+
+                <span class="fee-info-label">
+                    Daily Bus Fee
+                </span>
+
+                <strong>
+                    GH₵{{ daily_fee|floatformat:2 }}
+                </strong>
+
+            </div>
+
+
+            <div class="fee-info-card">
+
+                <span class="fee-info-label">
+                    Weekly Fee
+                </span>
+
+                <strong>
+                    GH₵{{ weekly_class_fee|floatformat:2 }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- TABLE -->
+        <div class="bus-fee-card">
 
             {% if students %}
 
@@ -129,13 +160,22 @@
                                         {{ day|date:"d M" }}
                                     </span>
 
+                                    <span class="day-fee">
+                                        GH₵{{ daily_fee|floatformat:2 }}
+                                    </span>
+
                                 </th>
 
                             {% endfor %}
 
 
                             <th>
-                                Total
+                                Paid
+                            </th>
+
+
+                            <th>
+                                Due
                             </th>
 
                         </tr>
@@ -145,49 +185,106 @@
 
                     <tbody>
 
-                        {% for student in students %}
+                        {% for row in students %}
 
                             <tr>
 
                                 <!-- STUDENT -->
-
                                 <td class="student-column">
 
                                     <span class="student-name">
-                                        {{ student.first_name }}
-                                        {{ student.last_name }}
+                                        {{ row.student.first_name }}
+                                        {{ row.student.last_name }}
                                     </span>
 
                                     <span class="student-id">
-                                        {{ student.student_id }}
+                                        {{ row.student.student_id }}
                                     </span>
 
                                 </td>
 
 
-                                <!-- MONDAY - FRIDAY -->
-
-                                {% for day in week_dates %}
+                                <!-- DAYS -->
+                                {% for day_data in row.days %}
 
                                     <td>
 
-                                        <div
-                                            class="fee-status"
-                                            data-student="{{ student.id }}"
-                                            data-date="{{ day|date:'Y-m-d' }}"
-                                            title="Click to mark as paid"
-                                        >
-                                        </div>
+                                        
+<div
+    class="fee-status
+    {% if day_data.status == 'paid' %}
+        paid
+    {% elif day_data.status == 'absent' %}
+        absent
+    {% elif day_data.status == 'present_not_paid' %}
+        unpaid
+    {% elif day_data.status == 'advance' %}
+        advance
+    {% else %}
+        unmarked
+    {% endif %}"
+    data-student="{{ row.student.id }}"
+    data-date="{{ day_data.date|date:'Y-m-d' }}"
+    data-status="{{ day_data.status }}"
+>
+
+    {% if day_data.status == "paid" %}
+
+        ✓
+
+    {% elif day_data.status == "absent" %}
+
+        ✕
+
+    {% elif day_data.status == "present_not_paid" %}
+
+        !
+
+    {% elif day_data.status == "advance" %}
+
+        ↗
+
+    {% else %}
+
+        •
+
+    {% endif %}
+
+</div>
+
+                                        <!-- DAILY AMOUNT -->
+                                        <span class="daily-amount">
+
+                                            {% if day_data.status == "paid" or day_data.status == "advance" %}
+
+                                                GH₵{{ day_data.amount|floatformat:2 }}
+
+                                            {% elif day_data.status == "present_not_paid" %}
+
+                                                Due GH₵{{ daily_fee|floatformat:2 }}
+
+                                            {% endif %}
+
+                                        </span>
 
                                     </td>
 
                                 {% endfor %}
 
 
-                                <!-- TOTAL -->
-
+                                <!-- PAID -->
                                 <td class="total-amount">
-                                    GH₵0.00
+
+                                    GH₵{{ row.weekly_paid|floatformat:2 }}
+
+                                </td>
+
+
+                                <!-- DUE -->
+                                <td class="amount-due">
+
+                                    GH₵{{ row.amount_due|floatformat:2 }}
+
                                 </td>
 
                             </tr>
@@ -199,10 +296,7 @@
                 </table>
 
 
-                <!-- =================================================
-                     LEGEND
-                     ================================================= -->
-
+                <!-- LEGEND -->
                 <div class="bus-fee-legend">
 
                     <div class="legend-item">
@@ -247,7 +341,9 @@
 
                 <div class="empty-state">
 
-                    <h3>No students found</h3>
+                    <h3>
+                        No students found
+                    </h3>
 
                     <p>
                         There are no active students in
@@ -258,121 +354,256 @@
 
             {% endif %}
 
+        </div>
 
-        {% else %}
+
+    {% else %}
+
+        <div class="bus-fee-card">
 
             <div class="empty-state">
 
-                <h3>Select a class</h3>
+                <h3>
+                    Select a class
+                </h3>
 
                 <p>
-                    Choose a class above to display its students
-                    and weekly bus-fee records.
+                    Choose a class above to display its
+                    students and weekly bus-fee records.
                 </p>
 
             </div>
 
-        {% endif %}
+        </div>
 
-    </div>
+    {% endif %}
 
 </div>
 
 
-<!-- =========================================================
-     JAVASCRIPT
-     TEMPORARY CLICK TEST
-     ========================================================= -->
-
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    const boxes = document.querySelectorAll(".fee-status");
+        const boxes =
+            document.querySelectorAll(
+                ".fee-status"
+            );
 
+        boxes.forEach(function (box) {
 
-    boxes.forEach(function (box) {
+            box.addEventListener(
+                "click",
+                function () {
 
-        /* =====================================================
-           SINGLE CLICK
-           Mark as PAID
-           ===================================================== */
+                    clearTimeout(
+                        box.clickTimer
+                    );
 
-        box.addEventListener("click", function () {
+                    box.clickTimer =
+                        setTimeout(
+                            function () {
 
-            /*
-             * We delay the single click slightly.
-             * This allows the browser to determine
-             * whether the user is doing a double click.
-             */
+                                saveBusStatus(
+                                    box,
+                                    "paid"
+                                );
 
-            clearTimeout(box.clickTimer);
-
-            box.clickTimer = setTimeout(function () {
-
-                box.classList.remove(
-                    "absent",
-                    "unpaid",
-                    "advance"
-                );
-
-                box.classList.toggle("paid");
-
-
-                if (box.classList.contains("paid")) {
-
-                    box.innerHTML = "✓";
-                    box.title = "Paid";
-
-                } else {
-
-                    box.innerHTML = "";
-                    box.title = "Click to mark as paid";
+                            },
+                            250
+                        );
 
                 }
+            );
 
-            }, 250);
+
+            box.addEventListener(
+                "dblclick",
+                function (event) {
+
+                    event.preventDefault();
+
+                    clearTimeout(
+                        box.clickTimer
+                    );
+
+                    showStatusMenu(box);
+
+                }
+            );
 
         });
 
-
-        /* =====================================================
-           DOUBLE CLICK
-           Open status menu
-           ===================================================== */
-
-        box.addEventListener("dblclick", function (event) {
-
-            event.preventDefault();
-
-            clearTimeout(box.clickTimer);
-
-            showStatusMenu(box);
-
-        });
-
-    });
-
-});
+    }
+);
 
 
-/* =========================================================
-   STATUS MENU
-   ========================================================= */
+/* SAVE STATUS */
+
+function saveBusStatus(
+    box,
+    status
+) {
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "student_id",
+        box.dataset.student
+    );
+
+    formData.append(
+        "date",
+        box.dataset.date
+    );
+
+    formData.append(
+        "status",
+        status
+    );
+
+
+    fetch(
+        "{% url 'save_bus_status' %}",
+        {
+            method: "POST",
+
+            headers: {
+                "X-CSRFToken":
+                    getCookie("csrftoken"),
+
+                "X-Requested-With":
+                    "XMLHttpRequest"
+            },
+
+            body: formData
+        }
+    )
+
+    .then(
+        response =>
+            response.json()
+    )
+
+    .then(
+        data => {
+
+            if (!data.success) {
+
+                alert(
+                    data.message ||
+                    "Unable to save status."
+                );
+
+                return;
+
+            }
+
+            applyStatus(
+                box,
+                status
+            );
+
+            /*
+             * Refresh the page after saving
+             * so the amounts are recalculated.
+             */
+
+            setTimeout(
+                function () {
+                    window.location.reload();
+                },
+                300
+            );
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(error);
+
+            alert(
+                "There was a problem saving the bus fee status."
+            );
+
+        }
+    );
+
+}
+
+
+/* APPLY STATUS */
+
+function applyStatus(
+    box,
+    status
+) {
+
+    box.classList.remove(
+        "paid",
+        "absent",
+        "unpaid",
+        "advance"
+    );
+
+    box.innerHTML = "";
+
+
+    if (status === "paid") {
+
+        box.classList.add("paid");
+
+        box.innerHTML = "✓";
+
+    }
+
+    else if (status === "absent") {
+
+        box.classList.add("absent");
+
+        box.innerHTML = "✕";
+
+    }
+
+    else if (
+        status === "present_not_paid"
+    ) {
+
+        box.classList.add("unpaid");
+
+        box.innerHTML = "!";
+
+    }
+
+    else if (status === "advance") {
+
+        box.classList.add("advance");
+
+        box.innerHTML = "↗";
+
+    }
+
+}
+
+
+/* STATUS MENU */
 
 function showStatusMenu(box) {
 
-    /* Remove any existing menu */
-
     const oldMenu =
-        document.querySelector(".bus-status-menu");
+        document.querySelector(
+            ".bus-status-menu"
+        );
 
     if (oldMenu) {
         oldMenu.remove();
     }
 
-
-    /* Create menu */
 
     const menu =
         document.createElement("div");
@@ -396,7 +627,6 @@ function showStatusMenu(box) {
             Paid
         </button>
 
-
         <button
             type="button"
             class="status-option status-absent"
@@ -406,16 +636,14 @@ function showStatusMenu(box) {
             Absent
         </button>
 
-
         <button
             type="button"
             class="status-option status-unpaid"
-            onclick="setBusStatus(this, 'unpaid')"
+            onclick="setBusStatus(this, 'present_not_paid')"
         >
             <span>!</span>
             Present - Not Paid
         </button>
-
 
         <button
             type="button"
@@ -425,7 +653,6 @@ function showStatusMenu(box) {
             <span>↗</span>
             Advance Paid
         </button>
-
 
         <button
             type="button"
@@ -439,10 +666,6 @@ function showStatusMenu(box) {
     `;
 
 
-    /*
-     * Store which box the menu belongs to.
-     */
-
     menu.dataset.student =
         box.dataset.student;
 
@@ -450,40 +673,30 @@ function showStatusMenu(box) {
         box.dataset.date;
 
 
-    /*
-     * Put the menu into the page.
-     */
-
     document.body.appendChild(menu);
 
-
-    /*
-     * Position the menu near the box.
-     */
 
     const rect =
         box.getBoundingClientRect();
 
 
     let left =
-        rect.left + window.scrollX;
+        rect.left +
+        window.scrollX;
 
     let top =
-        rect.bottom + window.scrollY + 8;
+        rect.bottom +
+        window.scrollY +
+        8;
 
-
-    /*
-     * Prevent the menu from going
-     * outside the right side of the screen.
-     */
 
     if (
-        left + 190 >
+        left + 220 >
         window.innerWidth
     ) {
 
         left =
-            window.innerWidth - 205;
+            window.innerWidth - 230;
 
     }
 
@@ -495,49 +708,40 @@ function showStatusMenu(box) {
         top + "px";
 
 
-    /*
-     * Close menu when clicking elsewhere.
-     */
+    setTimeout(
+        function () {
 
-    setTimeout(function () {
+            document.addEventListener(
+                "click",
+                closeStatusMenu
+            );
 
-        document.addEventListener(
-            "click",
-            closeStatusMenu
-        );
-
-    }, 10);
+        },
+        10
+    );
 
 }
 
 
-/* =========================================================
-   CHANGE STATUS
-   ========================================================= */
+/* MENU STATUS */
 
-function setBusStatus(button, status) {
+function setBusStatus(
+    button,
+    status
+) {
 
     const menu =
-        button.closest(".bus-status-menu");
+        button.closest(
+            ".bus-status-menu"
+        );
 
-
-    const studentId =
-        menu.dataset.student;
-
-    const selectedDate =
-        menu.dataset.date;
-
-
-    /*
-     * Find the original box.
-     */
 
     const box =
         document.querySelector(
             '.fee-status[data-student="' +
-            studentId +
+            menu.dataset.student +
             '"][data-date="' +
-            selectedDate +
+            menu.dataset.date +
             '"]'
         );
 
@@ -547,105 +751,29 @@ function setBusStatus(button, status) {
     }
 
 
-    /*
-     * Remove all existing colors.
-     */
-
-    box.classList.remove(
-        "paid",
-        "absent",
-        "unpaid",
-        "advance"
-    );
-
-
-    /*
-     * Apply selected status.
-     */
-
-    if (status === "paid") {
-
-        box.classList.add("paid");
-
-        box.innerHTML = "✓";
-
-        box.title = "Paid";
-
-    }
-
-
-    else if (status === "absent") {
-
-        box.classList.add("absent");
-
-        box.innerHTML = "✕";
-
-        box.title = "Absent";
-
-    }
-
-
-    else if (status === "unpaid") {
-
-        box.classList.add("unpaid");
-
-        box.innerHTML = "!";
-
-        box.title =
-            "Present - Not Paid";
-
-    }
-
-
-    else if (status === "advance") {
-
-        box.classList.add("advance");
-
-        box.innerHTML = "↗";
-
-        box.title =
-            "Advance Paid";
-
-    }
-
-
-    else if (status === "clear") {
-
-        box.innerHTML = "";
-
-        box.title =
-            "Click to mark as paid";
-
-    }
-
-
-    /*
-     * Close menu.
-     */
-
-    menu.remove();
-
-    document.removeEventListener(
-        "click",
-        closeStatusMenu
+    saveBusStatus(
+        box,
+        status
     );
 
 }
 
 
-/* =========================================================
-   CLOSE STATUS MENU
-   ========================================================= */
+/* CLOSE MENU */
 
 function closeStatusMenu(event) {
 
     const menu =
-        document.querySelector(".bus-status-menu");
+        document.querySelector(
+            ".bus-status-menu"
+        );
 
 
     if (
         menu &&
-        !menu.contains(event.target)
+        !menu.contains(
+            event.target
+        )
     ) {
 
         menu.remove();
@@ -660,9 +788,58 @@ function closeStatusMenu(event) {
 }
 
 
-/* =========================================================
-   WEEK NAVIGATION
-   ========================================================= */
+/* CSRF */
+
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (
+        document.cookie &&
+        document.cookie !== ""
+    ) {
+
+        const cookies =
+            document.cookie.split(";");
+
+        for (
+            let i = 0;
+            i < cookies.length;
+            i++
+        ) {
+
+            const cookie =
+                cookies[i].trim();
+
+            if (
+                cookie.substring(
+                    0,
+                    name.length + 1
+                ) ===
+                name + "="
+            ) {
+
+                cookieValue =
+                    decodeURIComponent(
+                        cookie.substring(
+                            name.length + 1
+                        )
+                    );
+
+                break;
+
+            }
+
+        }
+
+    }
+
+    return cookieValue;
+
+}
+
+
+/* WEEK NAVIGATION */
 
 function changeWeek(days) {
 
@@ -702,14 +879,15 @@ function changeWeek(days) {
 
 
     window.location.href =
-        "?student_class="
-        + encodeURIComponent(selectedClass)
-        + "&date="
-        + newDate;
+        "?student_class=" +
+        encodeURIComponent(
+            selectedClass
+        ) +
+        "&date=" +
+        newDate;
 
 }
 
 </script>
-
 
 {% endblock %}

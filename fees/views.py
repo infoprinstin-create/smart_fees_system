@@ -1521,63 +1521,685 @@ def bill_fee_lookup(request):
     })
 
 from datetime import date, timedelta
-
+from datetime import date, timedelta
 
 def bus_fees(request):
 
-    selected_class = request.GET.get("student_class", "").strip()
+    selected_class = request.GET.get(
+        "student_class",
+        ""
+    ).strip()
 
-    selected_date = request.GET.get("date", "").strip()
+    selected_date = request.GET.get(
+        "date",
+        ""
+    ).strip()
+
+    # =====================================================
+    # SELECTED DATE
+    # =====================================================
 
     if selected_date:
+
         try:
-            current_date = date.fromisoformat(selected_date)
+            current_date = date.fromisoformat(
+                selected_date
+            )
+
         except ValueError:
             current_date = date.today()
+
     else:
         current_date = date.today()
 
-    # Find the Monday of the selected week
-    monday = current_date - timedelta(days=current_date.weekday())
 
-    # Monday to Friday
+    # =====================================================
+    # CALCULATE WEEK
+    # =====================================================
+
+    monday = current_date - timedelta(
+        days=current_date.weekday()
+    )
+
     week_dates = [
         monday + timedelta(days=i)
         for i in range(5)
     ]
 
-    # Get available classes from students
+    friday = week_dates[-1]
+
+    previous_week = monday - timedelta(days=7)
+
+    next_week = monday + timedelta(days=7)
+
+
+    # =====================================================
+    # ALL CLASSES
+    # =====================================================
+
     classes = (
         Student.objects
-        .values_list("student_class", flat=True)
+        .filter(status="Active")
+        .values_list(
+            "student_class",
+            flat=True
+        )
         .distinct()
         .order_by("student_class")
     )
 
-    # Get students for selected class
+
+    # =====================================================
+    # GET THE ONE SCHOOL-WIDE BUS FEE
+    # =====================================================
+
+    bus_structure = (
+        BusFeeStructure.objects
+        .order_by("-updated_at")
+        .first()
+    )
+
+    if bus_structure:
+
+        daily_fee = bus_structure.daily_fee
+
+    else:
+
+        daily_fee = Decimal("0.00")
+
+
+    # =====================================================
+    # CALCULATE WEEKLY FEE
+    # =====================================================
+
+    weekly_class_fee = daily_fee * 5
+
+
+    students = []
+
+
+    # =====================================================
+    # GET STUDENTS FOR SELECTED CLASS
+    # =====================================================
+
     if selected_class:
-        students = (
+
+        students_queryset = (
             Student.objects
             .filter(
                 student_class=selected_class,
                 status="Active"
             )
-            .order_by("first_name", "last_name")
+            .order_by(
+                "first_name",
+                "last_name"
+            )
         )
-    else:
-        students = []
+
+
+        # =================================================
+        # GET BUS RECORDS FOR THE ENTIRE WEEK
+        # =================================================
+
+        records = (
+            BusFeeRecord.objects
+            .filter(
+                student__in=students_queryset,
+                date__in=week_dates
+            )
+        )
+
+
+        # =================================================
+        # ORGANIZE RECORDS
+        # =================================================
+
+        record_lookup = {}
+
+        for record in records:
+
+            key = (
+                record.student_id,
+                record.date
+            )
+
+            record_lookup[key] = record
+
+
+        # =================================================
+        # BUILD STUDENT ROWS
+        # =================================================
+
+        for student in students_queryset:
+
+            student_days = []
+
+            weekly_paid = Decimal("0.00")
+
+            days_paid = 0
+
+
+            for day in week_dates:
+
+                record = record_lookup.get(
+                    (
+                        student.id,
+                        day
+                    )
+                )
+
+
+                if record:
+
+                    status = record.status
+
+                    amount = record.amount
+
+
+                    # Use the current daily fee if
+                    # an older record has no amount.
+
+                    if (
+                        amount == 0
+                        and daily_fee
+                    ):
+
+                        amount = daily_fee
+
+
+                else:
+
+                    status = "unmarked"
+
+                    amount = Decimal("0.00")
+
+
+                # =========================================
+                # COUNT PAID / ADVANCE
+                # =========================================
+
+                if status in [
+                    "paid",
+                    "advance"
+                ]:
+
+                    weekly_paid += amount
+
+                    days_paid += 1
+
+
+                student_days.append({
+
+                    "date": day,
+
+                    "record": record,
+
+                    "status": status,
+
+                    "amount": amount,
+
+                })
+
+
+            # =============================================
+            # AMOUNT DUE
+            # =============================================
+
+            weekly_due = daily_fee * 5
+
+            amount_due = (
+                weekly_due -
+                weekly_paid
+            )
+
+
+            if amount_due < 0:
+
+                amount_due = Decimal("0.00")
+
+
+            students.append({
+
+                "student": student,
+
+                "days": student_days,
+
+                "weekly_paid": weekly_paid,
+
+                "weekly_due": weekly_due,
+
+                "amount_due": amount_due,
+
+                "days_paid": days_paid,
+
+            })
+
+
+    # =====================================================
+    # PAGE CONTEXT
+    # =====================================================
 
     context = {
+
         "selected_class": selected_class,
+
         "classes": classes,
+
         "students": students,
+
+
         "week_dates": week_dates,
+
         "monday": monday,
-        "friday": week_dates[-1],
+
+        "friday": friday,
+
+
+        "previous_week": previous_week,
+
+        "next_week": next_week,
+
+
+        # BUS FEE
+
+        "daily_fee": daily_fee,
+
+        "weekly_class_fee": weekly_class_fee,
+
     }
+
 
     return render(
         request,
         "fees/bus_fees.html",
         context
     )
+
+
+from datetime import date, timedelta
+from decimal import Decimal
+
+
+
+def bus_fee_structure(request):
+
+    # =====================================================
+    # SAVE DAILY BUS FEE
+    # =====================================================
+
+    if request.method == "POST":
+
+        daily_fee_value = request.POST.get(
+            "daily_fee",
+            ""
+        ).strip()
+
+        try:
+            daily_fee = Decimal(daily_fee_value)
+
+            if daily_fee < 0:
+                raise ValueError
+
+        except (ValueError, TypeError):
+            daily_fee = Decimal("0.00")
+
+        bus_fee_structure = (
+            BusFeeStructure.objects
+            .order_by("-updated_at")
+            .first()
+        )
+
+        if bus_fee_structure:
+            bus_fee_structure.daily_fee = daily_fee
+            bus_fee_structure.save()
+
+        else:
+            BusFeeStructure.objects.create(
+                daily_fee=daily_fee
+            )
+
+    # =====================================================
+    # GET SELECTED DATE
+    # =====================================================
+
+    selected_date = request.GET.get(
+        "date",
+        ""
+    ).strip()
+
+    if selected_date:
+
+        try:
+            current_date = date.fromisoformat(
+                selected_date
+            )
+
+        except ValueError:
+            current_date = date.today()
+
+    else:
+        current_date = date.today()
+
+    # =====================================================
+    # CALCULATE WEEK
+    # =====================================================
+
+    monday = current_date - timedelta(
+        days=current_date.weekday()
+    )
+
+    friday = monday + timedelta(days=4)
+
+    previous_week = monday - timedelta(days=7)
+
+    next_week = monday + timedelta(days=7)
+
+    week_dates = [
+        monday + timedelta(days=i)
+        for i in range(5)
+    ]
+
+    # =====================================================
+    # GET ONE DAILY BUS FEE
+    # =====================================================
+
+    bus_fee_structure = (
+        BusFeeStructure.objects
+        .order_by("-updated_at")
+        .first()
+    )
+
+    if bus_fee_structure:
+
+        daily_fee = bus_fee_structure.daily_fee
+
+    else:
+
+        daily_fee = Decimal("0.00")
+
+    # Weekly fee
+    weekly_fee = daily_fee * 5
+
+    # =====================================================
+    # GET ALL ACTIVE CLASSES
+    # =====================================================
+
+    classes = (
+        Student.objects
+        .filter(status="Active")
+        .values_list(
+            "student_class",
+            flat=True
+        )
+        .distinct()
+        .order_by("student_class")
+    )
+
+    # =====================================================
+    # GET BUS RECORDS FOR THIS WEEK
+    # =====================================================
+
+    bus_records = (
+        BusFeeRecord.objects
+        .filter(
+            date__in=week_dates
+        )
+        .select_related("student")
+    )
+
+    # =====================================================
+    # CLASS SUMMARIES
+    # =====================================================
+
+    class_summaries = []
+
+    total_students = 0
+    total_paid = 0
+    total_absent = 0
+    total_unpaid = 0
+    total_advance_days = 0
+    total_collection = Decimal("0.00")
+
+    for student_class in classes:
+
+        students = (
+            Student.objects
+            .filter(
+                student_class=student_class,
+                status="Active"
+            )
+        )
+
+        student_ids = set(
+            students.values_list(
+                "id",
+                flat=True
+            )
+        )
+
+        class_records = [
+            record
+            for record in bus_records
+            if record.student_id in student_ids
+        ]
+
+        # Present and paid
+        present = sum(
+            1
+            for record in class_records
+            if record.status == "paid"
+        )
+
+        # Absent
+        absent = sum(
+            1
+            for record in class_records
+            if record.status == "absent"
+        )
+
+        # Present but not paid
+        not_paid = sum(
+            1
+            for record in class_records
+            if record.status == "present_not_paid"
+        )
+
+        # Advance-paid days
+        advance_days = sum(
+            1
+            for record in class_records
+            if record.is_advance_payment
+        )
+
+        # Collection
+        collection = sum(
+            (
+                record.amount
+                for record in class_records
+                if record.status == "paid"
+                or record.is_advance_payment
+            ),
+            Decimal("0.00")
+        )
+
+        student_count = len(student_ids)
+
+        class_summaries.append({
+
+            "student_class": student_class,
+
+            "total_students": student_count,
+
+            "present": present,
+
+            "absent": absent,
+
+            "not_paid": not_paid,
+
+            "advance_days": advance_days,
+
+            "collection": collection,
+
+        })
+
+        total_students += student_count
+
+        total_paid += present
+
+        total_absent += absent
+
+        total_unpaid += not_paid
+
+        total_advance_days += advance_days
+
+        total_collection += collection
+
+    # =====================================================
+    # PAGE CONTEXT
+    # =====================================================
+
+    context = {
+
+        "class_summaries": class_summaries,
+
+        "monday": monday,
+
+        "friday": friday,
+
+        "previous_week": previous_week,
+
+        "next_week": next_week,
+
+        "week_dates": week_dates,
+
+        # BUS FEE
+        "daily_fee": daily_fee,
+
+        "weekly_fee": weekly_fee,
+
+        # TOTALS
+        "total_students": total_students,
+
+        "total_paid": total_paid,
+
+        "total_absent": total_absent,
+
+        "total_unpaid": total_unpaid,
+
+        "total_advance_days": total_advance_days,
+
+        "total_collection": total_collection,
+
+    }
+
+    return render(
+        request,
+        "fees/bus_fee_structure.html",
+        context
+    )
+
+
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+
+@require_POST
+def save_bus_status(request):
+
+    student_id = request.POST.get("student_id")
+    selected_date = request.POST.get("date")
+    status = request.POST.get("status")
+
+    allowed_statuses = [
+        "paid",
+        "absent",
+        "present_not_paid",
+        "advance",
+        "clear",
+    ]
+
+    if status not in allowed_statuses:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid status."
+        }, status=400)
+
+    try:
+
+        student = Student.objects.get(
+            id=student_id
+        )
+
+        record_date = date.fromisoformat(
+            selected_date
+        )
+
+    except (
+        Student.DoesNotExist,
+        ValueError
+    ):
+
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid student or date."
+        }, status=400)
+
+    # CLEAR
+    if status == "clear":
+
+        BusFeeRecord.objects.filter(
+            student=student,
+            date=record_date
+        ).delete()
+
+        return JsonResponse({
+            "success": True,
+            "status": "clear"
+        })
+
+    # GET THE GLOBAL BUS FEE
+    bus_structure = (
+        BusFeeStructure.objects
+        .order_by("-updated_at")
+        .first()
+    )
+
+    if bus_structure:
+
+        daily_fee = bus_structure.daily_fee
+
+    else:
+
+        daily_fee = Decimal("0.00")
+
+    # CREATE OR FIND THE DAILY RECORD
+    record, created = (
+        BusFeeRecord.objects.get_or_create(
+            student=student,
+            date=record_date
+        )
+    )
+
+    record.status = status
+
+    # MARK ADVANCE PAYMENT
+    if status == "advance":
+
+        record.is_advance_payment = True
+
+    else:
+
+        record.is_advance_payment = False
+
+    # SAVE THE GLOBAL DAILY FEE
+    record.amount = daily_fee
+
+    record.save()
+
+    return JsonResponse({
+        "success": True,
+        "status": status,
+        "amount": str(record.amount)
+    })
