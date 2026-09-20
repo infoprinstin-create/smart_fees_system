@@ -135,3 +135,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Maximum uploaded file size: 5 MB
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
+
+LOGIN_URL = "login"
+
+LOGIN_REDIRECT_URL = "home"
+
+LOGOUT_REDIRECT_URL = "login"

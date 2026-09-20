@@ -1,10 +1,17 @@
+from django.urls import path
+from django.contrib.auth import views as auth_views
+from . import views
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.db import models
 from django.utils import timezone
 
-from .models import Student, SchoolSettings, FeeStructure, Payment, Bill,  BusFeeStructure, BusFeeRecord, FeedingFeeStructure, FeedingFeeRecord
+
+from .models import Student, SchoolSettings, FeeStructure, Payment, Bill,  BusFeeStructure, UserProfile, BusFeeRecord, FeedingFeeStructure, FeedingFeeRecord
+
 
 
 def logout_view(request):
@@ -2828,3 +2835,159 @@ def save_feeding_status(request):
         "status": status,
         "amount": str(record.amount)
     })
+
+
+@login_required
+def users_management(request):
+
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    users = (
+        User.objects
+        .select_related("profile")
+        .exclude(id=request.user.id)
+        .order_by("username")
+    )
+
+    return render(
+        request,
+        "fees/users_management.html",
+        {
+            "users": users,
+        }
+    )
+
+@login_required
+def create_user(request):
+
+    # Only Administrator can create users
+    if not request.user.is_superuser:
+        return redirect("home")
+
+    if request.method == "POST":
+
+        full_name = request.POST.get("full_name", "").strip()
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
+        confirm_password = request.POST.get("confirm_password", "")
+        role = request.POST.get("role", "")
+
+        # -----------------------------------------
+        # VALIDATION
+        # -----------------------------------------
+
+        if not full_name:
+            return render(
+                request,
+                "fees/create_user.html",
+                {
+                    "error": "Please enter the user's full name.",
+                    "full_name": full_name,
+                    "username": username,
+                    "role": role,
+                }
+            )
+
+        if not username:
+            return render(
+                request,
+                "fees/create_user.html",
+                {
+                    "error": "Please enter a username.",
+                    "full_name": full_name,
+                    "username": username,
+                    "role": role,
+                }
+            )
+
+        if not password:
+            return render(
+                request,
+                "fees/create_user.html",
+                {
+                    "error": "Please enter a password.",
+                    "full_name": full_name,
+                    "username": username,
+                    "role": role,
+                }
+            )
+
+        if password != confirm_password:
+            return render(
+                request,
+                "fees/create_user.html",
+                {
+                    "error": "Passwords do not match.",
+                    "full_name": full_name,
+                    "username": username,
+                    "role": role,
+                }
+            )
+
+        if role not in [
+            "school_fees",
+            "bus_fee",
+            "feeding_fee",
+        ]:
+            return render(
+                request,
+                "fees/create_user.html",
+                {
+                    "error": "Please select a valid user role.",
+                    "full_name": full_name,
+                    "username": username,
+                    "role": role,
+                }
+            )
+
+        # -----------------------------------------
+        # CHECK USERNAME
+        # -----------------------------------------
+
+        if User.objects.filter(username=username).exists():
+            return render(
+                request,
+                "fees/create_user.html",
+                {
+                    "error": "That username already exists.",
+                    "full_name": full_name,
+                    "username": username,
+                    "role": role,
+                }
+            )
+
+        # -----------------------------------------
+        # CREATE USER
+        # -----------------------------------------
+
+        name_parts = full_name.split(" ", 1)
+
+        first_name = name_parts[0]
+        last_name = ""
+
+        if len(name_parts) > 1:
+            last_name = name_parts[1]
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name
+        )
+
+        # -----------------------------------------
+        # CREATE USER PROFILE
+        # -----------------------------------------
+
+        UserProfile.objects.create(
+            user=user,
+            role=role
+        )
+
+        return redirect("users_management")
+
+        return render(
+        request,
+        "fees/create_user.html"
+    )

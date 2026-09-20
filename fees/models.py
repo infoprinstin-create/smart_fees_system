@@ -502,3 +502,43 @@ class FeedingFeeRecord(models.Model):
             f"{self.date} - "
             f"{self.status}"
         )
+
+class UserProfile(models.Model):
+
+    ROLE_CHOICES = [
+        ("administrator", "Administrator"),
+        ("school_fees", "School Fees"),
+        ("bus_fee", "Bus Fee"),
+        ("feeding_fee", "Feeding Fee"),
+    ]
+
+    user = models.OneToOneField(
+        "auth.User",
+        on_delete=models.CASCADE,
+        related_name="profile"
+    )
+
+    role = models.CharField(
+        max_length=30,
+        choices=ROLE_CHOICES
+    )
+
+    last_activity = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    last_logout = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    login_count = models.PositiveIntegerField(
+        default=0
+    )
+
+    def __str__(self):
+        return (
+            f"{self.user.username} - "
+            f"{self.get_role_display()}"
+        )

@@ -1,0 +1,233 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'fees/create_user.css' %}">
+
+<div class="create-user-page">
+
+    <div class="create-user-header">
+
+        <div>
+            <h1>
+                <i class="fas fa-user-plus"></i>
+                Create Staff User
+            </h1>
+
+            <p>
+                Create a new staff account and assign its access role.
+            </p>
+        </div>
+
+        <a href="{% url 'users_management' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            Back to Users
+        </a>
+
+    </div>
+
+
+    <div class="create-user-card">
+
+        {% if error %}
+            <div class="form-error">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+            </div>
+        {% endif %}
+
+
+        <form method="post">
+
+            {% csrf_token %}
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Full Name
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-user"></i>
+
+                    <input
+                        type="text"
+                        name="full_name"
+                        value="{{ full_name|default:'' }}"
+                        placeholder="Enter staff member's full name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-at"></i>
+
+                    <input
+                        type="text"
+                        name="username"
+                        value="{{ username|default:'' }}"
+                        placeholder="Enter username"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- ROLE -->
+
+            <div class="form-group">
+
+                <label>
+                    Staff Role
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-user-shield"></i>
+
+                    <select name="role" required>
+
+                        <option value="">
+                            Select staff role
+                        </option>
+
+                        <option
+                            value="school_fees"
+                            {% if role == "school_fees" %}selected{% endif %}
+                        >
+                            School Fees
+                        </option>
+
+                        <option
+                            value="bus_fee"
+                            {% if role == "bus_fee" %}selected{% endif %}
+                        >
+                            Bus Fee
+                        </option>
+
+                        <option
+                            value="feeding_fee"
+                            {% if role == "feeding_fee" %}selected{% endif %}
+                        >
+                            Feeding Fee
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-lock"></i>
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Create password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label>
+                    Confirm Password
+                </label>
+
+                <div class="input-wrapper">
+
+                    <i class="fas fa-lock"></i>
+
+                    <input
+                        type="password"
+                        name="confirm_password"
+                        placeholder="Confirm password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="role-info">
+
+                <i class="fas fa-info-circle"></i>
+
+                <div>
+
+                    <strong>Access Control</strong>
+
+                    <p>
+                        The selected role determines which sections of
+                        Smart Fee this user can access.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'users_management' %}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="create-button"
+                >
+                    <i class="fas fa-user-plus"></i>
+                    Create User
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

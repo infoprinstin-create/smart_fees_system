@@ -1,10 +1,42 @@
-
 from django.urls import path
+from django.contrib.auth import views as auth_views
 
 from . import views
 
 
 urlpatterns = [
+
+    # =========================================================
+    # LOGIN
+    # =========================================================
+
+    path(
+        "login/",
+        auth_views.LoginView.as_view(
+            template_name="registration/login.html"
+        ),
+        name="login"
+    ),
+
+    # =========================================================
+    # USERS MANAGEMENT
+    # =========================================================
+
+        path(
+        "users-management/",
+        views.users_management,
+        name="users_management"
+    ),
+
+        path(
+        "users-management/create/",
+        views.create_user,
+        name="create_user"
+    ),
+
+    # =========================================================
+    # SETTINGS
+    # =========================================================
 
     path(
         "setting/",
@@ -12,11 +44,19 @@ urlpatterns = [
         name="settings"
     ),
 
+    # =========================================================
+    # LOGOUT
+    # =========================================================
+
     path(
         "logout/",
         views.logout_view,
         name="logout"
     ),
+
+    # =========================================================
+    # STUDENTS
+    # =========================================================
 
     path(
         "students/",
@@ -31,9 +71,9 @@ urlpatterns = [
     ),
 
     path(
-    "student-profile/<int:student_id>/edit/",
-    views.edit_student,
-    name="edit_student"
+        "student-profile/<int:student_id>/edit/",
+        views.edit_student,
+        name="edit_student"
     ),
 
     path(
@@ -41,6 +81,10 @@ urlpatterns = [
         views.add_student,
         name="add_student"
     ),
+
+    # =========================================================
+    # PAYMENTS
+    # =========================================================
 
     path(
         "payments/",
@@ -55,10 +99,14 @@ urlpatterns = [
     ),
 
     path(
-    "student-payment-lookup/",
-    views.student_payment_lookup,
-    name="student_payment_lookup"
+        "student-payment-lookup/",
+        views.student_payment_lookup,
+        name="student_payment_lookup"
     ),
+
+    # =========================================================
+    # NORMAL FEE STRUCTURE
+    # =========================================================
 
     path(
         "fees-structure/",
@@ -66,23 +114,31 @@ urlpatterns = [
         name="fees_structure"
     ),
 
-        path(
+    path(
+        "fees-structure/add/",
+        views.add_fee_structure,
+        name="add_fee_structure"
+    ),
+
+    # =========================================================
+    # BILLS
+    # =========================================================
+
+    path(
         "create-bill/",
         views.create_bill,
         name="create_bill"
     ),
 
     path(
-    "bill-fee-lookup/",
-    views.bill_fee_lookup,
-    name="bill_fee_lookup"
+        "bill-fee-lookup/",
+        views.bill_fee_lookup,
+        name="bill_fee_lookup"
     ),
 
-    path(
-      "fees-structure/add/",
-       views.add_fee_structure,
-       name="add_fee_structure"
-    ),
+    # =========================================================
+    # REPORTS / CLASSES
+    # =========================================================
 
     path(
         "reports/",
@@ -96,42 +152,65 @@ urlpatterns = [
         name="classes"
     ),
 
+    # =========================================================
+    # BUS FEES
+    # =========================================================
+
+    path(
+        "bus-fees/",
+        views.bus_fees,
+        name="bus_fees"
+    ),
+
+    # =========================================================
+    # FEEDING FEES
+    # =========================================================
+
+    path(
+        "feeding-fees/",
+        views.feeding_fees,
+        name="feeding_fees"
+    ),
+
+    # =========================================================
+    # BUS + FEEDING STRUCTURE
+    # =========================================================
+
+    path(
+        "bus-fee-structure/",
+        views.bus_fee_structure,
+        name="bus_fee_structure"
+    ),
+
+    # =========================================================
+    # BUS STATUS
+    # =========================================================
+
+    path(
+        "save-bus-status/",
+        views.save_bus_status,
+        name="save_bus_status"
+    ),
+
+    # =========================================================
+    # FEEDING STATUS
+    # =========================================================
+
+    path(
+        "save-feeding-status/",
+        views.save_feeding_status,
+        name="save_feeding_status"
+    ),
+
+    # =========================================================
+    # HOME
+    # =========================================================
+
     path(
         "",
         views.home,
         name="home"
     ),
 
-    path("fees-structure/", views.fees_structure, name="fees_structure"),
-    path("fees-structure/add/", views.add_fee_structure, name="add_fee_structure"),
-    path("bus-fees/", views.bus_fees, name="bus_fees"),
-
-    path(
-    "feeding-fees/",
-    views.feeding_fees,
-    name="feeding_fees"
-    ),
-
-    path(
-    "bus-fee-structure/",
-    views.bus_fee_structure,
-    name="bus_fee_structure"
-),
-
-
-
-path(
-    "save-bus-status/",
-    views.save_bus_status,
-    name="save_bus_status"
-),
-
-path(
-    "save-feeding-status/",
-    views.save_feeding_status,
-    name="save_feeding_status"
-),
-
+    
 ]
-
-
