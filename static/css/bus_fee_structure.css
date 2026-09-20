@@ -1322,3 +1322,88 @@ body.dark-mode .weekly-fee-display strong {
 
 }
 
+/* =========================================================
+   BUS / FEEDING FEE SWITCH
+   ========================================================= */
+
+.fee-type-switch-card {
+    margin-bottom: 24px;
+}
+
+.fee-type-switch {
+    display: flex;
+    gap: 10px;
+    padding: 6px;
+    background: #f1f5f9;
+    border-radius: 14px;
+    width: fit-content;
+}
+
+.fee-type-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-width: 150px;
+    padding: 12px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.fee-type-btn:hover {
+    color: #2563eb;
+    background: #ffffff;
+}
+
+.fee-type-btn.active {
+    color: #ffffff;
+    background: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+body.dark-mode .fee-type-switch {
+    background: #1e293b;
+}
+
+body.dark-mode .fee-type-btn {
+    color: #cbd5e1;
+}
+
+body.dark-mode .fee-type-btn:hover {
+    color: #60a5fa;
+    background: #334155;
+}
+
+body.dark-mode .fee-type-btn.active {
+    color: #ffffff;
+    background: #2563eb;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .fee-type-switch {
+        width: 100%;
+    }
+
+    .fee-type-btn {
+        flex: 1;
+        min-width: 0;
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+}

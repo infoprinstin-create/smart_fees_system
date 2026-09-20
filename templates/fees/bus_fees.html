@@ -134,24 +134,24 @@
         </div>
 
 
-        <!-- TABLE -->
-        <div class="bus-fee-card">
+<!-- TABLE -->
+<div class="bus-fee-card">
 
-            {% if students %}
+    {% if students %}
 
-                <table class="bus-fee-table">
+        <div class="bus-fee-table-wrapper">
 
-                    <thead>
+            <table class="bus-fee-table">
 
-                        <tr>
+                <thead>
 
-                            <th class="student-column">
-                                Student
-                            </th>
+                    <tr>
 
+                        <th class="student-column">
+                            Student
+                        </th>
 
-                            {% for day in week_dates %}
-
+                        {% for day in week_dates %}
                                 <th>
 
                                     {{ day|date:"l" }}

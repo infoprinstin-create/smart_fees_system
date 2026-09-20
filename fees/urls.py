@@ -107,15 +107,29 @@ urlpatterns = [
     path("bus-fees/", views.bus_fees, name="bus_fees"),
 
     path(
+    "feeding-fees/",
+    views.feeding_fees,
+    name="feeding_fees"
+    ),
+
+    path(
     "bus-fee-structure/",
     views.bus_fee_structure,
     name="bus_fee_structure"
 ),
 
+
+
 path(
     "save-bus-status/",
     views.save_bus_status,
     name="save_bus_status"
+),
+
+path(
+    "save-feeding-status/",
+    views.save_feeding_status,
+    name="save_feeding_status"
 ),
 
 ]

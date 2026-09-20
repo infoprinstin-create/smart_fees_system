@@ -428,3 +428,77 @@ class BusFeeRecord(models.Model):
             f"{self.date} - "
             f"{self.status}"
         )
+
+class FeedingFeeStructure(models.Model):
+
+    daily_fee = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    academic_year = models.CharField(
+        max_length=20,
+        default="2026/2027"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"Feeding Fee - {self.daily_fee}"
+
+
+class FeedingFeeRecord(models.Model):
+
+    STATUS_CHOICES = [
+        ("unmarked", "Unmarked"),
+        ("paid", "Paid"),
+        ("absent", "Absent"),
+        ("present_not_paid", "Present - Not Paid"),
+        ("advance", "Advance Paid"),
+    ]
+
+    student = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        related_name="feeding_fee_records"
+    )
+
+    date = models.DateField()
+
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES,
+        default="unmarked"
+    )
+
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    is_advance_payment = models.BooleanField(
+        default=False
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.student} - "
+            f"{self.date} - "
+            f"{self.status}"
+        )

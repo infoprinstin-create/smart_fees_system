@@ -1,37 +1,32 @@
-
 {% extends "fees/base.html" %}
 {% load static %}
 
 {% block content %}
 
-<link
-    rel="stylesheet"
-    href="{% static 'css/bus_fee_structure.css' %}"
->
+<link rel="stylesheet" href="{% static 'css/bus_fee_structure.css' %}">
 
 <div class="bus-summary-page">
 
-
     <!-- =====================================================
-         HEADER
-         ===================================================== -->
+         PAGE HEADER
+    ====================================================== -->
 
     <div class="bus-page-header">
 
         <div class="bus-page-title">
 
             <div class="bus-icon">
-                🚌
+                {{ fee_icon }}
             </div>
 
             <div>
 
                 <h1>
-                    Bus Fee Structure
+                    {{ fee_name }} Structure
                 </h1>
 
                 <p>
-                    Bus fee settings and weekly collection summary
+                    {{ fee_description }}
                 </p>
 
             </div>
@@ -42,8 +37,44 @@
 
 
     <!-- =====================================================
-         BUS FEE SETTINGS
-         ===================================================== -->
+         BUS / FEEDING SWITCH
+    ====================================================== -->
+
+    <div class="fee-type-switch-card">
+
+        <div class="fee-type-switch">
+
+            <a
+                href="?type=bus"
+                class="
+                    fee-type-btn
+                    {% if fee_type == 'bus' %}active{% endif %}
+                "
+            >
+                <span>🚌</span>
+                <span>Bus Fee</span>
+            </a>
+
+
+            <a
+                href="?type=feeding"
+                class="
+                    fee-type-btn
+                    {% if fee_type == 'feeding' %}active{% endif %}
+                "
+            >
+                <span>🍽️</span>
+                <span>Feeding Fee</span>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         FEE SETTINGS
+    ====================================================== -->
 
     <div class="bus-fee-settings-card">
 
@@ -52,11 +83,11 @@
             <div>
 
                 <h2>
-                    Bus Fee Settings
+                    {{ fee_name }} Settings
                 </h2>
 
                 <p>
-                    Set the daily bus fee for all students.
+                    {{ settings_description }}
                 </p>
 
             </div>
@@ -71,17 +102,22 @@
 
             {% csrf_token %}
 
+            <input
+                type="hidden"
+                name="fee_type"
+                value="{{ fee_type }}"
+            >
+
+
             <div class="fee-input-group">
 
                 <label for="daily_fee">
-                    Daily Bus Fee
+                    {{ daily_label }}
                 </label>
 
                 <div class="fee-input-wrapper">
 
-                    <span>
-                        GH₵
-                    </span>
+                    <span>GH₵</span>
 
                     <input
                         type="number"
@@ -119,7 +155,7 @@
                 type="submit"
                 class="save-bus-fee-btn"
             >
-                Save Bus Fee
+                {{ save_label }}
             </button>
 
         </form>
@@ -129,12 +165,12 @@
 
     <!-- =====================================================
          WEEK CONTROLS
-         ===================================================== -->
+    ====================================================== -->
 
     <div class="week-control-card">
 
         <a
-            href="?date={{ previous_week|date:'Y-m-d' }}"
+            href="?type={{ fee_type }}&date={{ previous_week|date:'Y-m-d' }}"
             class="week-btn"
         >
             ← Previous Week
@@ -161,7 +197,7 @@
 
 
         <a
-            href="?date={{ next_week|date:'Y-m-d' }}"
+            href="?type={{ fee_type }}&date={{ next_week|date:'Y-m-d' }}"
             class="week-btn"
         >
             Next Week →
@@ -171,13 +207,11 @@
 
 
     <!-- =====================================================
-         WEEK SUMMARY
-         ===================================================== -->
+         WEEKLY OVERVIEW
+    ====================================================== -->
 
     <div class="weekly-overview">
 
-
-        <!-- TOTAL STUDENTS -->
 
         <div class="overview-card">
 
@@ -200,8 +234,6 @@
         </div>
 
 
-        <!-- PRESENT -->
-
         <div class="overview-card">
 
             <span class="overview-icon paid-icon">
@@ -222,8 +254,6 @@
 
         </div>
 
-
-        <!-- ABSENT -->
 
         <div class="overview-card">
 
@@ -246,8 +276,6 @@
         </div>
 
 
-        <!-- NOT PAID -->
-
         <div class="overview-card">
 
             <span class="overview-icon unpaid-icon">
@@ -268,8 +296,6 @@
 
         </div>
 
-
-        <!-- COLLECTION -->
 
         <div class="overview-card collection-card">
 
@@ -295,8 +321,8 @@
 
 
     <!-- =====================================================
-         CLASS SUMMARY
-         ===================================================== -->
+         CLASS COLLECTION
+    ====================================================== -->
 
     <div class="collection-section">
 
@@ -309,7 +335,8 @@
                 </h2>
 
                 <p>
-                    Weekly bus fee collection and attendance summary
+                    Weekly {{ fee_name|lower }} collection
+                    and attendance summary
                 </p>
 
             </div>
@@ -319,27 +346,22 @@
 
         {% if class_summaries %}
 
-
             <div class="class-summary-grid">
 
-
                 {% for class in class_summaries %}
-
 
                     <div class="class-summary-card">
 
 
-                        <!-- CARD TOP -->
+                        <!-- CLASS HEADER -->
 
                         <div class="class-card-top">
-
 
                             <div class="class-name-box">
 
                                 <div class="class-small-icon">
                                     🎓
                                 </div>
-
 
                                 <div>
 
@@ -369,11 +391,10 @@
 
                             </div>
 
-
                         </div>
 
 
-                        <!-- STATISTICS -->
+                        <!-- CLASS STATS -->
 
                         <div class="class-stats">
 
@@ -429,7 +450,6 @@
 
                             </div>
 
-
                         </div>
 
 
@@ -437,37 +457,43 @@
 
                         <div class="class-card-footer">
 
-                            <a
-                                href="{% url 'bus_fees' %}?date={{ monday|date:'Y-m-d' }}&student_class={{ class.student_class|urlencode }}"
-                                class="details-btn"
-                            >
-                                View Detailed
-                                <span>
-                                    →
-                                </span>
-                            </a>
+                            {% if fee_type == "bus" %}
+
+                                <a
+                                    href="{% url 'bus_fees' %}?date={{ monday|date:'Y-m-d' }}&student_class={{ class.student_class|urlencode }}"
+                                    class="details-btn"
+                                >
+                                    View Detailed
+                                    <span>→</span>
+                                </a>
+
+                            {% else %}
+
+                                <a
+                                    href="{% url 'feeding_fees' %}?date={{ monday|date:'Y-m-d' }}&student_class={{ class.student_class|urlencode }}"
+                                    class="details-btn"
+                                >
+                                    View Detailed
+                                    <span>→</span>
+                                </a>
+
+                            {% endif %}
 
                         </div>
 
-
                     </div>
 
-
                 {% endfor %}
-
 
             </div>
 
 
         {% else %}
 
-
-            <!-- EMPTY -->
-
             <div class="empty-summary">
 
                 <div class="empty-summary-icon">
-                    🚌
+                    {{ fee_icon }}
                 </div>
 
                 <h3>
@@ -475,19 +501,17 @@
                 </h3>
 
                 <p>
-                    There are no bus fee records available for this week.
+                    There are no
+                    {{ fee_name|lower }}
+                    records available for this week.
                 </p>
 
             </div>
 
-
         {% endif %}
 
-
     </div>
-
 
 </div>
 
 {% endblock %}
-

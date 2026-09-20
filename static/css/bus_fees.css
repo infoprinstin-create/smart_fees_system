@@ -891,3 +891,110 @@ body.dark-mode .daily-amount {
 
 }
 
+/* =========================================================
+   BUS FEE TABLE CARD
+   ========================================================= */
+
+.bus-fee-table-card {
+    width: 100%;
+
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================================================
+   BUS FEE TABLE WRAPPER
+   ========================================================= */
+
+.bus-fee-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+/* =========================================================
+   BUS FEE TABLE
+   ========================================================= */
+
+.bus-fee-table {
+    width: 100%;
+    min-width: 1000px;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
+.bus-fee-table thead th {
+    padding: 14px 13px;
+
+    background: #f8fafc;
+    color: #374151;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    text-align: left;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   TABLE BODY
+   ========================================================= */
+
+.bus-fee-table tbody td {
+    padding: 13px;
+
+    color: #4b5563;
+
+    border-bottom: 1px solid #eef0f3;
+
+    font-size: 13px;
+
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .bus-fee-table-card {
+        border-radius: 10px;
+    }
+
+    .bus-fee-table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .bus-fee-table {
+        width: 100%;
+        min-width: 1000px;
+    }
+
+}
+
