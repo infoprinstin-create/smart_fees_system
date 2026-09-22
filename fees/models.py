@@ -542,3 +542,5 @@ class UserProfile(models.Model):
             f"{self.user.username} - "
             f"{self.get_role_display()}"
         )
+
+        

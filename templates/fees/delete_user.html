@@ -1,0 +1,265 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Delete User - Smart Fee{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/delete_user.css' %}">
+
+<div class="delete-user-page">
+
+    <!-- PAGE HEADER -->
+    <div class="delete-user-header">
+
+        <div class="delete-user-header-left">
+
+            <div class="delete-user-header-icon">
+                <i class="fas fa-user-times"></i>
+            </div>
+
+            <div>
+                <h1>Delete User</h1>
+
+                <p>
+                    Review this account before permanently deleting it.
+                </p>
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'users_management' %}"
+            class="back-users-button"
+        >
+            <i class="fas fa-arrow-left"></i>
+            Back to Users
+        </a>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+    <div class="delete-user-card">
+
+
+        <!-- WARNING -->
+        <div class="delete-warning">
+
+            <div class="delete-warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Delete this user account?
+                </h2>
+
+                <p>
+                    This action will permanently remove this staff
+                    account from Smart Fee. This action cannot be undone.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- USER INFORMATION -->
+        <div class="delete-user-information">
+
+            <div class="delete-user-avatar">
+
+                {% if user_account.first_name %}
+
+                    {{ user_account.first_name|first|upper }}
+
+                {% else %}
+
+                    {{ user_account.username|first|upper }}
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="delete-user-details">
+
+                <h3>
+
+                    {% if user_account.first_name %}
+
+                        {{ user_account.first_name }}
+                        {{ user_account.last_name }}
+
+                    {% else %}
+
+                        {{ user_account.username }}
+
+                    {% endif %}
+
+                </h3>
+
+                <span>
+                    @{{ user_account.username }}
+                </span>
+
+
+                <div class="delete-user-role">
+
+                    {% if user_account.profile.role == "school_fees" %}
+
+                        <i class="fas fa-money-check-alt"></i>
+                        School Fees
+
+                    {% elif user_account.profile.role == "bus_fee" %}
+
+                        <i class="fas fa-bus"></i>
+                        Bus Fee
+
+                    {% elif user_account.profile.role == "feeding_fee" %}
+
+                        <i class="fas fa-utensils"></i>
+                        Feeding Fee
+
+                    {% else %}
+
+                        <i class="fas fa-user"></i>
+                        {{ user_account.profile.get_role_display }}
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACCOUNT DETAILS -->
+        <div class="account-details">
+
+            <div class="account-detail">
+
+                <span>
+                    <i class="fas fa-user"></i>
+                    Username
+                </span>
+
+                <strong>
+                    {{ user_account.username }}
+                </strong>
+
+            </div>
+
+
+            <div class="account-detail">
+
+                <span>
+                    <i class="fas fa-calendar"></i>
+                    Account Created
+                </span>
+
+                <strong>
+                    {{ user_account.date_joined|date:"d M Y" }}
+                </strong>
+
+            </div>
+
+
+            <div class="account-detail">
+
+                <span>
+                    <i class="fas fa-sign-in-alt"></i>
+                    Last Login
+                </span>
+
+                <strong>
+
+                    {% if user_account.last_login %}
+
+                        {{ user_account.last_login|date:"d M Y" }}
+
+                    {% else %}
+
+                        Never
+
+                    {% endif %}
+
+                </strong>
+
+            </div>
+
+
+            <div class="account-detail">
+
+                <span>
+                    <i class="fas fa-keyboard"></i>
+                    Login Count
+                </span>
+
+                <strong>
+                    {{ user_account.profile.login_count|default:"0" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONFIRMATION -->
+        <div class="delete-confirmation">
+
+            <div class="confirmation-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+
+            <div>
+
+                <h3>
+                    Important
+                </h3>
+
+                <p>
+                    Deleting this account will prevent the user from
+                    logging into Smart Fee with this account.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+        <form
+            method="POST"
+            class="delete-user-form"
+        >
+
+            {% csrf_token %}
+
+            <a
+                href="{% url 'users_management' %}"
+                class="cancel-delete-button"
+            >
+                <i class="fas fa-times"></i>
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="confirm-delete-button"
+            >
+                <i class="fas fa-trash-alt"></i>
+                Yes, Delete User
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

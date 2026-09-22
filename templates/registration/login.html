@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +12,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Login - Smart Fee</title>
+    <title>Login - Ferdmerc School Complex Fees System</title>
 
     <link
         rel="stylesheet"
@@ -19,240 +21,1670 @@
 
     <style>
 
+        /* =========================================================
+           RESET
+           ========================================================= */
+
         * {
             box-sizing: border-box;
         }
 
+        html,
         body {
             margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(
-                135deg,
-                #0f172a,
-                #1d4ed8
-            );
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
         }
+
+
+        /* =========================================================
+           BODY
+           ========================================================= */
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f4f8ff;
+
+            display: flex;
+
+            overflow-x: hidden;
+        }
+
+
+        /* =========================================================
+           MAIN LOGIN CONTAINER
+           ========================================================= */
+
+        .login-page {
+
+            width: 100%;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            background: #ffffff;
+        }
+
+
+        /* =========================================================
+           LEFT SIDE
+           ========================================================= */
+
+        .login-left {
+
+            width: 50%;
+
+            min-height: 100vh;
+
+            position: relative;
+
+            overflow: hidden;
+
+            color: #ffffff;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(0, 91, 190, 0.72),
+                    rgba(4, 42, 91, 0.96)
+                ),
+                url("{% static 'images/login-school.jpg' %}");
+
+            background-size: cover;
+
+            background-position: center;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            padding: 55px 70px;
+        }
+
+
+        /* =========================================================
+           LEFT OVERLAY
+           ========================================================= */
+
+        .login-left::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0, 100, 220, 0.35),
+                    rgba(3, 31, 68, 0.78)
+                );
+
+            pointer-events: none;
+        }
+
+
+        .left-content {
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
+        .brand {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .brand-icon {
+
+            width: 105px;
+
+            height: 105px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 58px;
+
+            color: #ffffff;
+
+            flex-shrink: 0;
+        }
+
+
+        .brand-text h1 {
+
+            margin: 0;
+
+            font-size: 51px;
+
+            line-height: 1.05;
+
+            font-weight: 800;
+
+            letter-spacing: -1.5px;
+        }
+
+
+        .brand-text p {
+
+            margin: 8px 0 0;
+
+            font-size: 29px;
+
+            font-weight: 400;
+
+            letter-spacing: 0.2px;
+        }
+
+
+        /* =========================================================
+           TAGLINE
+           ========================================================= */
+
+        .left-tagline {
+
+            margin-top: 25px;
+
+            font-size: 21px;
+
+            line-height: 1.5;
+
+            font-weight: 400;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+        }
+
+
+        .left-tagline span {
+
+            opacity: 0.95;
+        }
+
+
+        .dot {
+
+            font-size: 16px;
+        }
+
+
+        /* =========================================================
+           FEATURES
+           ========================================================= */
+
+        .features {
+
+            position: relative;
+
+            z-index: 2;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 22px;
+
+            margin-top: auto;
+
+            padding-top: 40px;
+        }
+
+
+        .feature {
+
+            text-align: center;
+        }
+
+
+        .feature-icon {
+
+            width: 62px;
+
+            height: 62px;
+
+            margin: 0 auto 12px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 25px;
+
+            color: #ffffff;
+
+            background:
+                rgba(255, 255, 255, 0.18);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.22);
+
+            backdrop-filter: blur(5px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.18);
+        }
+
+
+        .feature:nth-child(1)
+        .feature-icon {
+
+            background: #1478f2;
+        }
+
+
+        .feature:nth-child(2)
+        .feature-icon {
+
+            background: #12b886;
+        }
+
+
+        .feature:nth-child(3)
+        .feature-icon {
+
+            background: #8b45e8;
+        }
+
+
+        .feature:nth-child(4)
+        .feature-icon {
+
+            background: #f5a623;
+        }
+
+
+        .feature-title {
+
+            font-size: 15px;
+
+            line-height: 1.35;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           LEFT FOOTER
+           ========================================================= */
+
+        .left-footer {
+
+            position: relative;
+
+            z-index: 2;
+
+            text-align: center;
+
+            margin-top: 40px;
+        }
+
+
+        .left-footer p {
+
+            margin: 0;
+
+            font-size: 20px;
+
+            font-style: italic;
+
+            letter-spacing: 0.5px;
+
+            opacity: 0.95;
+        }
+
+
+        .footer-line {
+
+            width: 170px;
+
+            height: 3px;
+
+            background: rgba(255, 255, 255, 0.85);
+
+            border-radius: 10px;
+
+            margin: 14px auto 0;
+
+            transform: rotate(-5deg);
+        }
+
+
+        /* =========================================================
+           RIGHT SIDE
+           ========================================================= */
+
+        .login-right {
+
+            width: 50%;
+
+            min-height: 100vh;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 50px;
+
+            position: relative;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(37, 99, 235, 0.08),
+                    transparent 35%
+                ),
+                #f8fbff;
+        }
+
+
+        /* =========================================================
+           LOGIN CARD
+           ========================================================= */
 
         .login-card {
+
             width: 100%;
-            max-width: 430px;
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 40px;
+
+            max-width: 565px;
+
+            background: rgba(255, 255, 255, 0.96);
+
+            border: 1px solid #dbe8fb;
+
+            border-radius: 22px;
+
+            padding: 48px 42px;
+
             box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.25);
+                0 20px 55px rgba(30, 75, 140, 0.10);
         }
+
+
+        /* =========================================================
+           LOGIN ICON
+           ========================================================= */
 
         .login-icon {
-            width: 75px;
-            height: 75px;
+
+            width: 78px;
+
+            height: 78px;
+
             margin: 0 auto 20px;
-            border-radius: 50%;
-            background: #2563eb;
-            color: #ffffff;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
-            font-size: 30px;
+
+            color: #0868ef;
+
+            font-size: 48px;
         }
+
+
+        /* =========================================================
+           TITLE
+           ========================================================= */
 
         .login-title {
-            text-align: center;
+
             margin: 0;
-            color: #0f172a;
-            font-size: 28px;
+
+            text-align: center;
+
+            color: #17366d;
+
+            font-size: 39px;
+
+            line-height: 1.15;
+
             font-weight: 800;
+
+            letter-spacing: -0.8px;
         }
+
 
         .login-subtitle {
+
+            margin: 12px 0 36px;
+
             text-align: center;
-            margin: 8px 0 30px;
-            color: #64748b;
-            font-size: 14px;
+
+            color: #496ba8;
+
+            font-size: 18px;
+
+            line-height: 1.5;
         }
+
+
+        /* =========================================================
+           ERROR MESSAGE
+           ========================================================= */
+
+        .error-message {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            background: #fff1f1;
+
+            border: 1px solid #ffd2d2;
+
+            color: #c62828;
+
+            border-radius: 10px;
+
+            padding: 13px 15px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           FORM GROUP
+           ========================================================= */
 
         .form-group {
-            margin-bottom: 20px;
+
+            margin-bottom: 22px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #334155;
-            font-size: 14px;
-            font-weight: 700;
-        }
+
+        /* =========================================================
+           INPUT
+           ========================================================= */
 
         .input-wrapper {
+
             position: relative;
         }
 
-        .input-wrapper i {
+
+        .input-wrapper > i {
+
             position: absolute;
-            left: 15px;
+
+            left: 22px;
+
             top: 50%;
+
             transform: translateY(-50%);
-            color: #64748b;
+
+            color: #41639d;
+
+            font-size: 19px;
+
+            z-index: 2;
         }
+
 
         .input-wrapper input {
+
             width: 100%;
-            height: 50px;
-            padding: 0 15px 0 45px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
+
+            height: 59px;
+
+            padding:
+                0 52px
+                0 62px;
+
+            border:
+                1px solid #bcd4fa;
+
+            border-radius: 13px;
+
             outline: none;
-            font-size: 15px;
-            transition: 0.2s;
+
+            background: #ffffff;
+
+            color: #243d68;
+
+            font-size: 16px;
+
+            font-family: inherit;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
         }
+
+
+        .input-wrapper input::placeholder {
+
+            color: #91a5ca;
+        }
+
 
         .input-wrapper input:focus {
-            border-color: #2563eb;
+
+            border-color: #1976f3;
+
             box-shadow:
-                0 0 0 3px rgba(37, 99, 235, 0.12);
+                0 0 0 4px
+                rgba(25, 118, 243, 0.10);
         }
+
+
+        /* =========================================================
+           PASSWORD EYE
+           ========================================================= */
+
+        .password-toggle {
+
+            position: absolute;
+
+            right: 20px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #7e93bb;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+            padding: 5px;
+        }
+
+
+        .password-toggle:hover {
+
+            color: #126ce9;
+        }
+
+
+        /* =========================================================
+           REMEMBER + FORGOT
+           ========================================================= */
+
+        .login-options {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin: 4px 2px 28px;
+        }
+
+
+        .remember-label {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            color: #284d8e;
+
+            font-size: 15px;
+
+            cursor: pointer;
+
+            user-select: none;
+        }
+
+
+        .remember-label input {
+
+            width: 21px;
+
+            height: 21px;
+
+            margin: 0;
+
+            accent-color: #0878f9;
+
+            cursor: pointer;
+        }
+
+
+        .forgot-password {
+
+            color: #0872ef;
+
+            font-size: 15px;
+
+            font-weight: 600;
+
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+
+        .forgot-password:hover {
+
+            text-decoration: underline;
+        }
+
+
+        /* =========================================================
+           LOGIN BUTTON
+           ========================================================= */
 
         .login-button {
+
             width: 100%;
-            height: 52px;
+
+            height: 61px;
+
             border: none;
-            border-radius: 10px;
-            background: #2563eb;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0878f9,
+                    #1264e8
+                );
+
             color: #ffffff;
-            font-size: 16px;
+
+            font-family: inherit;
+
+            font-size: 17px;
+
             font-weight: 700;
+
             cursor: pointer;
-            transition: 0.2s;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            box-shadow:
+                0 9px 22px
+                rgba(17, 105, 239, 0.20);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
         }
+
 
         .login-button:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 13px 28px
+                rgba(17, 105, 239, 0.28);
         }
 
-        .error-message {
-            background: #fee2e2;
-            color: #b91c1c;
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 20px;
+
+        .login-button:active {
+
+            transform: translateY(0);
+        }
+
+
+        /* =========================================================
+           RIGHT FOOTER
+           ========================================================= */
+
+        .right-footer {
+
+            margin-top: 48px;
+
+            color: #4165a2;
+
             font-size: 14px;
+
+            text-align: center;
         }
 
-        @media (max-width: 500px) {
 
-            .login-card {
-                padding: 30px 22px;
+        /* =========================================================
+           FORGOT PASSWORD POPUP
+           ========================================================= */
+
+        .forgot-message {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 9999;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                rgba(10, 36, 75, 0.42);
+
+            backdrop-filter: blur(4px);
+        }
+
+
+        .forgot-message-box {
+
+            width: 100%;
+
+            max-width: 390px;
+
+            background: #ffffff;
+
+            border-radius: 18px;
+
+            padding: 32px;
+
+            text-align: center;
+
+            box-shadow:
+                0 25px 70px
+                rgba(0, 0, 0, 0.22);
+        }
+
+
+        .forgot-message-icon {
+
+            width: 62px;
+
+            height: 62px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #e9f3ff;
+
+            color: #0872ef;
+
+            font-size: 27px;
+        }
+
+
+        .forgot-message-box h3 {
+
+            margin: 0 0 10px;
+
+            color: #17366d;
+
+            font-size: 22px;
+        }
+
+
+        .forgot-message-box p {
+
+            margin: 0 0 24px;
+
+            color: #6079a5;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+
+        .forgot-close {
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #0872ef;
+
+            color: #ffffff;
+
+            padding: 11px 30px;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================================
+           TABLET
+           ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .login-left {
+
+                padding: 45px 40px;
             }
 
-            .login-title {
+            .brand-text h1 {
+
+                font-size: 40px;
+            }
+
+            .brand-text p {
+
                 font-size: 24px;
             }
 
+            .brand-icon {
+
+                width: 85px;
+
+                height: 85px;
+
+                font-size: 48px;
+            }
+
+            .left-tagline {
+
+                font-size: 17px;
+            }
+
+            .features {
+
+                gap: 10px;
+            }
+
+            .feature-title {
+
+                font-size: 13px;
+            }
+
+            .login-right {
+
+                padding: 35px;
+            }
+
+            .login-card {
+
+                padding: 40px 32px;
+            }
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 800px) {
+
+            .login-page {
+
+                display: block;
+            }
+
+
+            .login-left {
+
+                width: 100%;
+
+                min-height: 310px;
+
+                padding: 35px 25px;
+
+                justify-content: center;
+
+                background-position: center;
+            }
+
+
+            .brand {
+
+                justify-content: center;
+
+                margin-bottom: 15px;
+            }
+
+
+            .brand-icon {
+
+                width: 70px;
+
+                height: 70px;
+
+                font-size: 40px;
+            }
+
+
+            .brand-text h1 {
+
+                font-size: 34px;
+            }
+
+
+            .brand-text p {
+
+                font-size: 19px;
+            }
+
+
+            .left-tagline {
+
+                justify-content: center;
+
+                font-size: 15px;
+
+                text-align: center;
+            }
+
+
+            .features {
+
+                display: none;
+            }
+
+
+            .left-footer {
+
+                display: none;
+            }
+
+
+            .login-right {
+
+                width: 100%;
+
+                min-height: auto;
+
+                padding: 30px 20px 35px;
+            }
+
+
+            .login-card {
+
+                max-width: 560px;
+
+                padding: 35px 24px;
+
+                border-radius: 18px;
+            }
+
+
+            .login-title {
+
+                font-size: 31px;
+            }
+
+
+            .login-subtitle {
+
+                font-size: 16px;
+
+                margin-bottom: 28px;
+            }
+
+
+            .right-footer {
+
+                margin-top: 28px;
+            }
+        }
+
+
+        /* =========================================================
+           SMALL MOBILE
+           ========================================================= */
+
+        @media (max-width: 430px) {
+
+            .login-left {
+
+                min-height: 260px;
+
+                padding: 28px 18px;
+            }
+
+
+            .brand {
+
+                gap: 10px;
+            }
+
+
+            .brand-icon {
+
+                width: 58px;
+
+                height: 58px;
+
+                font-size: 32px;
+            }
+
+
+            .brand-text h1 {
+
+                font-size: 27px;
+            }
+
+
+            .brand-text p {
+
+                font-size: 16px;
+            }
+
+
+            .left-tagline {
+
+                font-size: 13px;
+            }
+
+
+            .login-right {
+
+                padding:
+                    20px 12px 30px;
+            }
+
+
+            .login-card {
+
+                padding:
+                    30px 18px;
+            }
+
+
+            .login-options {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 14px;
+            }
+
+
+            .input-wrapper input {
+
+                height: 55px;
+
+                padding-left: 56px;
+            }
+
+
+            .login-button {
+
+                height: 57px;
+            }
         }
 
     </style>
 
 </head>
 
+
 <body>
 
-    <div class="login-card">
 
-        <div class="login-icon">
-            <i class="fas fa-school"></i>
+<div class="login-page">
+
+
+    <!-- =====================================================
+         LEFT SIDE
+         ====================================================== -->
+
+    <section class="login-left">
+
+
+        <div class="left-content">
+
+
+            <!-- BRAND -->
+
+            <div class="brand">
+
+                <div class="brand-icon">
+
+                    <i class="fas fa-graduation-cap"></i>
+
+                </div>
+
+
+                <div class="brand-text">
+
+                    <h1>
+                        Ferdmerc School Complex
+                    </h1>
+
+                    <p>
+                        School Fees System
+                    </p>
+
+                </div>
+
+            </div>
+
+
         </div>
 
-        <h1 class="login-title">
-            Smart Fee
-        </h1>
 
-        <p class="login-subtitle">
-            School Fee Management System
+        <!-- FEATURES -->
+
+        <div class="features">
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="fas fa-users"></i>
+
+                </div>
+
+                <div class="feature-title">
+
+                    Student<br>
+                    Management
+
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="fas fa-credit-card"></i>
+
+                </div>
+
+                <div class="feature-title">
+
+                    Fee Tracking<br>
+                    & Payments
+
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="fas fa-file-invoice"></i>
+
+                </div>
+
+                <div class="feature-title">
+
+                    Reports &<br>
+                    Analytics
+
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+
+                    <i class="fas fa-shield-halved"></i>
+
+                </div>
+
+                <div class="feature-title">
+
+                    Secure &<br>
+                    Reliable
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- LEFT FOOTER -->
+
+        <div class="left-footer">
+
+            <div class="footer-line"></div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RIGHT SIDE
+         ====================================================== -->
+
+    <section class="login-right">
+
+
+        <div class="login-card">
+
+
+            <!-- LOGIN ICON -->
+
+            <div class="login-icon">
+
+                <i class="fas fa-graduation-cap"></i>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <h1 class="login-title">
+
+                Welcome Back
+
+            </h1>
+
+
+            <p class="login-subtitle">
+
+                Login to your account to continue
+
+            </p>
+
+
+
+            <!-- ERROR -->
+
+            {% if login_error %}
+
+                <div class="error-message">
+
+                    <i class="fas fa-circle-exclamation"></i>
+
+                    <span>
+                        Invalid username or password.
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- LOGIN FORM -->
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <div class="input-wrapper">
+
+                        <i class="fas fa-user"></i>
+
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            placeholder="Username or Email"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <div class="input-wrapper">
+
+                        <i class="fas fa-lock"></i>
+
+                        <input
+                            type="password"
+                            name="password"
+                            id="id_password"
+                            placeholder="Password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            aria-label="Show password"
+                        >
+
+                            <i class="fas fa-eye-slash"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- OPTIONS -->
+
+                <div class="login-options">
+
+
+                    <label class="remember-label">
+
+                        <input
+                            type="checkbox"
+                            name="remember_me"
+                        >
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        class="forgot-password"
+                        id="forgotPassword"
+                    >
+                        Forgot password?
+                    </a>
+
+
+                </div>
+
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+
+                    <i class="fas fa-right-to-bracket"></i>
+
+                    <span>
+                        Log In
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+
+        <!-- RIGHT FOOTER -->
+
+        <div class="right-footer">
+
+            Bright Future School Fees System
+            &nbsp; © 2026
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     FORGOT PASSWORD MESSAGE
+     ========================================================== -->
+
+<div
+    class="forgot-message"
+    id="forgotMessage"
+>
+
+
+    <div class="forgot-message-box">
+
+
+        <div class="forgot-message-icon">
+
+            <i class="fas fa-user-lock"></i>
+
+        </div>
+
+
+        <h3>
+            Forgot your password?
+        </h3>
+
+
+        <p>
+
+            Please contact the administrator
+            to reset your password.
+
         </p>
 
 
-        {% if form.errors %}
+        <button
+            type="button"
+            class="forgot-close"
+            id="forgotClose"
+        >
 
-            <div class="error-message">
-                <i class="fas fa-circle-exclamation"></i>
-                Invalid username or password.
-            </div>
+            OK
 
-        {% endif %}
+        </button>
 
-
-        <form method="post">
-
-            {% csrf_token %}
-
-            <div class="form-group">
-
-                <label for="id_username">
-                    Username
-                </label>
-
-                <div class="input-wrapper">
-
-                    <i class="fas fa-user"></i>
-
-                    <input
-                        type="text"
-                        name="username"
-                        id="id_username"
-                        placeholder="Enter username"
-                        autocomplete="username"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <div class="form-group">
-
-                <label for="id_password">
-                    Password
-                </label>
-
-                <div class="input-wrapper">
-
-                    <i class="fas fa-lock"></i>
-
-                    <input
-                        type="password"
-                        name="password"
-                        id="id_password"
-                        placeholder="Enter password"
-                        autocomplete="current-password"
-                        required
-                    >
-
-                </div>
-
-            </div>
-
-
-            <button
-                type="submit"
-                class="login-button"
-            >
-
-                <i class="fas fa-right-to-bracket"></i>
-
-                Login
-
-            </button>
-
-        </form>
 
     </div>
+
+
+</div>
+
+
+
+<script>
+
+    /* =========================================================
+       PASSWORD SHOW / HIDE
+       ========================================================= */
+
+    const passwordInput =
+        document.getElementById("id_password");
+
+    const passwordToggle =
+        document.getElementById("passwordToggle");
+
+
+    passwordToggle.addEventListener(
+        "click",
+        function () {
+
+            if (
+                passwordInput.type === "password"
+            ) {
+
+                passwordInput.type = "text";
+
+                passwordToggle.innerHTML =
+                    '<i class="fas fa-eye"></i>';
+
+                passwordToggle.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+            } else {
+
+                passwordInput.type = "password";
+
+                passwordToggle.innerHTML =
+                    '<i class="fas fa-eye-slash"></i>';
+
+                passwordToggle.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       FORGOT PASSWORD MESSAGE
+       ========================================================= */
+
+    const forgotPassword =
+        document.getElementById("forgotPassword");
+
+    const forgotMessage =
+        document.getElementById("forgotMessage");
+
+    const forgotClose =
+        document.getElementById("forgotClose");
+
+
+    forgotPassword.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            forgotMessage.style.display = "flex";
+
+        }
+    );
+
+
+    forgotClose.addEventListener(
+        "click",
+        function () {
+
+            forgotMessage.style.display = "none";
+
+        }
+    );
+
+
+    /* Close popup when clicking outside */
+
+    forgotMessage.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target === forgotMessage
+            ) {
+
+                forgotMessage.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    /* Close popup with ESC */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                forgotMessage.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+</script>
+
 
 </body>
 

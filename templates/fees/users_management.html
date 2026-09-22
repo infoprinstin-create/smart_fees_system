@@ -333,37 +333,45 @@
 
                         <!-- ACTIONS -->
 
-                        <td>
+<td>
 
-                            <div class="user-actions">
+    <div class="user-actions">
 
-                                <button
-                                    type="button"
-                                    class="action-button edit-button"
-                                    title="Edit User"
-                                >
-                                    <i class="fas fa-edit"></i>
-                                </button>
+        <!-- EDIT USER -->
 
-                                <button
-                                    type="button"
-                                    class="action-button password-button"
-                                    title="Change Password"
-                                >
-                                    <i class="fas fa-key"></i>
-                                </button>
+        <a
+            href="{% url 'edit_user' user.id %}"
+            class="action-button edit-button"
+            title="Edit User"
+        >
+            <i class="fas fa-edit"></i>
+        </a>
 
-                                <button
-                                    type="button"
-                                    class="action-button delete-button"
-                                    title="Delete User"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </button>
 
-                            </div>
+        <!-- CHANGE PASSWORD -->
 
-                        </td>
+        <a
+            href="{% url 'change_user_password' user.id %}"
+            class="action-button password-button"
+            title="Change Password"
+        >
+            <i class="fas fa-key"></i>
+        </a>
+
+
+        <!-- DELETE USER -->
+
+        <a
+            href="{% url 'delete_user' user.id %}"
+            class="action-button delete-button"
+            title="Delete User"
+        >
+            <i class="fas fa-trash"></i>
+        </a>
+
+    </div>
+
+</td>
 
                     </tr>
 

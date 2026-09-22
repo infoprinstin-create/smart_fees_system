@@ -11,11 +11,9 @@ urlpatterns = [
     # =========================================================
 
     path(
-        "login/",
-        auth_views.LoginView.as_view(
-            template_name="registration/login.html"
-        ),
-        name="login"
+    "login/",
+    views.login_view,
+    name="login"
     ),
 
     # =========================================================
@@ -33,6 +31,24 @@ urlpatterns = [
         views.create_user,
         name="create_user"
     ),
+
+    path(
+    "users-management/<int:user_id>/edit/",
+    views.edit_user,
+    name="edit_user"
+),
+
+path(
+    "users-management/<int:user_id>/password/",
+    views.change_user_password,
+    name="change_user_password"
+),
+
+path(
+    "users-management/<int:user_id>/delete/",
+    views.delete_user,
+    name="delete_user"
+),
 
     # =========================================================
     # SETTINGS

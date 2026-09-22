@@ -1,0 +1,320 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Edit User - Smart Fee{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/edit_user.css' %}">
+
+<div class="edit-user-page">
+
+    <!-- PAGE HEADER -->
+
+    <div class="edit-user-header">
+
+        <div class="edit-user-header-left">
+
+            <div class="edit-user-header-icon">
+                <i class="fas fa-user-edit"></i>
+            </div>
+
+            <div>
+                <h1>Edit User</h1>
+
+                <p>
+                    Update this staff member's account information and access role.
+                </p>
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'users_management' %}"
+            class="back-users-button"
+        >
+            <i class="fas fa-arrow-left"></i>
+            Back to Users
+        </a>
+
+    </div>
+
+
+    <!-- USER INFORMATION -->
+
+    <div class="edit-user-layout">
+
+        <!-- LEFT INFORMATION CARD -->
+
+        <div class="user-preview-card">
+
+            <div class="preview-avatar">
+
+                {% if user_account.first_name %}
+                    {{ user_account.first_name|first|upper }}
+                {% else %}
+                    {{ user_account.username|first|upper }}
+                {% endif %}
+
+            </div>
+
+            <h2>
+
+                {% if user_account.first_name %}
+                    {{ user_account.first_name }}
+                    {{ user_account.last_name }}
+                {% else %}
+                    {{ user_account.username }}
+                {% endif %}
+
+            </h2>
+
+            <span class="preview-username">
+                @{{ user_account.username }}
+            </span>
+
+            <div class="preview-role">
+
+                {% if profile.role == "school_fees" %}
+
+                    <i class="fas fa-money-check-alt"></i>
+                    School Fees
+
+                {% elif profile.role == "bus_fee" %}
+
+                    <i class="fas fa-bus"></i>
+                    Bus Fee
+
+                {% elif profile.role == "feeding_fee" %}
+
+                    <i class="fas fa-utensils"></i>
+                    Feeding Fee
+
+                {% else %}
+
+                    <i class="fas fa-user"></i>
+                    {{ profile.get_role_display }}
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="preview-stats">
+
+                <div class="preview-stat">
+
+                    <span>Login Count</span>
+
+                    <strong>
+                        {{ profile.login_count|default:"0" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="preview-stat">
+
+                    <span>Last Login</span>
+
+                    <strong>
+
+                        {% if user_account.last_login %}
+                            {{ user_account.last_login|date:"d M Y" }}
+                        {% else %}
+                            Never
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EDIT FORM -->
+
+        <div class="edit-user-card">
+
+            <div class="card-title">
+
+                <div class="card-title-icon">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+
+                <div>
+
+                    <h2>
+                        Account Information
+                    </h2>
+
+                    <p>
+                        Change the user's name, username and role.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if error %}
+
+                <div class="form-error">
+
+                    <i class="fas fa-exclamation-circle"></i>
+
+                    <span>
+                        {{ error }}
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+
+            <form
+                method="POST"
+                class="edit-user-form"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="full_name">
+                        Full Name
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fas fa-user"></i>
+
+                        <input
+                            type="text"
+                            id="full_name"
+                            name="full_name"
+                            value="{{ user_account.first_name }}{% if user_account.last_name %} {{ user_account.last_name }}{% endif %}"
+                            placeholder="Enter full name"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- USERNAME -->
+
+                <div class="form-group">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fas fa-at"></i>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value="{{ user_account.username }}"
+                            placeholder="Enter username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROLE -->
+
+                <div class="form-group">
+
+                    <label for="role">
+                        User Role
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fas fa-user-shield"></i>
+
+                        <select
+                            id="role"
+                            name="role"
+                            required
+                        >
+
+                            <option
+                                value=""
+                                {% if not profile.role %}selected{% endif %}
+                            >
+                                Select User Role
+                            </option>
+
+                            <option
+                                value="school_fees"
+                                {% if profile.role == "school_fees" %}selected{% endif %}
+                            >
+                                School Fees
+                            </option>
+
+                            <option
+                                value="bus_fee"
+                                {% if profile.role == "bus_fee" %}selected{% endif %}
+                            >
+                                Bus Fee
+                            </option>
+
+                            <option
+                                value="feeding_fee"
+                                {% if profile.role == "feeding_fee" %}selected{% endif %}
+                            >
+                                Feeding Fee
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="form-actions">
+
+                    <a
+                        href="{% url 'users_management' %}"
+                        class="cancel-button"
+                    >
+                        <i class="fas fa-times"></i>
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="save-user-button"
+                    >
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

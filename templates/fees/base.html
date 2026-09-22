@@ -1,45 +1,53 @@
 {% load static %}
 
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
 
+    <meta charset="UTF-8">
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<title>
-    {% block title %}Smart Fee{% endblock %}
-</title>
+    <title>
+        {% block title %}Smart Fee{% endblock %}
+    </title>
 
-<!-- Font Awesome -->
-<link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
->
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
 
-<!-- Main Website CSS -->
-<link
-    rel="stylesheet"
-    href="{% static 'css/base.css' %}"
->
+    <!-- Main Website CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/base.css' %}"
+    >
 
-<!-- Page Specific CSS -->
-{% block extra_css %}{% endblock %}
+    <!-- Page Specific CSS -->
+    {% block extra_css %}{% endblock %}
 
 </head>
+
 
 <body>
 
 
-<!-- ================================
+<!-- =========================================================
      SIDEBAR
-================================= -->
+========================================================= -->
 
 <aside class="sidebar" id="sidebar">
 
-    <!-- SCHOOL LOGO & INFORMATION -->
+
+    <!-- =====================================================
+         SCHOOL LOGO & INFORMATION
+    ====================================================== -->
+
     <div class="sidebar-logo">
 
         {% if school_settings.logo %}
@@ -79,179 +87,387 @@
     </div>
 
 
-    <!-- NAVIGATION -->
+    <!-- =====================================================
+         NAVIGATION
+    ====================================================== -->
+
     <nav class="sidebar-nav">
 
-        <p class="menu-label">
-            MAIN MENU
-        </p>
+
+        <!-- =================================================
+             ADMINISTRATOR
+             Full access
+        ================================================== -->
+
+        {% if request.user.is_superuser or request.user.profile.role == "administrator" %}
 
 
-        <!-- Dashboard -->
-        <a
-            href="{% url 'home' %}"
-            class="nav-item"
-        >
-
-            <i class="fas fa-home"></i>
-
-            <span>
-                Dashboard
-            </span>
-
-        </a>
-
-    
-        <!-- Students -->
-        <a
-            href="{% url 'students' %}"
-            class="nav-item"
-        >
-
-            <i class="fas fa-users"></i>
-
-            <span>
-                Students
-            </span>
-
-        </a>
-
-                <!-- Record Payment -->
-        <a
-            href="{% url 'record_payment' %}"
-            class="nav-item"
-        >
-
-            <i class="fas fa-money-bill-wave"></i>
-
-            <span>
-                Record Payment
-            </span>
-
-        </a>
-
-        <!-- Fees Structure -->
-        <a
-            href="{% url 'fees_structure' %}"
-            class="nav-item"
-        >
-
-            <i class="fas fa-file-invoice-dollar"></i>
-
-            <span>
-                Fees Structure
-            </span>
-
-        </a>
+            <p class="menu-label">
+                MAIN MENU
+            </p>
 
 
-        <!-- Payments -->
-        <a
-            href="{% url 'payments' %}"
-            class="nav-item"
-        >
+            <!-- Dashboard -->
+            <a
+                href="{% url 'home' %}"
+                class="nav-item"
+            >
 
-            <i class="fas fa-credit-card"></i>
+                <i class="fas fa-home"></i>
 
-            <span>
-                Payments
-            </span>
+                <span>
+                    Dashboard
+                </span>
 
-        </a>
-        
-<!-- Bus Fees -->
-<a
-    href="{% url 'bus_fees' %}"
-    class="nav-item"
->
-
-    <i class="fas fa-bus"></i>
-
-    <span>
-        Bus Fees
-    </span>
-
-</a>
+            </a>
 
 
-<!-- Feeding Fees -->
-<a
-    href="{% url 'feeding_fees' %}"
-    class="nav-item"
->
+            <!-- Students -->
+            <a
+                href="{% url 'students' %}"
+                class="nav-item"
+            >
 
-    <i class="fas fa-utensils"></i>
+                <i class="fas fa-users"></i>
 
-    <span>
-        Feeding Fees
-    </span>
+                <span>
+                    Students
+                </span>
 
-</a>
-
-
-<!-- Bus & Feeding Fee Structure -->
-<a
-    href="{% url 'bus_fee_structure' %}"
-    class="nav-item"
->
-
-    <i class="fas fa-layer-group"></i>
-
-    <span>
-        Bus & Feed Structure
-    </span>
-
-</a>
-
-    <!-- Classes -->
-        <a
-            href="{% url 'classes' %}"
-            class="nav-item"
-        >
-
-            <i class="fas fa-user-group"></i>
-
-            <span>
-                Classes
-            </span>
-
-        </a>
+            </a>
 
 
-        <!-- Reports -->
-        <a
-            href="{% url 'reports' %}"
-            class="nav-item"
-        >
+            <!-- Record Payment -->
+            <a
+                href="{% url 'record_payment' %}"
+                class="nav-item"
+            >
 
-            <i class="fas fa-chart-column"></i>
+                <i class="fas fa-money-bill-wave"></i>
 
-            <span>
-                Reports
-            </span>
+                <span>
+                    Record Payment
+                </span>
 
-        </a>
-
-
-        
+            </a>
 
 
-        <!-- Settings -->
-        <a
-            href="{% url 'settings' %}"
-            class="nav-item"
-        >
+            <!-- Fees Structure -->
+            <a
+                href="{% url 'fees_structure' %}"
+                class="nav-item"
+            >
 
-            <i class="fas fa-gear"></i>
+                <i class="fas fa-file-invoice-dollar"></i>
 
-            <span>
-                Settings
-            </span>
+                <span>
+                    Fees Structure
+                </span>
 
-        </a>
+            </a>
 
 
-        <!-- Logout -->
+            <!-- Payments -->
+            <a
+                href="{% url 'payments' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-credit-card"></i>
+
+                <span>
+                    Payments
+                </span>
+
+            </a>
+
+
+            <!-- Bus Fees -->
+            <a
+                href="{% url 'bus_fees' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-bus"></i>
+
+                <span>
+                    Bus Fees
+                </span>
+
+            </a>
+
+
+            <!-- Feeding Fees -->
+            <a
+                href="{% url 'feeding_fees' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-utensils"></i>
+
+                <span>
+                    Feeding Fees
+                </span>
+
+            </a>
+
+
+            <!-- Bus & Feeding Fee Structure -->
+            <a
+                href="{% url 'bus_fee_structure' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-layer-group"></i>
+
+                <span>
+                    Bus & Feed Structure
+                </span>
+
+            </a>
+
+
+            <!-- Classes -->
+            <a
+                href="{% url 'classes' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-user-group"></i>
+
+                <span>
+                    Classes
+                </span>
+
+            </a>
+
+
+            <!-- Reports -->
+            <a
+                href="{% url 'reports' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-chart-column"></i>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+
+            <!-- Settings -->
+            <a
+                href="{% url 'settings' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-gear"></i>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+        <!-- =================================================
+             SCHOOL FEES USER
+        ================================================== -->
+
+        {% elif request.user.profile.role == "school_fees" %}
+
+
+            <p class="menu-label">
+                SCHOOL FEES
+            </p>
+
+
+            <!-- Dashboard -->
+            <a
+                href="{% url 'home' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-home"></i>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- Students -->
+            <a
+                href="{% url 'students' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-users"></i>
+
+                <span>
+                    Students
+                </span>
+
+            </a>
+
+
+            <!-- Record Payment -->
+            <a
+                href="{% url 'record_payment' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-money-bill-wave"></i>
+
+                <span>
+                    Record Payment
+                </span>
+
+            </a>
+
+
+            <!-- Fees Structure -->
+            <a
+                href="{% url 'fees_structure' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-file-invoice-dollar"></i>
+
+                <span>
+                    Fees Structure
+                </span>
+
+            </a>
+
+
+            <!-- Payments -->
+            <a
+                href="{% url 'payments' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-credit-card"></i>
+
+                <span>
+                    Payments
+                </span>
+
+            </a>
+
+
+            <!-- Classes -->
+            <a
+                href="{% url 'classes' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-user-group"></i>
+
+                <span>
+                    Classes
+                </span>
+
+            </a>
+
+
+            <!-- Reports -->
+            <a
+                href="{% url 'reports' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-chart-column"></i>
+
+                <span>
+                    Reports
+                </span>
+
+            </a>
+
+
+            <!-- Settings -->
+            <a
+                href="{% url 'settings' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-gear"></i>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+        <!-- =================================================
+             BUS FEE USER
+             ONLY BUS FEES + LOGOUT
+        ================================================== -->
+
+        {% elif request.user.profile.role == "bus_fee" %}
+
+
+            <p class="menu-label">
+                BUS FEE
+            </p>
+
+
+            <!-- Bus Fees ONLY -->
+            <a
+                href="{% url 'bus_fees' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-bus"></i>
+
+                <span>
+                    Bus Fees
+                </span>
+
+            </a>
+
+
+        <!-- =================================================
+             FEEDING FEE USER
+             ONLY FEEDING FEES + LOGOUT
+        ================================================== -->
+
+        {% elif request.user.profile.role == "feeding_fee" %}
+
+
+            <p class="menu-label">
+                FEEDING FEE
+            </p>
+
+
+            <!-- Feeding Fees ONLY -->
+            <a
+                href="{% url 'feeding_fees' %}"
+                class="nav-item"
+            >
+
+                <i class="fas fa-utensils"></i>
+
+                <span>
+                    Feeding Fees
+                </span>
+
+            </a>
+
+
+        {% endif %}
+
+
+        <!-- =================================================
+             LOGOUT
+             EVERY USER GETS LOGOUT
+        ================================================== -->
+
         <a
             href="{% url 'logout' %}"
             class="nav-item"
@@ -265,11 +481,16 @@
 
         </a>
 
+
     </nav>
 
 
-    <!-- SIDEBAR FOOTER -->
+    <!-- =====================================================
+         SIDEBAR FOOTER
+    ====================================================== -->
+
     <div class="sidebar-footer">
+
 
         <div class="user-avatar">
 
@@ -280,24 +501,81 @@
 
         <div class="sidebar-user">
 
-            <strong>
-                Administrator
-            </strong>
+            {% if request.user.is_superuser %}
 
-            <span>
-                School Admin
-            </span>
+                <strong>
+                    Administrator
+                </strong>
+
+                <span>
+                    Super Admin
+                </span>
+
+            {% elif request.user.profile.role == "administrator" %}
+
+                <strong>
+                    Administrator
+                </strong>
+
+                <span>
+                    School Admin
+                </span>
+
+            {% elif request.user.profile.role == "school_fees" %}
+
+                <strong>
+                    School Fees
+                </strong>
+
+                <span>
+                    Fee Officer
+                </span>
+
+            {% elif request.user.profile.role == "bus_fee" %}
+
+                <strong>
+                    Bus Fee
+                </strong>
+
+                <span>
+                    Bus Officer
+                </span>
+
+            {% elif request.user.profile.role == "feeding_fee" %}
+
+                <strong>
+                    Feeding Fee
+                </strong>
+
+                <span>
+                    Feeding Officer
+                </span>
+
+            {% else %}
+
+                <strong>
+                    User
+                </strong>
+
+                <span>
+                    Smart Fee
+                </span>
+
+            {% endif %}
 
         </div>
 
+
     </div>
+
 
 </aside>
 
 
-<!-- ================================
+
+<!-- =========================================================
      MAIN WRAPPER
-================================= -->
+========================================================= -->
 
 <div
     class="main-wrapper"
@@ -305,16 +583,20 @@
 >
 
 
-    <!-- ================================
+    <!-- =====================================================
          TOP BAR
-    ================================= -->
+    ====================================================== -->
 
     <header class="topbar">
 
+
         <!-- LEFT SIDE -->
+
         <div class="topbar-left">
 
+
             <!-- Sidebar Toggle -->
+
             <button
                 type="button"
                 class="sidebar-toggle"
@@ -328,7 +610,9 @@
 
 
             <!-- Breadcrumb -->
+
             <div class="breadcrumb-area">
+
 
                 <span class="breadcrumb-main">
 
@@ -348,15 +632,21 @@
 
                 </span>
 
+
             </div>
+
 
         </div>
 
 
+
         <!-- RIGHT SIDE -->
+
         <div class="topbar-right">
 
+
             <!-- Search -->
+
             <button
                 type="button"
                 class="topbar-icon"
@@ -369,6 +659,7 @@
 
 
             <!-- Theme -->
+
             <button
                 type="button"
                 class="theme-toggle"
@@ -386,6 +677,7 @@
 
 
             <!-- Notifications -->
+
             <button
                 type="button"
                 class="topbar-icon notification-btn"
@@ -402,22 +694,86 @@
 
 
             <!-- User -->
+
             <div class="topbar-user">
 
+
                 <div class="topbar-avatar">
-                    A
+
+                    {% if request.user.is_superuser %}
+                        A
+                    {% else %}
+                        {{ request.user.username|first|upper }}
+                    {% endif %}
+
                 </div>
 
 
                 <div class="topbar-user-info">
 
-                    <strong>
-                        Administrator
-                    </strong>
 
-                    <span>
-                        Admin
-                    </span>
+                    {% if request.user.is_superuser %}
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <span>
+                            Admin
+                        </span>
+
+                    {% elif request.user.profile.role == "administrator" %}
+
+                        <strong>
+                            Administrator
+                        </strong>
+
+                        <span>
+                            Admin
+                        </span>
+
+                    {% elif request.user.profile.role == "school_fees" %}
+
+                        <strong>
+                            School Fees
+                        </strong>
+
+                        <span>
+                            Fee Officer
+                        </span>
+
+                    {% elif request.user.profile.role == "bus_fee" %}
+
+                        <strong>
+                            Bus Fee
+                        </strong>
+
+                        <span>
+                            Bus Officer
+                        </span>
+
+                    {% elif request.user.profile.role == "feeding_fee" %}
+
+                        <strong>
+                            Feeding Fee
+                        </strong>
+
+                        <span>
+                            Feeding Officer
+                        </span>
+
+                    {% else %}
+
+                        <strong>
+                            User
+                        </strong>
+
+                        <span>
+                            Smart Fee
+                        </span>
+
+                    {% endif %}
+
 
                 </div>
 
@@ -426,16 +782,20 @@
                     class="fa-solid fa-chevron-down user-arrow"
                 ></i>
 
+
             </div>
 
+
         </div>
+
 
     </header>
 
 
-    <!-- ================================
+
+    <!-- =====================================================
          PAGE CONTENT
-    ================================= -->
+    ====================================================== -->
 
     <main class="page-content">
 
@@ -444,12 +804,14 @@
 
     </main>
 
+
 </div>
 
 
-<!-- ================================
+
+<!-- =========================================================
      MOBILE SIDEBAR OVERLAY
-================================= -->
+========================================================= -->
 
 <div
     class="sidebar-overlay"
@@ -458,15 +820,17 @@
 ></div>
 
 
-<!-- ================================
+
+<!-- =========================================================
      JAVASCRIPT
-================================= -->
+========================================================= -->
 
 <script>
 
-    /* ================================
+
+    /* ========================================================
        SIDEBAR TOGGLE
-    ================================= */
+    ========================================================= */
 
     function toggleSidebar() {
 
@@ -515,9 +879,10 @@
     }
 
 
-    /* ================================
+
+    /* ========================================================
        DARK MODE
-    ================================= */
+    ========================================================= */
 
     function toggleTheme() {
 
@@ -584,9 +949,10 @@
     }
 
 
-    /* ================================
+
+    /* ========================================================
        LOAD SAVED THEME
-    ================================= */
+    ========================================================= */
 
     document.addEventListener(
         "DOMContentLoaded",
@@ -649,12 +1015,16 @@
         }
     );
 
+
 </script>
 
 
+
 <!-- Page Specific JavaScript -->
+
 {% block extra_js %}{% endblock %}
 
 
 </body>
+
 </html>
