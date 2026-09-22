@@ -76,72 +76,50 @@
 
 
         /* =========================================================
-           LEFT SIDE
-           ========================================================= */
+   LEFT SIDE
+   ========================================================= */
 
-        .login-left {
+.login-left {
 
-            width: 50%;
+    width: 50%;
 
-            min-height: 100vh;
+    min-height: 100vh;
 
-            position: relative;
+    position: relative;
 
-            overflow: hidden;
+    overflow: hidden;
 
-            color: #ffffff;
+    color: #ffffff;
 
-            background:
-                linear-gradient(
-                    180deg,
-                    rgba(0, 91, 190, 0.72),
-                    rgba(4, 42, 91, 0.96)
-                ),
-                url("{% static 'images/login-school.jpg' %}");
+    /* YOUR IMAGE */
+    background-image:
+        url("{% static 'images/login-school.jpg' %}");
 
-            background-size: cover;
+    background-size: cover;
 
-            background-position: center;
+    background-position: center;
 
-            display: flex;
+    background-repeat: no-repeat;
 
-            flex-direction: column;
+    display: flex;
 
-            justify-content: space-between;
+    flex-direction: column;
 
-            padding: 55px 70px;
-        }
+    justify-content: space-between;
+
+    padding: 55px 70px;
+}
 
 
-        /* =========================================================
-           LEFT OVERLAY
-           ========================================================= */
+/* =========================================================
+   NO BLUE OVERLAY
+   ========================================================= */
 
-        .login-left::before {
+.login-left::before {
 
-            content: "";
+    content: none;
 
-            position: absolute;
-
-            inset: 0;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(0, 100, 220, 0.35),
-                    rgba(3, 31, 68, 0.78)
-                );
-
-            pointer-events: none;
-        }
-
-
-        .left-content {
-
-            position: relative;
-
-            z-index: 2;
-        }
+}
 
 
         /* =========================================================
