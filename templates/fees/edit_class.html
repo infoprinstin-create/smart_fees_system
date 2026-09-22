@@ -1,0 +1,234 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Edit Class{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/classes.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="classes-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>Edit Class</h1>
+
+            <p>
+                Update the information for {{ school_class.name }}.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'classes' %}"
+            class="add-class-btn"
+        >
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Classes</span>
+        </a>
+
+    </div>
+
+
+    <!-- FORM CARD -->
+    <div class="classes-card">
+
+        <div class="card-heading">
+
+            <div>
+                <h2>Class Information</h2>
+
+                <p>
+                    Edit the class details below.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- MESSAGES -->
+        {% if messages %}
+
+            <div class="messages-container">
+
+                {% for message in messages %}
+
+                    <div class="message {{ message.tags }}">
+
+                        <i class="fas fa-circle-info"></i>
+
+                        <span>
+                            {{ message }}
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- EDIT FORM -->
+        <form
+            method="POST"
+            class="class-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- CLASS NAME -->
+            <div class="form-group">
+
+                <label for="name">
+                    Class Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="{{ school_class.name }}"
+                    placeholder="Enter class name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- LEVEL -->
+            <div class="form-group">
+
+                <label for="level">
+                    Class Level
+                </label>
+
+                <select
+                    id="level"
+                    name="level"
+                    required
+                >
+
+                    <option value="">
+                        Select class level
+                    </option>
+
+                    <option
+                        value="Junior High School"
+                        {% if school_class.level == "Junior High School" %}selected{% endif %}
+                    >
+                        Junior High School
+                    </option>
+
+                    <option
+                        value="Primary School"
+                        {% if school_class.level == "Primary School" %}selected{% endif %}
+                    >
+                        Primary School
+                    </option>
+
+                    <option
+                        value="Kindergarten"
+                        {% if school_class.level == "Kindergarten" %}selected{% endif %}
+                    >
+                        Kindergarten
+                    </option>
+
+                    <option
+                        value="Playgroup"
+                        {% if school_class.level == "Playgroup" %}selected{% endif %}
+                    >
+                        Playgroup
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CLASS TEACHER -->
+            <div class="form-group">
+
+                <label for="class_teacher">
+                    Class Teacher
+                </label>
+
+                <input
+                    type="text"
+                    id="class_teacher"
+                    name="class_teacher"
+                    value="{{ school_class.class_teacher|default:'' }}"
+                    placeholder="Enter class teacher name"
+                >
+
+            </div>
+
+
+            <!-- STATUS -->
+            <div class="form-group">
+
+                <label for="status">
+                    Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option
+                        value="Active"
+                        {% if school_class.status == "Active" %}selected{% endif %}
+                    >
+                        Active
+                    </option>
+
+                    <option
+                        value="Inactive"
+                        {% if school_class.status == "Inactive" %}selected{% endif %}
+                    >
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+            <div class="form-actions">
+
+                <a
+                    href="{% url 'classes' %}"
+                    class="cancel-btn"
+                >
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

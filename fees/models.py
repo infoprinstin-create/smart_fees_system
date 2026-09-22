@@ -1,4 +1,3 @@
-
 from django.db import models
 
 
@@ -43,12 +42,6 @@ class Student(models.Model):
 
     student_class = models.CharField(
         max_length=100
-    )
-
-    stream = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True
     )
 
     academic_year = models.CharField(
@@ -120,6 +113,49 @@ class Student(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+class SchoolClass(models.Model):
+
+    LEVEL_CHOICES = [
+        ("Junior High School", "Junior High School"),
+        ("Primary School", "Primary School"),
+        ("Kindergarten", "Kindergarten"),
+        ("Playgroup", "Playgroup"),
+    ]
+
+    STATUS_CHOICES = [
+        ("Active", "Active"),
+        ("Inactive", "Inactive"),
+    ]
+
+    name = models.CharField(max_length=100)
+
+    level = models.CharField(
+        max_length=50,
+        choices=LEVEL_CHOICES
+    )
+
+    class_teacher = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="Active"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return self.name
 
 class SchoolSettings(models.Model):
 
@@ -163,6 +199,7 @@ class SchoolSettings(models.Model):
 
     def __str__(self):
         return self.school_name
+
 
 class FeeStructure(models.Model):
 
@@ -241,6 +278,7 @@ class FeeStructure(models.Model):
             f"{self.term}"
         )
 
+
 class Payment(models.Model):
 
     TERM_CHOICES = [
@@ -306,6 +344,7 @@ class Payment(models.Model):
             f"{self.academic_year}"
         )
 
+
 class Bill(models.Model):
 
     TERM_CHOICES = [
@@ -358,11 +397,12 @@ class Bill(models.Model):
     )
 
     def __str__(self):
-            return (
+        return (
             f"{self.student} - "
             f"{self.academic_year} - "
             f"{self.term}"
         )
+
 
 class BusFeeStructure(models.Model):
 
@@ -387,6 +427,7 @@ class BusFeeStructure(models.Model):
 
     def __str__(self):
         return f"Bus Fee - {self.daily_fee}"
+
 
 class BusFeeRecord(models.Model):
 
@@ -428,6 +469,7 @@ class BusFeeRecord(models.Model):
             f"{self.date} - "
             f"{self.status}"
         )
+
 
 class FeedingFeeStructure(models.Model):
 
@@ -503,6 +545,7 @@ class FeedingFeeRecord(models.Model):
             f"{self.status}"
         )
 
+
 class UserProfile(models.Model):
 
     ROLE_CHOICES = [
@@ -542,5 +585,3 @@ class UserProfile(models.Model):
             f"{self.user.username} - "
             f"{self.get_role_display()}"
         )
-
-        

@@ -16,6 +16,7 @@ from django.views.decorators.http import require_POST
 from .models import (
     Student,
     SchoolSettings,
+    SchoolClass,
     FeeStructure,
     Payment,
     Bill,
@@ -608,11 +609,7 @@ def edit_student(request, student_id):
             ""
         ).strip()
 
-        student.stream = request.POST.get(
-            "stream",
-            ""
-        ).strip()
-
+    
         student.academic_year = request.POST.get(
             "academic_year",
             ""
@@ -725,9 +722,6 @@ def add_student(request):
                 "class_name"
             ),
 
-            stream=request.POST.get(
-                "stream"
-            ),
 
             academic_year=request.POST.get(
                 "academic_year"
@@ -1346,9 +1340,103 @@ def reports(request):
 @role_required("school_fees")
 def classes(request):
 
+    classes_queryset = SchoolClass.objects.all().order_by("name")
+
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    selected_level = request.GET.get(
+        "level",
+        ""
+    ).strip()
+
+    selected_status = request.GET.get(
+        "status",
+        ""
+    ).strip()
+
+    # SEARCH
+    if search:
+        classes_queryset = classes_queryset.filter(
+            models.Q(name__icontains=search)
+            |
+            models.Q(level__icontains=search)
+        )
+
+    # LEVEL FILTER
+    if selected_level:
+        classes_queryset = classes_queryset.filter(
+            level=selected_level
+        )
+
+    # STATUS FILTER
+    if selected_status:
+        classes_queryset = classes_queryset.filter(
+            status=selected_status
+        )
+
+    # Number of classes after filters
+    total_filtered_classes = classes_queryset.count()
+
+    # Count students belonging to each class
+    student_counts = dict(
+        Student.objects
+        .values("student_class")
+        .annotate(
+            total=models.Count("id")
+        )
+        .values_list(
+            "student_class",
+            "total"
+        )
+    )
+
+    classes = list(classes_queryset)
+
+    # Attach student count to every class
+    for school_class in classes:
+
+        school_class.student_count = student_counts.get(
+            school_class.name,
+            0
+        )
+
+    # Overall statistics
+    total_classes = SchoolClass.objects.count()
+
+    total_students = Student.objects.count()
+
+    active_classes = SchoolClass.objects.filter(
+        status="Active"
+    ).count()
+
+    if total_classes:
+
+        average_students = round(
+            total_students / total_classes,
+            1
+        )
+
+    else:
+
+        average_students = 0
+
     return render(
         request,
-        "fees/classes.html"
+        "fees/classes.html",
+        {
+            "classes": classes,
+            "total_classes": total_classes,
+            "total_students": total_students,
+            "average_students": average_students,
+            "active_classes": active_classes,
+            "total_filtered_classes": total_filtered_classes,
+            "search": search,
+            "selected_level": selected_level,
+            "selected_status": selected_status,
+        }
     )
 
 
@@ -2770,6 +2858,240 @@ def feeding_fees(request):
         .order_by(
             "student_class"
         )
+    )
+
+@login_required
+@role_required("school_fees")
+def add_class(request):
+
+    if request.method == "POST":
+
+        name = request.POST.get(
+            "name",
+            ""
+        ).strip()
+
+        level = request.POST.get(
+            "level",
+            ""
+        ).strip()
+
+        class_teacher = request.POST.get(
+            "class_teacher",
+            ""
+        ).strip()
+
+        status = request.POST.get(
+            "status",
+            "Active"
+        ).strip()
+
+        if not name:
+
+            messages.error(
+                request,
+                "Please enter a class name."
+            )
+
+            return render(
+                request,
+                "fees/add_class.html"
+            )
+
+        if not level:
+
+            messages.error(
+                request,
+                "Please select a class level."
+            )
+
+            return render(
+                request,
+                "fees/add_class.html"
+            )
+
+        if SchoolClass.objects.filter(
+            name__iexact=name
+        ).exists():
+
+            messages.error(
+                request,
+                "A class with this name already exists."
+            )
+
+            return render(
+                request,
+                "fees/add_class.html"
+            )
+
+        SchoolClass.objects.create(
+            name=name,
+            level=level,
+            class_teacher=class_teacher,
+            status=status
+        )
+
+        messages.success(
+            request,
+            f"{name} was added successfully."
+        )
+
+        return redirect("classes")
+
+    return render(
+        request,
+        "fees/add_class.html"
+    )
+
+
+@login_required
+@role_required("school_fees")
+def view_class(request, class_id):
+
+    school_class = get_object_or_404(
+        SchoolClass,
+        id=class_id
+    )
+
+    students = Student.objects.filter(
+        student_class=school_class.name
+    ).order_by(
+        "first_name",
+        "last_name"
+    )
+
+    return render(
+        request,
+        "fees/view_class.html",
+        {
+            "school_class": school_class,
+            "students": students,
+            "student_count": students.count(),
+        }
+    )
+
+
+@login_required
+@role_required("school_fees")
+def edit_class(request, class_id):
+
+    school_class = get_object_or_404(
+        SchoolClass,
+        id=class_id
+    )
+
+    old_name = school_class.name
+
+    if request.method == "POST":
+
+        name = request.POST.get(
+            "name",
+            ""
+        ).strip()
+
+        level = request.POST.get(
+            "level",
+            ""
+        ).strip()
+
+        class_teacher = request.POST.get(
+            "class_teacher",
+            ""
+        ).strip()
+
+        status = request.POST.get(
+            "status",
+            "Active"
+        ).strip()
+
+        if not name:
+
+            messages.error(
+                request,
+                "Please enter a class name."
+            )
+
+            return render(
+                request,
+                "fees/edit_class.html",
+                {
+                    "school_class": school_class
+                }
+            )
+
+        if not level:
+
+            messages.error(
+                request,
+                "Please select a class level."
+            )
+
+            return render(
+                request,
+                "fees/edit_class.html",
+                {
+                    "school_class": school_class
+                }
+            )
+
+        duplicate = SchoolClass.objects.filter(
+            name__iexact=name
+        ).exclude(
+            id=school_class.id
+        ).exists()
+
+        if duplicate:
+
+            messages.error(
+                request,
+                "Another class with this name already exists."
+            )
+
+            return render(
+                request,
+                "fees/edit_class.html",
+                {
+                    "school_class": school_class
+                }
+            )
+
+        school_class.name = name
+        school_class.level = level
+        school_class.class_teacher = class_teacher
+        school_class.status = status
+
+        school_class.save()
+
+        # Keep existing students connected if
+        # the class name was changed.
+        if old_name != name:
+
+            Student.objects.filter(
+                student_class=old_name
+            ).update(
+                student_class=name
+            )
+
+        messages.success(
+            request,
+            f"{name} was updated successfully."
+        )
+
+        return redirect(
+            "classes"
+        )
+
+    return render(
+        request,
+        "fees/edit_class.html",
+        {
+            "school_class": school_class
+        }
+    )
+
+
+    return redirect(
+        "classes"
     )
 
     # =====================================================

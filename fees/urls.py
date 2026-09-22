@@ -168,6 +168,24 @@ path(
         name="classes"
     ),
 
+        path(
+        "classes/add/",
+        views.add_class,
+        name="add_class"
+    ),
+
+    path(
+        "classes/<int:class_id>/",
+        views.view_class,
+        name="view_class"
+    ),
+
+    path(
+        "classes/<int:class_id>/edit/",
+        views.edit_class,
+        name="edit_class"
+    ),
+
     # =========================================================
     # BUS FEES
     # =========================================================

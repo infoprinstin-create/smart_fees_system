@@ -1,0 +1,226 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Add New Class{% endblock %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/classes.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="classes-page">
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+
+    <div>
+        <h1>Add New Class</h1>
+
+        <p>
+            Create a new class for the school.
+        </p>
+    </div>
+
+    <a
+        href="{% url 'classes' %}"
+        class="add-class-btn"
+    >
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Classes</span>
+    </a>
+
+</div>
+
+
+<!-- FORM CARD -->
+<div class="classes-card class-form-card">
+
+    <div class="card-heading">
+
+        <div>
+            <h2>
+                Class Information
+            </h2>
+
+            <p>
+                Enter the details for the new class.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+    {% if messages %}
+
+        <div class="form-messages">
+
+            {% for message in messages %}
+
+                <div class="form-message {{ message.tags }}">
+
+                    <i class="fas fa-circle-info"></i>
+
+                    <span>
+                        {{ message }}
+                    </span>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- FORM -->
+    <form
+        method="POST"
+        class="class-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- CLASS NAME -->
+        <div class="form-group">
+
+            <label for="name">
+                Class Name
+            </label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Example: Primary 2"
+                required
+            >
+
+            <small>
+                Enter the name exactly as it should appear
+                throughout the system.
+            </small>
+
+        </div>
+
+
+        <!-- LEVEL -->
+        <div class="form-group">
+
+            <label for="level">
+                Class Level
+            </label>
+
+            <select
+                id="level"
+                name="level"
+                required
+            >
+
+                <option value="">
+                    Select Class Level
+                </option>
+
+                <option value="Junior High School">
+                    Junior High School
+                </option>
+
+                <option value="Primary School">
+                    Primary School
+                </option>
+
+                <option value="Kindergarten">
+                    Kindergarten
+                </option>
+
+                <option value="Playgroup">
+                    Playgroup
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- CLASS TEACHER -->
+        <div class="form-group">
+
+            <label for="class_teacher">
+                Class Teacher
+            </label>
+
+            <input
+                type="text"
+                id="class_teacher"
+                name="class_teacher"
+                placeholder="Enter class teacher name"
+            >
+
+            <small>
+                This field can be left blank if a teacher
+                has not yet been assigned.
+            </small>
+
+        </div>
+
+
+        <!-- STATUS -->
+        <div class="form-group">
+
+            <label for="status">
+                Status
+            </label>
+
+            <select
+                id="status"
+                name="status"
+            >
+
+                <option value="Active">
+                    Active
+                </option>
+
+                <option value="Inactive">
+                    Inactive
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="form-actions">
+
+            <a
+                href="{% url 'classes' %}"
+                class="cancel-btn"
+            >
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="save-class-btn"
+            >
+
+                <i class="fas fa-save"></i>
+
+                Save Class
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% endblock %}
