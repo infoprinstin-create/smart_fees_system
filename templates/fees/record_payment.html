@@ -606,18 +606,25 @@
 
                 <!-- CLASS -->
 
-                <div class="summary-row">
+                <select
+    name="search_value"
+    id="classSearch"
+    class="form-control"
+>
 
-                    <span>
-                        Class
-                    </span>
+    <option value="">
+        Select Class
+    </option>
 
-                    <strong id="summaryClass">
-                        —
-                    </strong>
+    {% for class_name in registered_classes %}
 
-                </div>
+        <option value="{{ class_name }}">
+            {{ class_name }}
+        </option>
 
+    {% endfor %}
+
+</select>
 
                 <!-- ACADEMIC YEAR -->
 

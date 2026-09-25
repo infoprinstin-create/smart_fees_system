@@ -1044,9 +1044,22 @@ def record_payment(request):
 
         return redirect("print_receipt", payment_id=payment.id)
 
+    registered_classes = (
+    Student.objects
+    .values_list(
+        "student_class",
+        flat=True
+    )
+    .distinct()
+    .order_by("student_class")
+    )
+
     return render(
-        request,
-        "fees/record_payment.html"
+    request,
+    "fees/record_payment.html",
+    {
+        "registered_classes": registered_classes
+    }
     )
 
 
@@ -1222,8 +1235,7 @@ def student_payment_lookup(request):
         "students": results,
 
     })
-
-
+    
 # =========================================================
 # HOME
 # ADMINISTRATOR ONLY
