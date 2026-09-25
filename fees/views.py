@@ -722,7 +722,6 @@ def add_student(request):
                 "class_name"
             ),
 
-
             academic_year=request.POST.get(
                 "academic_year"
             ),
@@ -754,13 +753,20 @@ def add_student(request):
 
         return redirect("students")
 
+    # GET request:
+    # Load only active registered classes
+    classes = SchoolClass.objects.filter(
+        status="Active"
+    ).order_by("name")
+
     return render(
         request,
-        "fees/add_student.html"
-    )
-
-
-# =========================================================
+        "fees/add_student.html",
+        {
+            "classes": classes
+        }
+    
+)# =========================================================
 # PAYMENTS
 # SCHOOL FEES
 # =========================================================
