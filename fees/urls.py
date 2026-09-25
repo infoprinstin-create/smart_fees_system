@@ -246,5 +246,11 @@ path(
         name="home"
     ),
 
+path(
+    "payments/<int:payment_id>/receipt/",
+    views.print_receipt,
+    name="print_receipt"
+),
+
     
 ]

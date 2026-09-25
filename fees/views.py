@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db import IntegrityError, models
 from django.contrib import messages
+from django.db.models import Sum
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -1011,7 +1012,7 @@ def record_payment(request):
         # CREATE PAYMENT
         # -------------------------------------------------
 
-        Payment.objects.create(
+        payment = Payment.objects.create(
 
             student=student,
 
@@ -1041,7 +1042,7 @@ def record_payment(request):
             ).strip(),
         )
 
-        return redirect("payments")
+        return redirect("print_receipt", payment_id=payment.id)
 
     return render(
         request,
@@ -4084,3 +4085,157 @@ def delete_user(request, user_id):
         }
     )
 
+# =========================================================
+# PRINT PAYMENT RECEIPT
+# SCHOOL FEES
+# =========================================================
+
+@login_required
+def print_receipt(request, payment_id):
+
+    # -----------------------------------------------------
+    # GET PAYMENT
+    # -----------------------------------------------------
+
+    payment = get_object_or_404(
+        Payment.objects.select_related("student"),
+        id=payment_id
+    )
+
+    student = payment.student
+
+
+    # -----------------------------------------------------
+    # SCHOOL SETTINGS
+    # -----------------------------------------------------
+
+    settings = SchoolSettings.objects.first()
+
+
+    # -----------------------------------------------------
+    # GET STUDENT FEE STRUCTURE
+    # SAME LOGIC AS STUDENT PAYMENT LOOKUP
+    # -----------------------------------------------------
+
+    fee_structure = FeeStructure.objects.filter(
+        student_class=student.student_class,
+        academic_year=student.academic_year
+    ).first()
+
+
+    if fee_structure:
+
+        total_fee = fee_structure.total_fee
+
+    else:
+
+        total_fee = 0
+
+
+    # -----------------------------------------------------
+    # GET ALL PAYMENTS BEFORE THIS PAYMENT
+    # -----------------------------------------------------
+
+    previous_payments = Payment.objects.filter(
+        student=student,
+        academic_year=student.academic_year
+    ).filter(
+
+        models.Q(
+            payment_date__lt=payment.payment_date
+        )
+
+        |
+
+        models.Q(
+            payment_date=payment.payment_date,
+            id__lt=payment.id
+        )
+
+    )
+
+
+    # -----------------------------------------------------
+    # TOTAL PAID BEFORE THIS PAYMENT
+    # -----------------------------------------------------
+
+    total_previous_paid = (
+        previous_payments.aggregate(
+            total=models.Sum("amount")
+        )["total"] or 0
+    )
+
+
+    # -----------------------------------------------------
+    # ARREARS BEFORE CURRENT PAYMENT
+    # -----------------------------------------------------
+
+    arrears_before_payment = (
+        total_fee - total_previous_paid
+    )
+
+
+    if arrears_before_payment < 0:
+
+        arrears_before_payment = 0
+
+
+    # -----------------------------------------------------
+    # BALANCE AFTER CURRENT PAYMENT
+    # -----------------------------------------------------
+
+    balance_after_payment = (
+        arrears_before_payment - payment.amount
+    )
+
+
+    if balance_after_payment < 0:
+
+        balance_after_payment = 0
+
+
+    # -----------------------------------------------------
+    # TOTAL PAID INCLUDING CURRENT PAYMENT
+    # -----------------------------------------------------
+
+    total_paid = (
+        total_previous_paid + payment.amount
+    )
+
+
+    # -----------------------------------------------------
+    # CONTEXT
+    # -----------------------------------------------------
+
+    context = {
+
+        "payment": payment,
+
+        "student": student,
+
+        "settings": settings,
+
+        "fee_structure": fee_structure,
+
+        "total_fee": total_fee,
+
+        "total_previous_paid": total_previous_paid,
+
+        "total_paid": total_paid,
+
+        "arrears_before_payment": (
+            arrears_before_payment
+        ),
+
+        "balance_after_payment": (
+            balance_after_payment
+        ),
+
+    }
+
+
+    return render(
+        request,
+        "fees/print_receipt.html",
+        context
+    )

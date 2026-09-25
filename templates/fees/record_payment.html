@@ -708,33 +708,25 @@
 
         <div class="form-actions">
 
-            <a
-                href="{% url 'payments' %}"
-                class="btn-cancel"
-            >
+    <a
+        href="{% url 'payments' %}"
+        class="btn-cancel"
+    >
+        <i class="fas fa-xmark"></i>
+        Cancel
+    </a>
 
-                <i class="fas fa-xmark"></i>
+    <button
+        type="submit"
+        class="btn-save"
+        id="recordPaymentButton"
+        disabled
+    >
+        <i class="fas fa-check"></i>
+        Record Payment
+    </button>
 
-                Cancel
-
-            </a>
-
-
-            <button
-                type="submit"
-                class="btn-save"
-                id="recordPaymentButton"
-                disabled
-            >
-
-                <i class="fas fa-check"></i>
-
-                Record Payment
-
-            </button>
-
-        </div>
-
+</div>
 
     </form>
 

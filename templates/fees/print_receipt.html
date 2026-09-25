@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Payment Receipt -
+        {{ payment.receipt_number }}
+    </title>
+
+<style>
+
+/* =====================================================
+   GLOBAL
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #eeeeee;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    color: #222;
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+/* =====================================================
+   A5 RECEIPT
+   ===================================================== */
+
+.receipt {
+    width: 148mm;
+    min-height: 210mm;
+
+    margin: 20px auto;
+
+    padding: 9mm 8mm;
+
+    background: #ffffff;
+
+    position: relative;
+
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =====================================================
+   SCHOOL HEADER
+   ===================================================== */
+
+.school-header {
+    width: 100%;
+
+    margin: 0 0 10px 0;
+
+    padding: 0 0 8px 0;
+
+    text-align: center;
+
+    border-bottom: 2px solid #222;
+}
+
+.school-logo {
+    display: block;
+
+    width: auto;
+    height: auto;
+
+    max-width: 65px;
+    max-height: 65px;
+
+    margin: 0 auto 5px auto;
+
+    object-fit: contain;
+}
+
+.school-name {
+    margin: 0 0 3px 0;
+
+    font-size: 18px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+.school-info {
+    margin: 0;
+
+    font-size: 8.5px;
+
+    line-height: 1.45;
+
+    color: #333;
+}
+
+
+/* =====================================================
+   RECEIPT HEADING
+   LEFT ALIGNED
+   ===================================================== */
+
+.receipt-heading {
+    width: 100%;
+
+    display: block;
+
+    margin: 10px 0 12px 0;
+
+    padding: 0;
+
+    text-align: left !important;
+}
+
+.receipt-title {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+
+    padding: 0 0 5px 0;
+
+    font-size: 15px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    color: #111;
+
+    text-align: left !important;
+
+    border: none;
+
+    border-bottom: 1.5px solid #222;
+}
+
+.receipt-number {
+    display: block;
+
+    width: 100%;
+
+    margin: 5px 0 0 0;
+
+    padding: 0;
+
+    font-size: 9px;
+
+    line-height: 1.2;
+
+    font-weight: 600;
+
+    letter-spacing: 0.3px;
+
+    color: #333;
+
+    text-align: left !important;
+}
+
+
+/* =====================================================
+   SECTION TITLE
+   ===================================================== */
+
+.section-title {
+    width: 100%;
+
+    margin: 12px 0 5px 0;
+
+    padding: 4px 0;
+
+    border-bottom: 1.5px solid #222;
+
+    font-size: 9px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+
+    color: #222;
+}
+
+
+/* =====================================================
+   STUDENT INFORMATION BOX
+   ===================================================== */
+
+.details-box {
+    width: 100%;
+
+    margin: 0 0 12px 0;
+
+    border: 1px solid #222;
+}
+
+.details-header {
+    width: 100%;
+
+    padding: 5px 7px;
+
+    background: #222;
+
+    color: #ffffff;
+
+    font-size: 9px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+}
+
+.details {
+    width: 100%;
+
+    margin: 0;
+
+    border-collapse: collapse;
+}
+
+.details td {
+    padding: 5px 7px;
+
+    font-size: 9.5px;
+
+    line-height: 1.3;
+
+    vertical-align: middle;
+
+    border-bottom: 1px solid #dddddd;
+}
+
+.details tr:last-child td {
+    border-bottom: none;
+}
+
+.details td:first-child {
+    width: 37%;
+
+    font-weight: 700;
+
+    color: #333;
+}
+
+.details td:last-child {
+    width: 63%;
+
+    font-weight: 500;
+
+    color: #111;
+}
+
+
+/* =====================================================
+   PAYMENT TABLE
+   ===================================================== */
+
+.payment-table {
+    width: 100%;
+
+    margin: 0 0 12px 0;
+
+    border-collapse: collapse;
+}
+
+.payment-table th,
+.payment-table td {
+    padding: 6px 7px;
+
+    border: 1px solid #222;
+
+    font-size: 9px;
+
+    line-height: 1.3;
+
+    vertical-align: middle;
+}
+
+.payment-table th {
+    background: #f0f0f0;
+
+    font-size: 8.5px;
+
+    font-weight: 800;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+.payment-table td:last-child,
+.payment-table th:last-child {
+    text-align: right;
+}
+
+.payment-table td {
+    height: 26px;
+}
+
+.payment-table .total-row td {
+    font-size: 10.5px;
+
+    font-weight: 800;
+
+    border-top: 1.5px solid #222;
+}
+
+
+/* =====================================================
+   FEE ACCOUNT SUMMARY
+   ===================================================== */
+
+.financial-table {
+    width: 100%;
+
+    margin: 0 0 12px 0;
+
+    border: 1px solid #222;
+
+    border-collapse: collapse;
+}
+
+.financial-table td {
+    padding: 6px 8px;
+
+    font-size: 9.5px;
+
+    line-height: 1.3;
+
+    vertical-align: middle;
+
+    border-bottom: 1px solid #d5d5d5;
+}
+
+.financial-table tr:last-child td {
+    border-bottom: none;
+}
+
+.financial-table td:first-child {
+    width: 65%;
+
+    font-weight: 600;
+
+    color: #333;
+}
+
+.financial-table td:last-child {
+    width: 35%;
+
+    text-align: right;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   ARREARS ROW
+   ===================================================== */
+
+.financial-table .arrears-row td {
+    background: #f5f5f5;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   PAYMENT MADE ROW
+   ===================================================== */
+
+.financial-table .payment-made td {
+    padding-top: 8px;
+
+    padding-bottom: 8px;
+
+    background: #eeeeee;
+
+    font-size: 10.5px;
+
+    font-weight: 800;
+
+    border-top: 1.5px solid #222;
+}
+
+.financial-table .payment-made td:first-child {
+    color: #111;
+
+    text-transform: uppercase;
+}
+
+
+/* =====================================================
+   BALANCE DUE
+   ===================================================== */
+
+.financial-table .balance-row td {
+    padding-top: 9px;
+
+    padding-bottom: 9px;
+
+    background: #222;
+
+    color: #ffffff;
+
+    font-size: 11.5px;
+
+    font-weight: 800;
+}
+
+.financial-table .balance-row td:first-child {
+    color: #ffffff;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+.financial-table .balance-row td:last-child {
+    color: #ffffff;
+}
+
+
+/* =====================================================
+   PAYMENT METHOD
+   ===================================================== */
+
+.payment-method {
+    width: 100%;
+
+    margin: 0 0 12px 0;
+
+    padding: 7px 8px;
+
+    border: 1px solid #222;
+
+    font-size: 9.5px;
+
+    line-height: 1.4;
+}
+
+.payment-method strong {
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   BANK SECTION
+   ===================================================== */
+
+.bank-section {
+    width: 100%;
+
+    min-height: 28px;
+
+    margin: 0 0 8px 0;
+
+    padding: 5px 7px;
+
+    border: 1px solid #cccccc;
+
+    font-size: 9px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   MOMO SECTION
+   ===================================================== */
+
+.momo-section {
+    width: 100%;
+
+    min-height: 28px;
+
+    margin: 0 0 8px 0;
+
+    padding: 5px 7px;
+
+    border: 1px solid #cccccc;
+
+    font-size: 9px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   SIGNATURE / APPROVAL
+   ===================================================== */
+
+.signature-area {
+    width: 100%;
+
+    margin-top: 18px;
+}
+
+.signature-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.signature-table td {
+    width: 50%;
+
+    padding: 18px 10px 0 10px;
+
+    font-size: 8.5px;
+
+    line-height: 1.3;
+
+    text-align: center;
+
+    vertical-align: bottom;
+}
+
+.signature-line {
+    padding-top: 4px;
+
+    border-top: 1px solid #222;
+}
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.footer {
+    width: 100%;
+
+    margin-top: 16px;
+
+    padding-top: 7px;
+
+    border-top: 1px solid #222;
+
+    font-size: 8.5px;
+
+    line-height: 1.4;
+
+    text-align: center;
+
+    color: #333;
+}
+
+
+/* =====================================================
+   PRINT BUTTON
+   ===================================================== */
+
+.print-button {
+    display: block;
+
+    margin: 20px auto;
+
+    padding: 10px 24px;
+
+    background: #111111;
+
+    color: #ffffff;
+
+    border: none;
+
+    border-radius: 4px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.print-button:hover {
+    background: #333333;
+}
+
+
+/* =====================================================
+   PRINT SETTINGS
+   ===================================================== */
+
+@media print {
+
+    @page {
+        size: A5 portrait;
+
+        margin: 0;
+    }
+
+    html,
+    body {
+        width: 148mm;
+
+        min-height: 210mm;
+
+        margin: 0;
+
+        padding: 0;
+
+        background: #ffffff;
+    }
+
+    body {
+        font-size: 10px;
+    }
+
+    .receipt {
+        width: 148mm;
+
+        min-height: 210mm;
+
+        margin: 0;
+
+        padding: 9mm 8mm;
+
+        background: #ffffff;
+
+        box-shadow: none;
+    }
+
+    .print-button {
+        display: none !important;
+    }
+
+    .school-header,
+    .receipt-heading,
+    .details-box,
+    .payment-table,
+    .financial-table,
+    .payment-method,
+    .bank-section,
+    .momo-section,
+    .signature-area {
+        page-break-inside: avoid;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="receipt">
+
+
+    <!-- =========================
+         SCHOOL HEADER
+         ========================= -->
+
+    <div class="school-header">
+
+
+        {% if settings and settings.logo %}
+
+            <img
+                src="{{ settings.logo.url }}"
+                class="school-logo"
+                alt="School Logo"
+            >
+
+        {% endif %}
+
+
+        {% if settings %}
+
+            <div class="school-name">
+
+                {{ settings.school_name }}
+
+            </div>
+
+
+            {% if settings.address %}
+
+                <div class="school-info">
+
+                    {{ settings.address }}
+
+                </div>
+
+            {% endif %}
+
+
+            {% if settings.phone %}
+
+                <div class="school-info">
+
+                    Tel: {{ settings.phone }}
+
+                </div>
+
+            {% endif %}
+
+
+            {% if settings.email %}
+
+                <div class="school-info">
+
+                    {{ settings.email }}
+
+                </div>
+
+            {% endif %}
+
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         RECEIPT TITLE
+         ========================= -->
+
+    <div class="receipt-title">
+
+        PAYMENT RECEIPT
+
+    </div>
+
+
+    <!-- =========================
+         RECEIPT NUMBER
+         ========================= -->
+
+    <div class="receipt-number">
+
+        Receipt No:
+
+        <strong>
+
+            {{ payment.receipt_number }}
+
+        </strong>
+
+    </div>
+
+
+    <!-- =========================
+         STUDENT INFORMATION
+         ========================= -->
+
+    <table class="details">
+
+
+        <tr>
+
+            <td>
+                Student ID:
+            </td>
+
+            <td>
+                {{ student.student_id }}
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Student Name:
+            </td>
+
+            <td>
+
+                {{ student.first_name }}
+                {{ student.last_name }}
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Class:
+            </td>
+
+            <td>
+
+                {{ student.student_class }}
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Academic Year:
+            </td>
+
+            <td>
+
+                {{ payment.academic_year }}
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Term:
+            </td>
+
+            <td>
+
+                {{ payment.term }}
+
+            </td>
+
+        </tr>
+
+
+        <tr>
+
+            <td>
+                Date:
+            </td>
+
+            <td>
+
+                {{ payment.payment_date|date:"d M Y" }}
+
+            </td>
+
+        </tr>
+
+
+    </table>
+
+
+    <!-- =========================
+         FEE DETAILS
+         ========================= -->
+
+    <table class="payment-table">
+
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Description
+                </th>
+
+                <th>
+                    Amount
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+
+            {% if current_bill %}
+
+                <tr>
+
+                    <td>
+                        Original Fee
+                    </td>
+
+                    <td>
+
+                        {{ base_amount|floatformat:2 }}
+
+                    </td>
+
+                </tr>
+
+
+                {% if discount_amount > 0 %}
+
+                    <tr>
+
+                        <td>
+                            Discount
+                        </td>
+
+                        <td>
+
+                            -{{ discount_amount|floatformat:2 }}
+
+                        </td>
+
+                    </tr>
+
+                {% endif %}
+
+
+                <tr>
+
+                    <td>
+                        Current Term Fee
+                    </td>
+
+                    <td>
+
+                        {{ current_fee|floatformat:2 }}
+
+                    </td>
+
+                </tr>
+
+            {% endif %}
+
+
+            <tr>
+
+                <td>
+
+                    {% if payment.description %}
+
+                        {{ payment.description }}
+
+                    {% else %}
+
+                        School Fees Payment
+
+                    {% endif %}
+
+                </td>
+
+                <td>
+
+                    {{ payment.amount|floatformat:2 }}
+
+                </td>
+
+            </tr>
+
+
+            <tr class="total-row">
+
+                <td>
+                    Payment Made
+                </td>
+
+                <td>
+
+                    {{ payment.amount|floatformat:2 }}
+
+                </td>
+
+            </tr>
+
+
+        </tbody>
+
+    </table>
+
+
+    <!-- =========================
+         FINANCIAL SUMMARY
+         ========================= -->
+
+<!-- =========================
+     ACCOUNT SUMMARY
+     ========================= -->
+
+<div class="section-title">
+    ACCOUNT SUMMARY
+</div>
+
+<table class="financial-table">
+
+    <tr>
+        <td>
+            Total School Fee
+        </td>
+
+        <td>
+            GH₵ {{ total_fee|floatformat:2 }}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Previous Payments
+        </td>
+
+        <td>
+            GH₵ {{ total_previous_paid|floatformat:2 }}
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            Arrears Before Payment
+        </td>
+
+        <td>
+            GH₵ {{ arrears_before_payment|floatformat:2 }}
+        </td>
+    </tr>
+
+    <tr class="payment-made">
+
+        <td>
+            Payment Made
+        </td>
+
+        <td>
+            GH₵ {{ payment.amount|floatformat:2 }}
+        </td>
+
+    </tr>
+
+    <tr class="balance-row">
+
+        <td>
+            Balance After Payment
+        </td>
+
+        <td>
+            GH₵ {{ balance_after_payment|floatformat:2 }}
+        </td>
+
+    </tr>
+
+</table>
+
+
+    <!-- =========================
+         PAYMENT METHOD
+         ========================= -->
+
+    <table class="details">
+
+        <tr>
+
+            <td>
+                Payment Method:
+            </td>
+
+            <td>
+
+                {{ payment.payment_method }}
+
+            </td>
+
+        </tr>
+
+    </table>
+
+
+    <!-- =========================
+         BANK PAYMENT
+         ========================= -->
+
+    <div class="section-title">
+
+        BANK PAYMENT
+
+    </div>
+
+
+    <div class="bank-section">
+
+        Bank Name:
+        <br>
+
+        Account Name:
+        <br>
+
+        Account Number:
+        <br>
+
+        Branch:
+
+    </div>
+
+
+    <!-- =========================
+         MOMO PAYMENT
+         ========================= -->
+
+    <div class="section-title">
+
+        MOMO PAYMENT
+
+    </div>
+
+
+    <div class="momo-section">
+
+        Merchant ID:
+        <br>
+
+        Reference:
+
+    </div>
+
+
+    <!-- =========================
+         FOOTER
+         ========================= -->
+
+    <div class="footer">
+
+        Thank you for your payment.
+
+        <br>
+
+        Please keep this receipt for your records.
+
+    </div>
+
+
+</div>
+
+
+<!-- =========================
+     PRINT BUTTON
+     ========================= -->
+
+<button
+    class="print-button"
+    onclick="window.print()"
+>
+
+    🖨 Print Receipt
+
+</button>
+
+
+</body>
+
+</html>
