@@ -4256,54 +4256,782 @@ def print_receipt(request, payment_id):
         context
     )
 
-def excel_datetime(value):
-    """
-    Convert Django timezone-aware datetime to
-    Excel-compatible timezone-naive datetime.
-    """
-    if value is None:
-        return None
-
-    if timezone.is_aware(value):
-        return timezone.make_naive(value)
-
-    return value
-
-def excel_datetime(value):
-    """
-    Convert Django timezone-aware datetime to
-    Excel-compatible timezone-naive datetime.
-    """
-    if value is None:
-        return None
-
-    if timezone.is_aware(value):
-        return timezone.make_naive(value)
-
-    return value
+# =========================================================
+# EXPORT ALL DATA TO EXCEL
+# ADMINISTRATOR
+# =========================================================
 
 @login_required
 def export_excel(request):
+
     from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment
+    from openpyxl.utils import get_column_letter
+    from django.http import HttpResponse
+    from django.utils import timezone
+    from decimal import Decimal
+
+    # =====================================================
+    # HELPER - EXCEL DATETIME
+    # =====================================================
+
+    def excel_datetime(value):
+
+        if value is None:
+            return None
+
+        if timezone.is_aware(value):
+            return timezone.make_naive(value)
+
+        return value
+
+    # =====================================================
+    # CREATE WORKBOOK
+    # =====================================================
 
     workbook = Workbook()
-    sheet = workbook.active
-    sheet.title = "Test"
 
-    sheet.append(["Smart System", "Excel Export"])
-    sheet.append(["Status", "Working"])
+    # Remove default sheet
+    default_sheet = workbook.active
+    workbook.remove(default_sheet)
+
+    # =====================================================
+    # COMMON SHEET FORMATTING
+    # =====================================================
+
+    def format_sheet(sheet):
+
+        # Header
+        for cell in sheet[1]:
+
+            cell.font = Font(
+                bold=True
+            )
+
+            cell.fill = PatternFill(
+                fill_type="solid",
+                fgColor="D9EAF7"
+            )
+
+            cell.alignment = Alignment(
+                horizontal="center",
+                vertical="center"
+            )
+
+        # Freeze header
+        sheet.freeze_panes = "A2"
+
+        # Auto width
+        for column_cells in sheet.columns:
+
+            max_length = 0
+
+            column_letter = get_column_letter(
+                column_cells[0].column
+            )
+
+            for cell in column_cells:
+
+                try:
+
+                    cell_length = len(
+                        str(cell.value)
+                    )
+
+                    if cell_length > max_length:
+                        max_length = cell_length
+
+                except Exception:
+                    pass
+
+            sheet.column_dimensions[
+                column_letter
+            ].width = min(
+                max_length + 2,
+                40
+            )
+
+    # =====================================================
+    # 1. STUDENTS
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Students"
+    )
+
+    sheet.append([
+        "ID",
+        "First Name",
+        "Last Name",
+        "Student ID",
+        "Registration Number",
+        "Date of Birth",
+        "Class",
+        "Academic Year",
+        "Gender",
+        "Parent Name",
+        "Parent Contact",
+        "Address",
+        "Additional Information",
+        "Status",
+        "Fee Status",
+        "Discount",
+        "Total Fee",
+        "Total Paid",
+        "Balance",
+        "Photo",
+        "Date Registered",
+    ])
+
+    students = Student.objects.all().order_by(
+        "id"
+    )
+
+    for student in students:
+
+        # =================================================
+        # EXACT SAME FEE CALCULATION AS PAYMENT SYSTEM
+        # =================================================
+
+        fee_structure = FeeStructure.objects.filter(
+
+            student_class=student.student_class,
+
+            academic_year=student.academic_year
+
+        ).first()
+
+        # -------------------------------------------------
+        # TOTAL FEE
+        # -------------------------------------------------
+
+        if fee_structure:
+
+            total_fee = (
+                fee_structure.total_fee
+            )
+
+        else:
+
+            total_fee = Decimal("0.00")
+
+        # -------------------------------------------------
+        # TOTAL PAID
+        # -------------------------------------------------
+
+        total_paid = Payment.objects.filter(
+
+            student=student,
+
+            academic_year=student.academic_year
+
+        ).aggregate(
+
+            total=models.Sum("amount")
+
+        )["total"] or Decimal("0.00")
+
+        # -------------------------------------------------
+        # BALANCE
+        # -------------------------------------------------
+
+        balance = (
+            total_fee -
+            total_paid
+        )
+
+        # -------------------------------------------------
+        # FEE STATUS
+        # EXACT SAME LOGIC AS WEBSITE
+        # -------------------------------------------------
+
+        if total_fee <= 0:
+
+            calculated_fee_status = "Pending"
+
+        elif total_paid >= total_fee:
+
+            calculated_fee_status = "Paid"
+
+        else:
+
+            calculated_fee_status = "Pending"
+
+        # =================================================
+        # ADD STUDENT ROW
+        # =================================================
+
+        sheet.append([
+
+            student.id,
+
+            student.first_name,
+
+            student.last_name,
+
+            student.student_id,
+
+            student.registration_number,
+
+            student.date_of_birth,
+
+            student.student_class,
+
+            student.academic_year,
+
+            student.gender,
+
+            student.parent_name,
+
+            student.parent_contact,
+
+            student.address,
+
+            student.additional_information,
+
+            student.status,
+
+            calculated_fee_status,
+
+            float(
+                student.discount or 0
+            ),
+
+            float(
+                total_fee
+            ),
+
+            float(
+                total_paid
+            ),
+
+            float(
+                balance
+            ),
+
+            (
+                student.photo.name
+                if student.photo
+                else ""
+            ),
+
+            excel_datetime(
+                student.date_registered
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 2. CLASSES
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Classes"
+    )
+
+    sheet.append([
+        "ID",
+        "Class Name",
+        "Level",
+        "Class Teacher",
+        "Status",
+        "Created At",
+        "Updated At",
+    ])
+
+    for school_class in SchoolClass.objects.all().order_by("id"):
+
+        sheet.append([
+
+            school_class.id,
+
+            school_class.name,
+
+            school_class.level,
+
+            school_class.class_teacher,
+
+            school_class.status,
+
+            excel_datetime(
+                school_class.created_at
+            ),
+
+            excel_datetime(
+                school_class.updated_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 3. SCHOOL SETTINGS
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "School Settings"
+    )
+
+    sheet.append([
+        "ID",
+        "School Name",
+        "Address",
+        "Phone",
+        "Email",
+        "Academic Year",
+        "School Motto",
+        "Logo",
+    ])
+
+    for settings in SchoolSettings.objects.all().order_by("id"):
+
+        sheet.append([
+
+            settings.id,
+
+            settings.school_name,
+
+            settings.address,
+
+            settings.phone,
+
+            settings.email,
+
+            settings.academic_year,
+
+            settings.school_motto,
+
+            (
+                settings.logo.name
+                if settings.logo
+                else ""
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 4. FEE STRUCTURES
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Fee Structures"
+    )
+
+    sheet.append([
+        "ID",
+        "Class",
+        "Academic Year",
+        "Term",
+        "Registration Fee",
+        "Tuition Fee",
+        "Examination Fee",
+        "Library Fee",
+        "Activity Fee",
+        "Total Fee",
+        "Created At",
+        "Updated At",
+    ])
+
+    for fee in FeeStructure.objects.all().order_by("id"):
+
+        sheet.append([
+
+            fee.id,
+
+            fee.student_class,
+
+            fee.academic_year,
+
+            fee.term,
+
+            float(
+                fee.registration_fee or 0
+            ),
+
+            float(
+                fee.tuition_fee or 0
+            ),
+
+            float(
+                fee.examination_fee or 0
+            ),
+
+            float(
+                fee.library_fee or 0
+            ),
+
+            float(
+                fee.activity_fee or 0
+            ),
+
+            float(
+                fee.total_fee
+            ),
+
+            excel_datetime(
+                fee.created_at
+            ),
+
+            excel_datetime(
+                fee.updated_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 5. PAYMENTS
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Payments"
+    )
+
+    sheet.append([
+        "ID",
+        "Student ID",
+        "Student Name",
+        "Academic Year",
+        "Term",
+        "Amount",
+        "Payment Method",
+        "Payment Date",
+        "Receipt Number",
+        "Description",
+        "Created At",
+    ])
+
+    payments = Payment.objects.select_related(
+        "student"
+    ).all().order_by("id")
+
+    for payment in payments:
+
+        sheet.append([
+
+            payment.id,
+
+            payment.student.student_id,
+
+            (
+                f"{payment.student.first_name} "
+                f"{payment.student.last_name}"
+            ),
+
+            payment.academic_year,
+
+            payment.term,
+
+            float(
+                payment.amount or 0
+            ),
+
+            payment.payment_method,
+
+            payment.payment_date,
+
+            payment.receipt_number,
+
+            payment.description,
+
+            excel_datetime(
+                payment.created_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 6. BILLS
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Bills"
+    )
+
+    sheet.append([
+        "ID",
+        "Student ID",
+        "Student Name",
+        "Academic Year",
+        "Term",
+        "Base Amount",
+        "Discount Percent",
+        "Discount Amount",
+        "Amount Due",
+        "Created At",
+    ])
+
+    bills = Bill.objects.select_related(
+        "student"
+    ).all().order_by("id")
+
+    for bill in bills:
+
+        sheet.append([
+
+            bill.id,
+
+            bill.student.student_id,
+
+            (
+                f"{bill.student.first_name} "
+                f"{bill.student.last_name}"
+            ),
+
+            bill.academic_year,
+
+            bill.term,
+
+            float(
+                bill.base_amount or 0
+            ),
+
+            float(
+                bill.discount_percent or 0
+            ),
+
+            float(
+                bill.discount_amount or 0
+            ),
+
+            float(
+                bill.amount_due or 0
+            ),
+
+            excel_datetime(
+                bill.created_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 7. BUS FEE STRUCTURES
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Bus Fee Structures"
+    )
+
+    sheet.append([
+        "ID",
+        "Daily Fee",
+        "Academic Year",
+        "Created At",
+        "Updated At",
+    ])
+
+    for fee in BusFeeStructure.objects.all().order_by("id"):
+
+        sheet.append([
+
+            fee.id,
+
+            float(
+                fee.daily_fee or 0
+            ),
+
+            fee.academic_year,
+
+            excel_datetime(
+                fee.created_at
+            ),
+
+            excel_datetime(
+                fee.updated_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 8. BUS FEE RECORDS
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Bus Fee Records"
+    )
+
+    sheet.append([
+        "ID",
+        "Student ID",
+        "Student Name",
+        "Date",
+        "Status",
+        "Amount",
+        "Advance Payment",
+        "Created At",
+        "Updated At",
+    ])
+
+    bus_records = BusFeeRecord.objects.select_related(
+        "student"
+    ).all().order_by("id")
+
+    for record in bus_records:
+
+        sheet.append([
+
+            record.id,
+
+            record.student.student_id,
+
+            (
+                f"{record.student.first_name} "
+                f"{record.student.last_name}"
+            ),
+
+            record.date,
+
+            record.status,
+
+            float(
+                record.amount or 0
+            ),
+
+            record.is_advance_payment,
+
+            excel_datetime(
+                record.created_at
+            ),
+
+            excel_datetime(
+                record.updated_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 9. FEEDING FEE STRUCTURES
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Feeding Fee Structures"
+    )
+
+    sheet.append([
+        "ID",
+        "Daily Fee",
+        "Academic Year",
+        "Created At",
+        "Updated At",
+    ])
+
+    for fee in FeedingFeeStructure.objects.all().order_by("id"):
+
+        sheet.append([
+
+            fee.id,
+
+            float(
+                fee.daily_fee or 0
+            ),
+
+            fee.academic_year,
+
+            excel_datetime(
+                fee.created_at
+            ),
+
+            excel_datetime(
+                fee.updated_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # 10. FEEDING FEE RECORDS
+    # =====================================================
+
+    sheet = workbook.create_sheet(
+        "Feeding Fee Records"
+    )
+
+    sheet.append([
+        "ID",
+        "Student ID",
+        "Student Name",
+        "Date",
+        "Status",
+        "Amount",
+        "Advance Payment",
+        "Created At",
+        "Updated At",
+    ])
+
+    feeding_records = FeedingFeeRecord.objects.select_related(
+        "student"
+    ).all().order_by("id")
+
+    for record in feeding_records:
+
+        sheet.append([
+
+            record.id,
+
+            record.student.student_id,
+
+            (
+                f"{record.student.first_name} "
+                f"{record.student.last_name}"
+            ),
+
+            record.date,
+
+            record.status,
+
+            float(
+                record.amount or 0
+            ),
+
+            record.is_advance_payment,
+
+            excel_datetime(
+                record.created_at
+            ),
+
+            excel_datetime(
+                record.updated_at
+            ),
+
+        ])
+
+    format_sheet(sheet)
+
+    # =====================================================
+    # RESPONSE
+    # =====================================================
 
     response = HttpResponse(
+
         content_type=(
             "application/vnd.openxmlformats-officedocument."
             "spreadsheetml.sheet"
         )
+
     )
 
     response["Content-Disposition"] = (
-        'attachment; filename="Smart_System_Export.xlsx"'
+        'attachment; '
+        'filename="Smart_System_Export.xlsx"'
     )
 
-    workbook.save(response)
+    workbook.save(
+        response
+    )
 
     return response
