@@ -2,7 +2,11 @@
 from functools import wraps
 from datetime import date, timedelta
 from decimal import Decimal
-
+from django.utils import timezone
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.utils import get_column_letter
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -4251,3 +4255,55 @@ def print_receipt(request, payment_id):
         "fees/print_receipt.html",
         context
     )
+
+def excel_datetime(value):
+    """
+    Convert Django timezone-aware datetime to
+    Excel-compatible timezone-naive datetime.
+    """
+    if value is None:
+        return None
+
+    if timezone.is_aware(value):
+        return timezone.make_naive(value)
+
+    return value
+
+def excel_datetime(value):
+    """
+    Convert Django timezone-aware datetime to
+    Excel-compatible timezone-naive datetime.
+    """
+    if value is None:
+        return None
+
+    if timezone.is_aware(value):
+        return timezone.make_naive(value)
+
+    return value
+
+@login_required
+def export_excel(request):
+    from openpyxl import Workbook
+
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Test"
+
+    sheet.append(["Smart System", "Excel Export"])
+    sheet.append(["Status", "Working"])
+
+    response = HttpResponse(
+        content_type=(
+            "application/vnd.openxmlformats-officedocument."
+            "spreadsheetml.sheet"
+        )
+    )
+
+    response["Content-Disposition"] = (
+        'attachment; filename="Smart_System_Export.xlsx"'
+    )
+
+    workbook.save(response)
+
+    return response

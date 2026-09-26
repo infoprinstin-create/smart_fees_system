@@ -246,6 +246,12 @@ path(
         name="home"
     ),
 
+    path(
+    "export-excel/",
+    views.export_excel,
+    name="export_excel"
+    ),
+
 path(
     "payments/<int:payment_id>/receipt/",
     views.print_receipt,
