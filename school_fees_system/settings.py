@@ -22,6 +22,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.humanize",
 
+    "cloudinary",
+
     "fees",
 ]
 
@@ -131,10 +133,9 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
-# MEDIA FILES (STUDENT PHOTOS)
+# CLOUDINARY MEDIA STORAGE
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
 
 
 

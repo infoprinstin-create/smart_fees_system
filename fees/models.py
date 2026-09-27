@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 
 class Student(models.Model):
@@ -100,10 +101,11 @@ class Student(models.Model):
         default=0
     )
 
-    photo = models.ImageField(
-        upload_to="students/",
-        blank=True,
-        null=True
+    photo = CloudinaryField(
+    "photo",
+    folder="smart_fee/students",
+    blank=True,
+    null=True
     )
 
     date_registered = models.DateTimeField(
@@ -164,8 +166,9 @@ class SchoolSettings(models.Model):
         default="School Name"
     )
 
-    logo = models.ImageField(
-        upload_to="school/",
+    logo = CloudinaryField(
+        "logo",
+        folder="smart_fee/school",
         blank=True,
         null=True
     )
