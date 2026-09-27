@@ -132,20 +132,20 @@ STATICFILES_DIRS = [
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-
 # =========================================================
 # CLOUDINARY MEDIA STORAGE
 # =========================================================
 
+import os
 import cloudinary
 
 CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
 
-cloudinary.config(
-    cloud_name="smns3zpt",
-    secure=True
-)
-
+if CLOUDINARY_URL:
+    cloudinary.config(
+        cloudinary_url=CLOUDINARY_URL,
+        secure=True,
+    )
 
 # DEFAULT PRIMARY KEY
 

@@ -181,7 +181,6 @@ def login_view(request):
 # SETTINGS
 # ADMINISTRATOR ONLY
 # =========================================================
-
 @login_required
 @role_required("administrator")
 def settings_view(request):
@@ -189,46 +188,29 @@ def settings_view(request):
     settings = SchoolSettings.objects.first()
 
     if not settings:
-
         settings = SchoolSettings.objects.create()
 
     if request.method == "POST":
 
-        settings.school_name = request.POST.get(
-            "school_name",
-            ""
-        ).strip()
+        settings.school_name = request.POST.get("school_name", "").strip()
+        settings.address = request.POST.get("address", "").strip()
+        settings.phone = request.POST.get("phone", "").strip()
+        settings.email = request.POST.get("email", "").strip()
+        settings.academic_year = request.POST.get("academic_year", "").strip()
+        settings.school_motto = request.POST.get("school_motto", "").strip()
 
-        settings.address = request.POST.get(
-            "address",
-            ""
-        ).strip()
-
-        settings.phone = request.POST.get(
-            "phone",
-            ""
-        ).strip()
-
-        settings.email = request.POST.get(
-            "email",
-            ""
-        ).strip()
-
-        settings.academic_year = request.POST.get(
-            "academic_year",
-            ""
-        ).strip()
-
-        settings.school_motto = request.POST.get(
-            "school_motto",
-            ""
-        ).strip()
-
+        # SCHOOL LOGO
         if request.FILES.get("school_logo"):
+            uploaded_logo = request.FILES.get("school_logo")
 
-            settings.logo = request.FILES.get(
-                "school_logo"
-            )
+            print("===== CLOUDINARY LOGO DEBUG =====")
+            print("File:", uploaded_logo)
+            print("Name:", uploaded_logo.name)
+            print("Content type:", uploaded_logo.content_type)
+            print("Size:", uploaded_logo.size)
+            print("=================================")
+
+            settings.logo = uploaded_logo
 
         settings.save()
 
@@ -241,7 +223,6 @@ def settings_view(request):
             "school_settings": settings
         }
     )
-
 
 # =========================================================
 # STUDENTS
