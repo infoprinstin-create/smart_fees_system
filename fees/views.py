@@ -5049,22 +5049,32 @@ def import_excel(request):
 
     from openpyxl import load_workbook
     from django.db import transaction
+    from django.contrib import messages
     from datetime import datetime, date
+    from decimal import Decimal
 
     uploaded_file = request.FILES.get("excel_file")
 
+    # =====================================================
+    # CHECK FILE
+    # =====================================================
+
     if not uploaded_file:
+
         messages.error(
             request,
             "Please select an Excel backup file."
         )
+
         return redirect("settings")
 
     if not uploaded_file.name.lower().endswith(".xlsx"):
+
         messages.error(
             request,
             "Only .xlsx Excel files are supported."
         )
+
         return redirect("settings")
 
     try:
@@ -5073,6 +5083,10 @@ def import_excel(request):
             uploaded_file,
             data_only=True
         )
+
+        # =================================================
+        # REQUIRED SHEETS
+        # =================================================
 
         required_sheets = [
             "Students",
@@ -5094,19 +5108,26 @@ def import_excel(request):
         ]
 
         if missing_sheets:
+
             messages.error(
                 request,
-                "Invalid Smart System backup. "
-                "Missing sheets: "
+                "Invalid Smart System backup. Missing sheets: "
                 + ", ".join(missing_sheets)
             )
+
             return redirect("settings")
 
+        # =================================================
+        # HELPERS
+        # =================================================
+
         def clean(value):
+
             if value is None:
                 return None
 
             if isinstance(value, str):
+
                 value = value.strip()
 
                 if value == "":
@@ -5115,14 +5136,19 @@ def import_excel(request):
             return value
 
         def decimal_value(value):
+
             value = clean(value)
 
             if value is None:
                 return Decimal("0.00")
 
-            return Decimal(str(value))
+            try:
+                return Decimal(str(value))
+            except Exception:
+                return Decimal("0.00")
 
         def date_value(value):
+
             value = clean(value)
 
             if value is None:
@@ -5137,6 +5163,7 @@ def import_excel(request):
             return value
 
         def datetime_value(value):
+
             value = clean(value)
 
             if value is None:
@@ -5146,6 +5173,7 @@ def import_excel(request):
                 return value
 
             if isinstance(value, date):
+
                 return datetime.combine(
                     value,
                     datetime.min.time()
@@ -5153,7 +5181,28 @@ def import_excel(request):
 
             return value
 
+        def boolean_value(value):
+
+            value = clean(value)
+
+            if isinstance(value, bool):
+                return value
+
+            if value is None:
+                return False
+
+            value = str(value).strip().lower()
+
+            return value in [
+                "true",
+                "1",
+                "yes",
+                "y",
+                "on",
+            ]
+
         def rows(sheet_name):
+
             sheet = workbook[sheet_name]
 
             headers = [
@@ -5165,6 +5214,7 @@ def import_excel(request):
                 min_row=2,
                 values_only=True
             ):
+
                 if not any(
                     clean(value) is not None
                     for value in row
@@ -5178,55 +5228,67 @@ def import_excel(request):
                     )
                 )
 
+        # =================================================
+        # IMPORT EVERYTHING
+        # =================================================
+
         with transaction.atomic():
 
             # =================================================
-            # 1. SCHOOL CLASSES
+            # 1. CLASSES
             # =================================================
 
             for row in rows("Classes"):
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
+
+                defaults = {
+
+                    "name": clean(
+                        row.get("Class Name")
+                    ) or "",
+
+                    "level": clean(
+                        row.get("Level")
+                    ) or "",
+
+                    "class_teacher": clean(
+                        row.get("Class Teacher")
+                    ),
+
+                    "status": clean(
+                        row.get("Status")
+                    ) or "Active",
+                }
 
                 if record_id:
-                    obj, created = SchoolClass.objects.update_or_create(
+
+                    SchoolClass.objects.update_or_create(
                         id=record_id,
-                        defaults={
-                            "name": clean(row.get("Name")) or "",
-                            "level": clean(row.get("Level")) or "",
-                            "class_teacher": clean(
-                                row.get("Class Teacher")
-                            ),
-                            "status": clean(
-                                row.get("Status")
-                            ) or "Active",
-                        }
+                        defaults=defaults
                     )
+
                 else:
-                    SchoolClass.objects.create(
-                        name=clean(row.get("Name")) or "",
-                        level=clean(row.get("Level")) or "",
-                        class_teacher=clean(
-                            row.get("Class Teacher")
-                        ),
-                        status=clean(
-                            row.get("Status")
-                        ) or "Active",
+
+                    SchoolClass.objects.get_or_create(
+                        name=defaults["name"],
+                        defaults=defaults
                     )
 
             # =================================================
             # 2. SCHOOL SETTINGS
             # =================================================
 
-            settings_rows = list(
-                rows("School Settings")
-            )
+            for row in rows("School Settings"):
 
-            for row in settings_rows:
-
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "school_name": clean(
                         row.get("School Name")
                     ) or "School Name",
@@ -5253,11 +5315,14 @@ def import_excel(request):
                 }
 
                 if record_id:
+
                     SchoolSettings.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     SchoolSettings.objects.update_or_create(
                         id=1,
                         defaults=defaults
@@ -5269,9 +5334,19 @@ def import_excel(request):
 
             for row in rows("Students"):
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
+
+                student_id = clean(
+                    row.get("Student ID")
+                )
+
+                if not student_id:
+                    continue
 
                 defaults = {
+
                     "first_name": clean(
                         row.get("First Name")
                     ) or "",
@@ -5280,9 +5355,7 @@ def import_excel(request):
                         row.get("Last Name")
                     ) or "",
 
-                    "student_id": clean(
-                        row.get("Student ID")
-                    ) or "",
+                    "student_id": student_id,
 
                     "registration_number": clean(
                         row.get("Registration Number")
@@ -5298,7 +5371,7 @@ def import_excel(request):
 
                     "academic_year": clean(
                         row.get("Academic Year")
-                    ) or "2025/2026",
+                    ) or "2026/2027",
 
                     "gender": clean(
                         row.get("Gender")
@@ -5332,22 +5405,47 @@ def import_excel(request):
                         row.get("Discount")
                     ),
 
-                    # We import this value too, but the system's
-                    # live balance calculation can recalculate it.
                     "balance": decimal_value(
                         row.get("Balance")
                     ),
                 }
 
+                # ---------------------------------------------
+                # IMPORTANT:
+                # Existing students are primarily matched
+                # using Student ID.
+                # ---------------------------------------------
+
+                existing_student = None
+
                 if record_id:
-                    Student.objects.update_or_create(
-                        id=record_id,
-                        defaults=defaults
-                    )
+
+                    existing_student = Student.objects.filter(
+                        id=record_id
+                    ).first()
+
+                if not existing_student:
+
+                    existing_student = Student.objects.filter(
+                        student_id=student_id
+                    ).first()
+
+                if existing_student:
+
+                    for field, value in defaults.items():
+
+                        setattr(
+                            existing_student,
+                            field,
+                            value
+                        )
+
+                    existing_student.save()
+
                 else:
-                    Student.objects.update_or_create(
-                        student_id=defaults["student_id"],
-                        defaults=defaults
+
+                    Student.objects.create(
+                        **defaults
                     )
 
             # =================================================
@@ -5356,9 +5454,12 @@ def import_excel(request):
 
             for row in rows("Fee Structures"):
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "student_class": clean(
                         row.get("Class")
                     ) or "",
@@ -5393,11 +5494,14 @@ def import_excel(request):
                 }
 
                 if record_id:
+
                     FeeStructure.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     FeeStructure.objects.update_or_create(
                         student_class=defaults["student_class"],
                         academic_year=defaults["academic_year"],
@@ -5418,16 +5522,24 @@ def import_excel(request):
                 if not student_id:
                     continue
 
-                try:
-                    student = Student.objects.get(
-                        id=student_id
-                    )
-                except Student.DoesNotExist:
+                # ---------------------------------------------
+                # CORRECT:
+                # Excel contains Student.student_id
+                # ---------------------------------------------
+
+                student = Student.objects.filter(
+                    student_id=student_id
+                ).first()
+
+                if not student:
                     continue
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "student": student,
 
                     "academic_year": clean(
@@ -5460,11 +5572,14 @@ def import_excel(request):
                 }
 
                 if record_id:
+
                     Payment.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     Payment.objects.create(
                         **defaults
                     )
@@ -5482,16 +5597,19 @@ def import_excel(request):
                 if not student_id:
                     continue
 
-                try:
-                    student = Student.objects.get(
-                        id=student_id
-                    )
-                except Student.DoesNotExist:
+                student = Student.objects.filter(
+                    student_id=student_id
+                ).first()
+
+                if not student:
                     continue
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "student": student,
 
                     "academic_year": clean(
@@ -5520,11 +5638,14 @@ def import_excel(request):
                 }
 
                 if record_id:
+
                     Bill.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     Bill.objects.create(
                         **defaults
                     )
@@ -5535,9 +5656,12 @@ def import_excel(request):
 
             for row in rows("Bus Fee Structures"):
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "daily_fee": decimal_value(
                         row.get("Daily Fee")
                     ),
@@ -5548,11 +5672,14 @@ def import_excel(request):
                 }
 
                 if record_id:
+
                     BusFeeStructure.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     BusFeeStructure.objects.update_or_create(
                         academic_year=defaults["academic_year"],
                         defaults=defaults
@@ -5571,16 +5698,19 @@ def import_excel(request):
                 if not student_id:
                     continue
 
-                try:
-                    student = Student.objects.get(
-                        id=student_id
-                    )
-                except Student.DoesNotExist:
+                student = Student.objects.filter(
+                    student_id=student_id
+                ).first()
+
+                if not student:
                     continue
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "student": student,
 
                     "date": date_value(
@@ -5595,17 +5725,20 @@ def import_excel(request):
                         row.get("Amount")
                     ),
 
-                    "is_advance_payment": bool(
-                        row.get("Is Advance Payment")
+                    "is_advance_payment": boolean_value(
+                        row.get("Advance Payment")
                     ),
                 }
 
                 if record_id:
+
                     BusFeeRecord.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     BusFeeRecord.objects.update_or_create(
                         student=student,
                         date=defaults["date"],
@@ -5618,9 +5751,12 @@ def import_excel(request):
 
             for row in rows("Feeding Fee Structures"):
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "daily_fee": decimal_value(
                         row.get("Daily Fee")
                     ),
@@ -5631,11 +5767,14 @@ def import_excel(request):
                 }
 
                 if record_id:
+
                     FeedingFeeStructure.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     FeedingFeeStructure.objects.update_or_create(
                         academic_year=defaults["academic_year"],
                         defaults=defaults
@@ -5654,16 +5793,19 @@ def import_excel(request):
                 if not student_id:
                     continue
 
-                try:
-                    student = Student.objects.get(
-                        id=student_id
-                    )
-                except Student.DoesNotExist:
+                student = Student.objects.filter(
+                    student_id=student_id
+                ).first()
+
+                if not student:
                     continue
 
-                record_id = clean(row.get("ID"))
+                record_id = clean(
+                    row.get("ID")
+                )
 
                 defaults = {
+
                     "student": student,
 
                     "date": date_value(
@@ -5678,26 +5820,35 @@ def import_excel(request):
                         row.get("Amount")
                     ),
 
-                    "is_advance_payment": bool(
-                        row.get("Is Advance Payment")
+                    "is_advance_payment": boolean_value(
+                        row.get("Advance Payment")
                     ),
                 }
 
                 if record_id:
+
                     FeedingFeeRecord.objects.update_or_create(
                         id=record_id,
                         defaults=defaults
                     )
+
                 else:
+
                     FeedingFeeRecord.objects.update_or_create(
                         student=student,
                         date=defaults["date"],
                         defaults=defaults
                     )
 
+        # =====================================================
+        # SUCCESS
+        # =====================================================
+
         messages.success(
             request,
-            "Smart System Excel backup imported successfully."
+            "Excel backup restored successfully. "
+            "Students, fees, payments, bills, bus and feeding "
+            "records have been imported."
         )
 
     except Exception as e:
@@ -5708,3 +5859,4 @@ def import_excel(request):
         )
 
     return redirect("settings")
+
