@@ -1,7 +1,7 @@
 
 from functools import wraps
 from datetime import date, timedelta
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from django.utils import timezone
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -1472,24 +1472,37 @@ def classes(request):
 @role_required("school_fees")
 def create_bill(request):
 
+    # =====================================================
+    # ONLY POST CREATES A BILL
+    # =====================================================
+
     if request.method == "POST":
 
-        student_id = request.POST.get(
-            "student_id"
-        )
+        # -------------------------------------------------
+        # GET FORM VALUES
+        # -------------------------------------------------
+
+        student_id = request.POST.get("student_id", "").strip()
 
         academic_year = request.POST.get(
-            "academic_year"
-        )
+            "academic_year",
+            ""
+        ).strip()
 
         term = request.POST.get(
-            "term"
-        )
+            "term",
+            ""
+        ).strip()
 
         discount_percent = request.POST.get(
             "discount_percent",
-            0
-        )
+            "0"
+        ).strip()
+
+
+        # -------------------------------------------------
+        # VALIDATION
+        # -------------------------------------------------
 
         if not student_id:
 
@@ -1498,12 +1511,14 @@ def create_bill(request):
                 "message": "Student not selected."
             })
 
+
         if not academic_year:
 
             return JsonResponse({
                 "success": False,
                 "message": "Academic year not selected."
             })
+
 
         if not term:
 
@@ -1512,18 +1527,32 @@ def create_bill(request):
                 "message": "Term not selected."
             })
 
+
+        # =================================================
+        # FIND STUDENT
+        # =================================================
+
         try:
 
             student = Student.objects.get(
                 id=student_id
             )
 
-        except Student.DoesNotExist:
+        except (
+            Student.DoesNotExist,
+            ValueError,
+            TypeError
+        ):
 
             return JsonResponse({
                 "success": False,
                 "message": "Student not found."
             })
+
+
+        # =================================================
+        # FIND FEE STRUCTURE
+        # =================================================
 
         try:
 
@@ -1545,39 +1574,82 @@ def create_bill(request):
                 )
             })
 
+
+        # =================================================
+        # ORIGINAL FEE
+        # =================================================
+
         original_total = fee_structure.total_fee
+
+
+        # Make sure the amount is a Decimal
+        original_total = Decimal(
+            str(original_total or "0")
+        )
+
+
+        # =================================================
+        # DISCOUNT
+        # =================================================
 
         try:
 
-            discount_percent = float(
-                discount_percent
+            discount_percent = Decimal(
+                str(discount_percent or "0")
             )
 
         except (
+            InvalidOperation,
             TypeError,
             ValueError
         ):
 
-            discount_percent = 0
+            discount_percent = Decimal("0")
 
-        if discount_percent < 0:
 
-            discount_percent = 0
+        # -------------------------------------------------
+        # LIMIT DISCOUNT
+        # -------------------------------------------------
 
-        if discount_percent > 100:
+        if discount_percent < Decimal("0"):
 
-            discount_percent = 100
+            discount_percent = Decimal("0")
+
+
+        if discount_percent > Decimal("100"):
+
+            discount_percent = Decimal("100")
+
+
+        # =================================================
+        # CALCULATE DISCOUNT
+        # =================================================
 
         discount_amount = (
             original_total *
             discount_percent /
-            100
+            Decimal("100")
         )
+
+
+        # =================================================
+        # CALCULATE AMOUNT DUE
+        # =================================================
 
         amount_due = (
             original_total -
             discount_amount
         )
+
+
+        if amount_due < Decimal("0"):
+
+            amount_due = Decimal("0")
+
+
+        # =================================================
+        # CREATE BILL
+        # =================================================
 
         bill = Bill.objects.create(
 
@@ -1594,22 +1666,36 @@ def create_bill(request):
             discount_amount=discount_amount,
 
             amount_due=amount_due,
+
         )
+
+
+        # =================================================
+        # SUCCESS RESPONSE
+        # =================================================
 
         return JsonResponse({
 
             "success": True,
 
-            "message": "Bill created successfully.",
+            "message":
+                "Bill created successfully.",
 
-            "bill_id": bill.id,
+            "bill_id":
+                bill.id,
 
         })
+
+
+    # =====================================================
+    # GET REQUEST
+    # =====================================================
 
     return render(
         request,
         "fees/create_bill.html"
     )
+
 
 
 # =========================================================
@@ -2881,6 +2967,221 @@ def feeding_fees(request):
         .order_by(
             "student_class"
         )
+    )
+
+    # =====================================================
+    # SCHOOL-WIDE FEEDING FEE
+    # =====================================================
+
+    feeding_structure = (
+        FeedingFeeStructure.objects
+        .order_by("-updated_at")
+        .first()
+    )
+
+    if feeding_structure:
+
+        daily_fee = feeding_structure.daily_fee
+
+    else:
+
+        daily_fee = Decimal("0.00")
+
+    # =====================================================
+    # WEEKLY FEE
+    # =====================================================
+
+    weekly_class_fee = daily_fee * 5
+
+    students = []
+
+    # =====================================================
+    # GET STUDENTS FOR SELECTED CLASS
+    # =====================================================
+
+    if selected_class:
+
+        students_queryset = (
+            Student.objects
+            .filter(
+                student_class=selected_class,
+                status="Active"
+            )
+            .order_by(
+                "first_name",
+                "last_name"
+            )
+        )
+
+        # =================================================
+        # GET FEEDING RECORDS
+        # =================================================
+
+        records = (
+            FeedingFeeRecord.objects
+            .filter(
+                student__in=students_queryset,
+                date__in=week_dates
+            )
+        )
+
+        # =================================================
+        # ORGANIZE RECORDS
+        # =================================================
+
+        record_lookup = {}
+
+        for record in records:
+
+            key = (
+                record.student_id,
+                record.date
+            )
+
+            record_lookup[key] = record
+
+        # =================================================
+        # BUILD STUDENT ROWS
+        # =================================================
+
+        for student in students_queryset:
+
+            student_days = []
+
+            weekly_paid = Decimal("0.00")
+
+            days_paid = 0
+
+            for day in week_dates:
+
+                record = record_lookup.get(
+                    (
+                        student.id,
+                        day
+                    )
+                )
+
+                if record:
+
+                    status = record.status
+
+                    amount = record.amount
+
+                    if (
+                        amount == 0
+                        and daily_fee
+                    ):
+
+                        amount = daily_fee
+
+                else:
+
+                    status = "unmarked"
+
+                    amount = Decimal("0.00")
+
+                # =========================================
+                # COUNT PAID / ADVANCE
+                # =========================================
+
+                if status in [
+                    "paid",
+                    "advance"
+                ]:
+
+                    weekly_paid += amount
+
+                    days_paid += 1
+
+                student_days.append({
+
+                    "date": day,
+
+                    "record": record,
+
+                    "status": status,
+
+                    "amount": amount,
+
+                })
+
+            # =================================================
+            # AMOUNT DUE
+            # =================================================
+
+            weekly_due = daily_fee * 5
+
+            amount_due = (
+                weekly_due -
+                weekly_paid
+            )
+
+            if amount_due < 0:
+
+                amount_due = Decimal("0.00")
+
+            students.append({
+
+                "student": student,
+
+                "days": student_days,
+
+                "weekly_paid": weekly_paid,
+
+                "weekly_due": weekly_due,
+
+                "amount_due": amount_due,
+
+                "days_paid": days_paid,
+
+            })
+
+    # =====================================================
+    # PAGE CONTEXT
+    # =====================================================
+
+    context = {
+
+        "selected_class":
+            selected_class,
+
+        "classes":
+            classes,
+
+        "students":
+            students,
+
+        "week_dates":
+            week_dates,
+
+        "monday":
+            monday,
+
+        "friday":
+            friday,
+
+        "previous_week":
+            previous_week,
+
+        "next_week":
+            next_week,
+
+        "daily_fee":
+            daily_fee,
+
+        "weekly_class_fee":
+            weekly_class_fee,
+
+    }
+
+    # =====================================================
+    # RETURN PAGE
+    # =====================================================
+
+    return render(
+        request,
+        "fees/feeding_fees.html",
+        context
     )
 
 @login_required

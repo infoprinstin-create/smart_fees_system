@@ -4,7 +4,6 @@
 {% block title %}Create Bill{% endblock %}
 
 {% block extra_css %}
-
 <link rel="stylesheet" href="{% static 'css/create_bill.css' %}">
 {% endblock %}
 
@@ -12,349 +11,399 @@
 
 <div class="create-bill-page">
 
-<!-- PAGE HEADER -->
-<div class="page-header">
+    <!-- PAGE HEADER -->
+    <div class="page-header">
 
-    <div>
-        <h1>Create Student Bill</h1>
-        <p>Create a term bill for a student using the applicable fee structure and discount.</p>
-    </div>
-
-    <a href="{% url 'fees_structure' %}" class="back-button">
-        <i class="fas fa-arrow-left"></i>
-        <span>Back to Fee Structure</span>
-    </a>
-
-</div>
-
-
-<!-- MAIN BILL CARD -->
-<div class="bill-card">
-
-    <!-- STUDENT SEARCH -->
-    <div class="section">
-
-        <div class="section-title">
-            <div class="section-icon blue">
-                <i class="fas fa-user-graduate"></i>
-            </div>
-
-            <div>
-                <h2>Select Student</h2>
-                <p>Search by student ID, name or class.</p>
-            </div>
+        <div>
+            <h1>Create Student Bill</h1>
+            <p>
+                Create a term bill for a student using the applicable
+                fee structure and discount.
+            </p>
         </div>
 
+        <a href="{% url 'fees_structure' %}" class="back-button">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to Fee Structure</span>
+        </a>
 
-        <div class="student-search-area">
+    </div>
 
-            <div class="search-type">
 
-                <label for="search_type">
-                    Search By
-                </label>
+    <!-- MAIN BILL CARD -->
+    <div class="bill-card">
 
-                <select id="search_type">
+        <!-- STUDENT SEARCH -->
+        <div class="section">
 
-                    <option value="student_id">
-                        Student ID
-                    </option>
+            <div class="section-title">
 
-                    <option value="name">
-                        Student Name
-                    </option>
+                <div class="section-icon blue">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
 
-                    <option value="class">
-                        Class
-                    </option>
-
-                </select>
+                <div>
+                    <h2>Select Student</h2>
+                    <p>Search by student ID, name or class.</p>
+                </div>
 
             </div>
 
 
-            <div class="student-search-box">
+            <div class="student-search-area">
 
-                <label for="student_search">
-                    Student Search
-                </label>
+                <div class="search-type">
 
-                <div class="search-input-wrapper">
+                    <label for="search_type">
+                        Search By
+                    </label>
 
-                    <i class="fas fa-magnifying-glass"></i>
+                    <select id="search_type">
 
-                    <input
-                        type="text"
-                        id="student_search"
-                        placeholder="Enter student ID or name..."
-                        autocomplete="off"
-                    >
+                        <option value="student_id">
+                            Student ID
+                        </option>
+
+                        <option value="name">
+                            Student Name
+                        </option>
+
+                        <option value="class">
+                            Class
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="student-search-box">
+
+                    <label for="student_search">
+                        Student Search
+                    </label>
+
+                    <div class="search-input-wrapper">
+
+                        <i class="fas fa-magnifying-glass"></i>
+
+                        <input
+                            type="text"
+                            id="student_search"
+                            placeholder="Enter student ID or name..."
+                            autocomplete="off"
+                        >
+
+                    </div>
 
                 </div>
 
             </div>
 
+
+            <!-- AJAX RESULTS -->
+            <div
+                id="student-results"
+                class="student-results"
+            ></div>
+
+
+            <!-- SELECTED STUDENT -->
+            <div
+                id="selected-student"
+                class="selected-student"
+                style="display: none;"
+            >
+
+                <div class="student-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="selected-student-info">
+
+                    <strong id="selected-student-name">
+                        —
+                    </strong>
+
+                    <span id="selected-student-id">
+                        Student ID: —
+                    </span>
+
+                    <span id="selected-student-class">
+                        Class: —
+                    </span>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="change-student"
+                    class="change-student-btn"
+                >
+                    Change
+                </button>
+
+            </div>
+
         </div>
 
 
-        <!-- AJAX RESULTS -->
+        <!-- BILL DETAILS -->
         <div
-            id="student-results"
-            class="student-results"
-        ></div>
-
-
-        <!-- SELECTED STUDENT -->
-        <div
-            id="selected-student"
-            class="selected-student"
+            id="bill-details"
+            class="section"
             style="display: none;"
         >
 
-            <div class="student-avatar">
-                <i class="fas fa-user"></i>
-            </div>
+            <div class="section-title">
 
-            <div class="selected-student-info">
-
-                <strong id="selected-student-name">
-                    —
-                </strong>
-
-                <span id="selected-student-id">
-                    Student ID: —
-                </span>
-
-                <span id="selected-student-class">
-                    Class: —
-                </span>
-
-            </div>
-
-            <button
-                type="button"
-                id="change-student"
-                class="change-student-btn"
-            >
-                Change
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- BILL DETAILS -->
-    <div
-        id="bill-details"
-        class="section"
-        style="display: none;"
-    >
-
-        <div class="section-title">
-
-            <div class="section-icon purple">
-                <i class="fas fa-file-invoice-dollar"></i>
-            </div>
-
-            <div>
-                <h2>Bill Details</h2>
-                <p>Select the academic year, term and discount for this bill.</p>
-            </div>
-
-        </div>
-
-
-        <div class="form-grid">
-
-            <!-- ACADEMIC YEAR -->
-            <div class="form-group">
-
-                <label for="academic_year">
-                    Academic Year
-                </label>
-
-                <select id="academic_year">
-
-                    <option value="" selected disabled>
-                        Select Academic Year
-                    </option>
-
-                    <option value="2026/2027">
-                        2026/2027
-                    </option>
-
-                    <option value="2025/2026">
-                        2025/2026
-                    </option>
-
-                    <option value="2024/2025">
-                        2024/2025
-                    </option>
-
-                    <option value="2023/2024">
-                        2023/2024
-                    </option>
-
-                    <option value="2022/2023">
-                        2022/2023
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- TERM -->
-            <div class="form-group">
-
-                <label for="term">
-                    Term
-                </label>
-
-                <select id="term">
-
-                    <option value="" selected disabled>
-                        Select Term
-                    </option>
-
-                    <option value="First Term">
-                        First Term
-                    </option>
-
-                    <option value="Second Term">
-                        Second Term
-                    </option>
-
-                    <option value="Third Term">
-                        Third Term
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- DISCOUNT -->
-            <div class="form-group">
-
-                <label for="discount">
-                    Discount
-                </label>
-
-                <select id="discount">
-
-                    <option value="0">
-                        No Discount (0%)
-                    </option>
-
-                    <option value="10">
-                        10%
-                    </option>
-
-                    <option value="25">
-                        25%
-                    </option>
-
-                    <option value="50">
-                        50%
-                    </option>
-
-                    <option value="75">
-                        75%
-                    </option>
-
-                    <option value="100">
-                        100% — Full Scholarship
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <!-- FEE PREVIEW -->
-        <div class="fee-preview">
-
-            <div class="preview-header">
+                <div class="section-icon purple">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                </div>
 
                 <div>
-                    <h3>Fee Summary</h3>
-                    <p id="fee-summary-description">
-                        Select an academic year and term.
+                    <h2>Bill Details</h2>
+                    <p>
+                        Select the academic year, term and discount
+                        for this bill.
                     </p>
                 </div>
 
-                <div class="preview-icon">
-                    <i class="fas fa-calculator"></i>
+            </div>
+
+
+            <div class="form-grid">
+
+                <!-- ACADEMIC YEAR -->
+                <div class="form-group">
+
+                    <label for="academic_year">
+                        Academic Year
+                    </label>
+
+                    <select id="academic_year">
+
+                        <option value="" selected disabled>
+                            Select Academic Year
+                        </option>
+
+                        <option value="2026/2027">
+                            2026/2027
+                        </option>
+
+                        <option value="2025/2026">
+                            2025/2026
+                        </option>
+
+                        <option value="2024/2025">
+                            2024/2025
+                        </option>
+
+                        <option value="2023/2024">
+                            2023/2024
+                        </option>
+
+                        <option value="2022/2023">
+                            2022/2023
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TERM -->
+                <div class="form-group">
+
+                    <label for="term">
+                        Term
+                    </label>
+
+                    <select id="term">
+
+                        <option value="" selected disabled>
+                            Select Term
+                        </option>
+
+                        <option value="First Term">
+                            First Term
+                        </option>
+
+                        <option value="Second Term">
+                            Second Term
+                        </option>
+
+                        <option value="Third Term">
+                            Third Term
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- DISCOUNT -->
+                <div class="form-group">
+
+                    <label for="discount">
+                        Discount
+                    </label>
+
+                    <select id="discount">
+
+                        <option value="0">
+                            No Discount (0%)
+                        </option>
+
+                        <option value="10">
+                            10%
+                        </option>
+
+                        <option value="25">
+                            25%
+                        </option>
+
+                        <option value="50">
+                            50%
+                        </option>
+
+                        <option value="75">
+                            75%
+                        </option>
+
+                        <option value="100">
+                            100% — Full Scholarship
+                        </option>
+
+                    </select>
+
                 </div>
 
             </div>
 
 
-            <div class="fee-lines">
+            <!-- FEE PREVIEW -->
+            <div class="fee-preview">
 
-                <div class="fee-line">
+                <div class="preview-header">
+
+                    <div>
+                        <h3>Fee Summary</h3>
+
+                        <p id="fee-summary-description">
+                            Select an academic year and term.
+                        </p>
+                    </div>
+
+                    <div class="preview-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="fee-lines">
+
+                    <div class="fee-line">
+
+                        <span>
+                            Registration Fee
+                        </span>
+
+                        <strong id="registration-fee">
+                            GH₵ 0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="fee-line">
+
+                        <span>
+                            Tuition Fee
+                        </span>
+
+                        <strong id="tuition-fee">
+                            GH₵ 0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="fee-line">
+
+                        <span>
+                            Examination Fee
+                        </span>
+
+                        <strong id="examination-fee">
+                            GH₵ 0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="fee-line">
+
+                        <span>
+                            Library Fee
+                        </span>
+
+                        <strong id="library-fee">
+                            GH₵ 0.00
+                        </strong>
+
+                    </div>
+
+
+                    <div class="fee-line">
+
+                        <span>
+                            Activity Fee
+                        </span>
+
+                        <strong id="activity-fee">
+                            GH₵ 0.00
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="fee-total">
 
                     <span>
-                        Registration Fee
+                        Original Total
                     </span>
 
-                    <strong id="registration-fee">
+                    <strong id="original-total">
                         GH₵ 0.00
                     </strong>
 
                 </div>
 
 
-                <div class="fee-line">
+                <div class="discount-line">
 
                     <span>
-                        Tuition Fee
+                        Discount
                     </span>
 
-                    <strong id="tuition-fee">
-                        GH₵ 0.00
+                    <strong id="discount-amount">
+                        - GH₵ 0.00
                     </strong>
 
                 </div>
 
 
-                <div class="fee-line">
+                <div class="amount-due">
 
                     <span>
-                        Examination Fee
+                        Amount Due
                     </span>
 
-                    <strong id="examination-fee">
-                        GH₵ 0.00
-                    </strong>
-
-                </div>
-
-
-                <div class="fee-line">
-
-                    <span>
-                        Library Fee
-                    </span>
-
-                    <strong id="library-fee">
-                        GH₵ 0.00
-                    </strong>
-
-                </div>
-
-
-                <div class="fee-line">
-
-                    <span>
-                        Activity Fee
-                    </span>
-
-                    <strong id="activity-fee">
+                    <strong id="amount-due">
                         GH₵ 0.00
                     </strong>
 
@@ -363,66 +412,27 @@
             </div>
 
 
-            <div class="fee-total">
+            <!-- CREATE BUTTON -->
+            <div class="form-actions">
 
-                <span>
-                    Original Total
-                </span>
+                <a
+                    href="{% url 'fees_structure' %}"
+                    class="cancel-button"
+                >
+                    Cancel
+                </a>
 
-                <strong id="original-total">
-                    GH₵ 0.00
-                </strong>
-
-            </div>
-
-
-            <div class="discount-line">
-
-                <span>
-                    Discount
-                </span>
-
-                <strong id="discount-amount">
-                    - GH₵ 0.00
-                </strong>
+                <button
+                    type="button"
+                    id="create-bill-button"
+                    class="create-bill-button"
+                    disabled
+                >
+                    <i class="fas fa-file-circle-plus"></i>
+                    Create Bill
+                </button>
 
             </div>
-
-
-            <div class="amount-due">
-
-                <span>
-                    Amount Due
-                </span>
-
-                <strong id="amount-due">
-                    GH₵ 0.00
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- CREATE BUTTON -->
-        <div class="form-actions">
-
-            <a
-                href="{% url 'fees_structure' %}"
-                class="cancel-button"
-            >
-                Cancel
-            </a>
-
-            <button
-                type="button"
-                id="create-bill-button"
-                class="create-bill-button"
-                disabled
-            >
-                <i class="fas fa-file-circle-plus"></i>
-                Create Bill
-            </button>
 
         </div>
 
@@ -430,15 +440,23 @@
 
 </div>
 
-</div>
 
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const searchType = document.getElementById("search_type");
-    const searchInput = document.getElementById("student_search");
-    const resultsBox = document.getElementById("student-results");
+    // =====================================================
+    // ELEMENTS
+    // =====================================================
+
+    const searchType =
+        document.getElementById("search_type");
+
+    const searchInput =
+        document.getElementById("student_search");
+
+    const resultsBox =
+        document.getElementById("student-results");
 
     const selectedStudentBox =
         document.getElementById("selected-student");
@@ -471,144 +489,235 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("create-bill-button");
 
     let selectedStudent = null;
-    let searchTimer;
+
+    let searchTimer = null;
+
+
+    // =====================================================
+    // CSRF COOKIE
+    // =====================================================
+
+    function getCookie(name) {
+
+        let cookieValue = null;
+
+        if (
+            document.cookie &&
+            document.cookie !== ""
+        ) {
+
+            const cookies =
+                document.cookie.split(";");
+
+            for (
+                let cookie of cookies
+            ) {
+
+                cookie = cookie.trim();
+
+                if (
+                    cookie.substring(
+                        0,
+                        name.length + 1
+                    ) ===
+                    name + "="
+                ) {
+
+                    cookieValue =
+                        decodeURIComponent(
+                            cookie.substring(
+                                name.length + 1
+                            )
+                        );
+
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
 
 
     // =====================================================
     // STUDENT SEARCH
     // =====================================================
 
-    searchInput.addEventListener("input", function () {
+    searchInput.addEventListener(
+        "input",
+        function () {
 
-        clearTimeout(searchTimer);
+            clearTimeout(searchTimer);
 
-        const value = searchInput.value.trim();
+            const value =
+                searchInput.value.trim();
 
-        resultsBox.innerHTML = "";
+            resultsBox.innerHTML = "";
 
-        if (!value) {
-            return;
+            if (!value) {
+
+                return;
+            }
+
+            searchTimer =
+                setTimeout(
+                    function () {
+
+                        const params =
+                            new URLSearchParams();
+
+                        params.append(
+                            "search_type",
+                            searchType.value
+                        );
+
+                        params.append(
+                            "search_value",
+                            value
+                        );
+
+                        fetch(
+                            "{% url 'student_payment_lookup' %}?" +
+                            params.toString()
+                        )
+
+                        .then(
+                            response => {
+
+                                if (!response.ok) {
+
+                                    throw new Error(
+                                        "Search request failed."
+                                    );
+                                }
+
+                                return response.json();
+
+                            }
+                        )
+
+                        .then(
+                            data => {
+
+                                resultsBox.innerHTML =
+                                    "";
+
+                                if (!data.success) {
+
+                                    resultsBox.innerHTML = `
+                                        <div class="search-message">
+                                            ${data.message || "No student found."}
+                                        </div>
+                                    `;
+
+                                    return;
+                                }
+
+
+                                // =================================
+                                // ONE STUDENT
+                                // =================================
+
+                                if (!data.multiple) {
+
+                                    showStudent(
+                                        data.student
+                                    );
+
+                                    return;
+                                }
+
+
+                                // =================================
+                                // MULTIPLE STUDENTS
+                                // =================================
+
+                                data.students.forEach(
+                                    function (student) {
+
+                                        const item =
+                                            document.createElement(
+                                                "button"
+                                            );
+
+                                        item.type =
+                                            "button";
+
+                                        item.className =
+                                            "student-result-item";
+
+                                        item.innerHTML = `
+
+                                            <div class="result-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+
+                                            <div class="result-info">
+
+                                                <strong>
+                                                    ${student.name}
+                                                </strong>
+
+                                                <span>
+                                                    ID:
+                                                    ${student.student_id}
+                                                </span>
+
+                                                <span>
+                                                    Class:
+                                                    ${student.class}
+                                                </span>
+
+                                            </div>
+
+                                            <i class="fas fa-chevron-right"></i>
+
+                                        `;
+
+                                        item.addEventListener(
+                                            "click",
+                                            function () {
+
+                                                showStudent(
+                                                    student
+                                                );
+
+                                            }
+                                        );
+
+                                        resultsBox.appendChild(
+                                            item
+                                        );
+
+                                    }
+                                );
+
+                            }
+                        )
+
+                        .catch(
+                            error => {
+
+                                console.error(
+                                    "Student search error:",
+                                    error
+                                );
+
+                                resultsBox.innerHTML = `
+                                    <div class="search-message">
+                                        Unable to search students.
+                                    </div>
+                                `;
+
+                            }
+                        );
+
+                    },
+                    300
+                );
+
         }
-
-        searchTimer = setTimeout(function () {
-
-            const params = new URLSearchParams();
-
-            params.append(
-                "search_type",
-                searchType.value
-            );
-
-            params.append(
-                "search_value",
-                value
-            );
-
-            fetch(
-                "{% url 'student_payment_lookup' %}?" +
-                params.toString()
-            )
-
-            .then(response => response.json())
-
-            .then(data => {
-
-                resultsBox.innerHTML = "";
-
-                if (!data.success) {
-
-                    resultsBox.innerHTML = `
-                        <div class="search-message">
-                            ${data.message}
-                        </div>
-                    `;
-
-                    return;
-                }
-
-
-                // =========================================
-                // ONE STUDENT
-                // =========================================
-
-                if (!data.multiple) {
-
-                    showStudent(data.student);
-
-                    return;
-                }
-
-
-                // =========================================
-                // MULTIPLE STUDENTS
-                // =========================================
-
-                data.students.forEach(function (student) {
-
-                    const item =
-                        document.createElement("button");
-
-                    item.type = "button";
-
-                    item.className =
-                        "student-result-item";
-
-                    item.innerHTML = `
-
-                        <div class="result-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-
-                        <div class="result-info">
-
-                            <strong>
-                                ${student.name}
-                            </strong>
-
-                            <span>
-                                ID: ${student.student_id}
-                            </span>
-
-                            <span>
-                                Class: ${student.class}
-                            </span>
-
-                        </div>
-
-                        <i class="fas fa-chevron-right"></i>
-
-                    `;
-
-                    item.addEventListener(
-                        "click",
-                        function () {
-
-                            showStudent(student);
-
-                        }
-                    );
-
-                    resultsBox.appendChild(item);
-
-                });
-
-            })
-
-            .catch(error => {
-
-                console.error(error);
-
-                resultsBox.innerHTML = `
-                    <div class="search-message">
-                        Unable to search students.
-                    </div>
-                `;
-
-            });
-
-        }, 300);
-
-    });
+    );
 
 
     // =====================================================
@@ -617,18 +726,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function showStudent(student) {
 
-        selectedStudent = student;
+        selectedStudent =
+            student;
 
         selectedStudentName.textContent =
-            student.name;
+            student.name || "—";
 
         selectedStudentId.textContent =
             "Student ID: " +
-            student.student_id;
+            (student.student_id || "—");
 
         selectedStudentClass.textContent =
             "Class: " +
-            student.class;
+            (student.class || "—");
 
         selectedStudentBox.style.display =
             "flex";
@@ -636,12 +746,16 @@ document.addEventListener("DOMContentLoaded", function () {
         billDetails.style.display =
             "block";
 
-        resultsBox.innerHTML = "";
+        resultsBox.innerHTML =
+            "";
 
-        searchInput.value = "";
+        searchInput.value =
+            "";
 
 
-        // Automatically select student's academic year
+        // =================================================
+        // AUTOMATIC ACADEMIC YEAR
+        // =================================================
 
         const yearOption =
             document.querySelector(
@@ -656,12 +770,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        // Reset term
+        // =================================================
+        // RESET TERM
+        // =================================================
 
-        term.value = "";
+        term.value =
+            "";
 
 
-        // Load the student's current discount
+        // =================================================
+        // STUDENT DISCOUNT
+        // =================================================
 
         if (
             student.discount !== undefined &&
@@ -673,16 +792,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } else {
 
-            discount.value = "0";
+            discount.value =
+                "0";
 
         }
 
 
-        // Reset fee display
+        // =================================================
+        // RESET PREVIEW
+        // =================================================
 
         resetFeePreview();
 
-        createBillButton.disabled = true;
+        createBillButton.disabled =
+            true;
+
     }
 
 
@@ -693,6 +817,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadFeeInformation() {
 
         if (!selectedStudent) {
+
             return;
         }
 
@@ -702,11 +827,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedTerm =
             term.value;
 
-        if (!year || !selectedTerm) {
+        if (
+            !year ||
+            !selectedTerm
+        ) {
 
             resetFeePreview();
 
-            createBillButton.disabled = true;
+            createBillButton.disabled =
+                true;
 
             return;
         }
@@ -736,150 +865,199 @@ document.addEventListener("DOMContentLoaded", function () {
             params.toString()
         )
 
-        .then(response => response.json())
+        .then(
+            response => {
 
-        .then(data => {
+                if (!response.ok) {
 
-            if (!data.success) {
+                    throw new Error(
+                        "Fee lookup failed. HTTP " +
+                        response.status
+                    );
+                }
+
+                return response.json();
+
+            }
+        )
+
+        .then(
+            data => {
+
+                if (!data.success) {
+
+                    resetFeePreview();
+
+                    document.getElementById(
+                        "fee-summary-description"
+                    ).textContent =
+                        data.message ||
+                        "Fee information not found.";
+
+                    createBillButton.disabled =
+                        true;
+
+                    return;
+                }
+
+
+                const fees =
+                    data.fees;
+
+
+                // =========================================
+                // FEE BREAKDOWN
+                // =========================================
+
+                document.getElementById(
+                    "registration-fee"
+                ).textContent =
+                    formatMoney(
+                        fees.registration_fee
+                    );
+
+                document.getElementById(
+                    "tuition-fee"
+                ).textContent =
+                    formatMoney(
+                        fees.tuition_fee
+                    );
+
+                document.getElementById(
+                    "examination-fee"
+                ).textContent =
+                    formatMoney(
+                        fees.examination_fee
+                    );
+
+                document.getElementById(
+                    "library-fee"
+                ).textContent =
+                    formatMoney(
+                        fees.library_fee
+                    );
+
+                document.getElementById(
+                    "activity-fee"
+                ).textContent =
+                    formatMoney(
+                        fees.activity_fee
+                    );
+
+
+                // =========================================
+                // TOTAL
+                // =========================================
+
+                document.getElementById(
+                    "original-total"
+                ).textContent =
+                    formatMoney(
+                        fees.original_total
+                    );
+
+
+                // =========================================
+                // DISCOUNT
+                // =========================================
+
+                document.getElementById(
+                    "discount-amount"
+                ).textContent =
+                    "- " +
+                    formatMoney(
+                        fees.discount_amount
+                    );
+
+
+                // =========================================
+                // AMOUNT DUE
+                // =========================================
+
+                document.getElementById(
+                    "amount-due"
+                ).textContent =
+                    formatMoney(
+                        fees.amount_due
+                    );
+
+
+                // =========================================
+                // UPDATE DISCOUNT
+                // =========================================
+
+                const returnedDiscount =
+                    parseFloat(
+                        fees.discount_percent
+                    );
+
+                const discountOption =
+                    document.querySelector(
+                        `#discount option[value="${returnedDiscount}"]`
+                    );
+
+                if (discountOption) {
+
+                    discount.value =
+                        String(
+                            returnedDiscount
+                        );
+
+                }
+
+
+                // =========================================
+                // PAID / OWED
+                // =========================================
+
+                updatePaidAndOwed(
+                    fees.total_paid,
+                    fees.amount_owed
+                );
+
+
+                document.getElementById(
+                    "fee-summary-description"
+                ).textContent =
+                    `${selectedTerm} — ${year}`;
+
+
+                // =========================================
+                // ENABLE CREATE BUTTON
+                // =========================================
+
+                createBillButton.disabled =
+                    false;
+
+            }
+        )
+
+        .catch(
+            error => {
+
+                console.error(
+                    "Fee lookup error:",
+                    error
+                );
 
                 resetFeePreview();
 
                 document.getElementById(
                     "fee-summary-description"
                 ).textContent =
-                    data.message;
+                    "Unable to load fee information.";
 
-                createBillButton.disabled = true;
-
-                return;
-            }
-
-
-            const fees = data.fees;
-
-
-            // =========================================
-            // FEE BREAKDOWN
-            // =========================================
-
-            document.getElementById(
-                "registration-fee"
-            ).textContent =
-                formatMoney(fees.registration_fee);
-
-            document.getElementById(
-                "tuition-fee"
-            ).textContent =
-                formatMoney(fees.tuition_fee);
-
-            document.getElementById(
-                "examination-fee"
-            ).textContent =
-                formatMoney(fees.examination_fee);
-
-            document.getElementById(
-                "library-fee"
-            ).textContent =
-                formatMoney(fees.library_fee);
-
-            document.getElementById(
-                "activity-fee"
-            ).textContent =
-                formatMoney(fees.activity_fee);
-
-
-            // =========================================
-            // TOTAL
-            // =========================================
-
-            document.getElementById(
-                "original-total"
-            ).textContent =
-                formatMoney(fees.original_total);
-
-
-            // =========================================
-            // DISCOUNT
-            // =========================================
-
-            document.getElementById(
-                "discount-amount"
-            ).textContent =
-                "- " +
-                formatMoney(fees.discount_amount);
-
-
-            // =========================================
-            // AMOUNT DUE
-            // =========================================
-
-            document.getElementById(
-                "amount-due"
-            ).textContent =
-                formatMoney(fees.amount_due);
-
-
-            // =========================================
-            // UPDATE DISCOUNT SELECT
-            // =========================================
-
-            const returnedDiscount =
-                parseFloat(fees.discount_percent);
-
-            const discountOption =
-                document.querySelector(
-                    `#discount option[value="${returnedDiscount}"]`
-                );
-
-            if (discountOption) {
-
-                discount.value =
-                    String(returnedDiscount);
+                createBillButton.disabled =
+                    true;
 
             }
-
-
-            // =========================================
-            // ADD PAID / OWED INFORMATION
-            // =========================================
-
-            updatePaidAndOwed(
-                fees.total_paid,
-                fees.amount_owed
-            );
-
-
-            document.getElementById(
-                "fee-summary-description"
-            ).textContent =
-                `${selectedTerm} — ${year}`;
-
-
-            createBillButton.disabled =
-                false;
-
-        })
-
-        .catch(error => {
-
-            console.error(error);
-
-            resetFeePreview();
-
-            document.getElementById(
-                "fee-summary-description"
-            ).textContent =
-                "Unable to load fee information.";
-
-            createBillButton.disabled = true;
-
-        });
+        );
 
     }
 
 
     // =====================================================
-    // UPDATE PAID AND AMOUNT OWED
+    // UPDATE PAID / OWED
     // =====================================================
 
     function updatePaidAndOwed(
@@ -888,18 +1066,26 @@ document.addEventListener("DOMContentLoaded", function () {
     ) {
 
         let paidLine =
-            document.getElementById("total-paid-line");
+            document.getElementById(
+                "total-paid-line"
+            );
 
         let owedLine =
-            document.getElementById("amount-owed-line");
+            document.getElementById(
+                "amount-owed-line"
+            );
 
 
-        // Create the lines if they don't already exist
+        // =================================================
+        // ALREADY PAID
+        // =================================================
 
         if (!paidLine) {
 
             paidLine =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             paidLine.id =
                 "total-paid-line";
@@ -918,19 +1104,28 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
 
             const feeTotal =
-                document.querySelector(".fee-total");
+                document.querySelector(
+                    ".fee-total"
+                );
 
             feeTotal.parentNode.insertBefore(
                 paidLine,
                 feeTotal.nextSibling
             );
+
         }
 
+
+        // =================================================
+        // AMOUNT OWED
+        // =================================================
 
         if (!owedLine) {
 
             owedLine =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             owedLine.id =
                 "amount-owed-line";
@@ -949,29 +1144,37 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
 
             const amountDue =
-                document.querySelector(".amount-due");
+                document.querySelector(
+                    ".amount-due"
+                );
 
             amountDue.parentNode.insertBefore(
                 owedLine,
                 amountDue.nextSibling
             );
+
         }
 
 
         document.getElementById(
             "total-paid"
         ).textContent =
-            formatMoney(totalPaid);
+            formatMoney(
+                totalPaid
+            );
 
         document.getElementById(
             "amount-owed"
         ).textContent =
-            formatMoney(amountOwed);
+            formatMoney(
+                amountOwed
+            );
+
     }
 
 
     // =====================================================
-    // ACADEMIC YEAR / TERM CHANGES
+    // ACADEMIC YEAR
     // =====================================================
 
     academicYear.addEventListener(
@@ -984,6 +1187,10 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
+    // =====================================================
+    // TERM
+    // =====================================================
+
     term.addEventListener(
         "change",
         function () {
@@ -995,20 +1202,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // DISCOUNT CHANGE
+    // DISCOUNT
     // =====================================================
 
     discount.addEventListener(
         "change",
         function () {
-
-            /*
-             * The discount selected here is the discount
-             * that will be used for the NEW bill.
-             *
-             * We calculate it in the browser immediately
-             * so the user can see the new amount.
-             */
 
             recalculateDiscount();
 
@@ -1023,17 +1222,23 @@ document.addEventListener("DOMContentLoaded", function () {
     function recalculateDiscount() {
 
         const originalElement =
-            document.getElementById("original-total");
+            document.getElementById(
+                "original-total"
+            );
 
         const originalText =
             originalElement.textContent
                 .replace(/[^\d.-]/g, "");
 
         const originalTotal =
-            parseFloat(originalText) || 0;
+            parseFloat(
+                originalText
+            ) || 0;
 
         const discountPercent =
-            parseFloat(discount.value) || 0;
+            parseFloat(
+                discount.value
+            ) || 0;
 
         const discountAmount =
             originalTotal *
@@ -1049,22 +1254,26 @@ document.addEventListener("DOMContentLoaded", function () {
             "discount-amount"
         ).textContent =
             "- " +
-            formatMoney(discountAmount);
+            formatMoney(
+                discountAmount
+            );
 
         document.getElementById(
             "amount-due"
         ).textContent =
-            formatMoney(amountDue);
+            formatMoney(
+                amountDue
+            );
 
 
-        /*
-         * Existing payment is not changed.
-         * We simply recalculate what remains owed
-         * against the new bill amount.
-         */
+        // =================================================
+        // RECALCULATE AMOUNT OWED
+        // =================================================
 
         const paidElement =
-            document.getElementById("total-paid");
+            document.getElementById(
+                "total-paid"
+            );
 
         if (paidElement) {
 
@@ -1073,20 +1282,35 @@ document.addEventListener("DOMContentLoaded", function () {
                     .replace(/[^\d.-]/g, "");
 
             const totalPaid =
-                parseFloat(paidText) || 0;
+                parseFloat(
+                    paidText
+                ) || 0;
 
             let amountOwed =
                 amountDue -
                 totalPaid;
 
             if (amountOwed < 0) {
-                amountOwed = 0;
+
+                amountOwed =
+                    0;
+
             }
 
-            document.getElementById(
-                "amount-owed"
-            ).textContent =
-                formatMoney(amountOwed);
+            const owedElement =
+                document.getElementById(
+                    "amount-owed"
+                );
+
+            if (owedElement) {
+
+                owedElement.textContent =
+                    formatMoney(
+                        amountOwed
+                    );
+
+            }
+
         }
 
     }
@@ -1099,27 +1323,41 @@ document.addEventListener("DOMContentLoaded", function () {
     function resetFeePreview() {
 
         const fields = [
+
             "registration-fee",
+
             "tuition-fee",
+
             "examination-fee",
+
             "library-fee",
+
             "activity-fee",
+
             "original-total",
+
             "amount-due"
+
         ];
 
-        fields.forEach(function (id) {
 
-            const element =
-                document.getElementById(id);
+        fields.forEach(
+            function (id) {
 
-            if (element) {
+                const element =
+                    document.getElementById(
+                        id
+                    );
 
-                element.textContent =
-                    "GH₵ 0.00";
+                if (element) {
+
+                    element.textContent =
+                        "GH₵ 0.00";
+
+                }
+
             }
-
-        });
+        );
 
 
         document.getElementById(
@@ -1135,20 +1373,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const paid =
-            document.getElementById("total-paid");
+            document.getElementById(
+                "total-paid"
+            );
 
         const owed =
-            document.getElementById("amount-owed");
+            document.getElementById(
+                "amount-owed"
+            );
 
 
         if (paid) {
+
             paid.textContent =
                 "GH₵ 0.00";
+
         }
 
         if (owed) {
+
             owed.textContent =
                 "GH₵ 0.00";
+
         }
 
     }
@@ -1171,6 +1417,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     maximumFractionDigits: 2
                 }
             );
+
     }
 
 
@@ -1182,7 +1429,8 @@ document.addEventListener("DOMContentLoaded", function () {
         "click",
         function () {
 
-            selectedStudent = null;
+            selectedStudent =
+                null;
 
             selectedStudentBox.style.display =
                 "none";
@@ -1190,117 +1438,247 @@ document.addEventListener("DOMContentLoaded", function () {
             billDetails.style.display =
                 "none";
 
-            searchInput.value = "";
+            searchInput.value =
+                "";
 
-            resultsBox.innerHTML = "";
+            resultsBox.innerHTML =
+                "";
 
             resetFeePreview();
 
-            createBillButton.disabled = true;
+            createBillButton.disabled =
+                true;
 
             searchInput.focus();
 
         }
     );
 
-});
 
-// ===============================
-// GET CSRF COOKIE
-// ===============================
+    // =====================================================
+    // CREATE BILL
+    // =====================================================
 
-function getCookie(name) {
-    let cookieValue = null;
+    createBillButton.addEventListener(
+        "click",
+        function () {
 
-    if (document.cookie && document.cookie !== "") {
+            // ---------------------------------------------
+            // CHECK STUDENT
+            // ---------------------------------------------
 
-        const cookies = document.cookie.split(";");
+            if (!selectedStudent) {
 
-        for (let cookie of cookies) {
-
-            cookie = cookie.trim();
-
-            if (cookie.substring(0, name.length + 1) === (name + "=")) {
-
-                cookieValue = decodeURIComponent(
-                    cookie.substring(name.length + 1)
+                alert(
+                    "Please select a student first."
                 );
 
-                break;
+                return;
             }
-        }
-    }
 
-    return cookieValue;
-}
 
-// ===============================
-// CREATE BILL
-// ===============================
+            // ---------------------------------------------
+            // GET VALUES
+            // ---------------------------------------------
 
-document.getElementById("create-bill-button").addEventListener("click", function () {
+            const academicYearValue =
+                academicYear.value;
 
-    if (!selectedStudent) {
-        alert("Please select a student first.");
-        return;
-    }
+            const termValue =
+                term.value;
 
-    const academicYearValue = academicYear.value;
-    const termValue = term.value;
-    const discountValue = discount.value;
+            const discountValue =
+                discount.value;
 
-    if (!academicYearValue) {
-        alert("Please select an academic year.");
-        return;
-    }
 
-    if (!termValue) {
-        alert("Please select a term.");
-        return;
-    }
+            // ---------------------------------------------
+            // VALIDATE YEAR
+            // ---------------------------------------------
 
-    const formData = new FormData();
+            if (!academicYearValue) {
 
-    formData.append("student_id", selectedStudent.id);
-    formData.append("academic_year", academicYearValue);
-    formData.append("term", termValue);
-    formData.append("discount_percent", discountValue);
+                alert(
+                    "Please select an academic year."
+                );
 
-    fetch("{% url 'create_bill' %}", {
-        method: "POST",
-        body: formData,
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken")
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
+                return;
+            }
 
-        if (data.success) {
 
-            alert(
-                "Bill created successfully!\n\n" +
-                "Bill ID: " + data.bill_id
+            // ---------------------------------------------
+            // VALIDATE TERM
+            // ---------------------------------------------
+
+            if (!termValue) {
+
+                alert(
+                    "Please select a term."
+                );
+
+                return;
+            }
+
+
+            // ---------------------------------------------
+            // DISABLE BUTTON
+            // ---------------------------------------------
+
+            createBillButton.disabled =
+                true;
+
+            createBillButton.innerHTML = `
+                <i class="fas fa-spinner fa-spin"></i>
+                Creating Bill...
+            `;
+
+
+            // ---------------------------------------------
+            // FORM DATA
+            // ---------------------------------------------
+
+            const formData =
+                new FormData();
+
+            formData.append(
+                "student_id",
+                selectedStudent.id
             );
 
-            window.location.href = "{% url 'fees_structure' %}";
+            formData.append(
+                "academic_year",
+                academicYearValue
+            );
 
-        } else {
+            formData.append(
+                "term",
+                termValue
+            );
 
-            alert(data.message || "Unable to create bill.");
+            formData.append(
+                "discount_percent",
+                discountValue
+            );
+
+
+            // ---------------------------------------------
+            // SEND TO DJANGO
+            // ---------------------------------------------
+
+            fetch(
+                "{% url 'create_bill' %}",
+                {
+                    method: "POST",
+
+                    body: formData,
+
+                    headers: {
+
+                        "X-CSRFToken":
+                            getCookie(
+                                "csrftoken"
+                            )
+
+                    }
+
+                }
+            )
+
+            .then(
+                response => {
+
+                    if (!response.ok) {
+
+                        return response.text()
+                            .then(
+                                text => {
+
+                                    throw new Error(
+                                        "Server error " +
+                                        response.status +
+                                        ": " +
+                                        text.substring(
+                                            0,
+                                            300
+                                        )
+                                    );
+
+                                }
+                            );
+
+                    }
+
+                    return response.json();
+
+                }
+            )
+
+            .then(
+                data => {
+
+                    if (data.success) {
+
+                        alert(
+                            "Bill created successfully!\n\n" +
+                            "Bill ID: " +
+                            data.bill_id
+                        );
+
+                        window.location.href =
+                            "{% url 'fees_structure' %}";
+
+                        return;
+
+                    }
+
+
+                    alert(
+                        data.message ||
+                        "Unable to create the bill."
+                    );
+
+
+                    // Restore button
+
+                    createBillButton.disabled =
+                        false;
+
+                    createBillButton.innerHTML = `
+                        <i class="fas fa-file-circle-plus"></i>
+                        Create Bill
+                    `;
+
+                }
+            )
+
+            .catch(
+                error => {
+
+                    console.error(
+                        "Create Bill Error:",
+                        error
+                    );
+
+                    alert(
+                        "Unable to create the bill.\n\n" +
+                        error.message
+                    );
+
+
+                    // Restore button
+
+                    createBillButton.disabled =
+                        false;
+
+                    createBillButton.innerHTML = `
+                        <i class="fas fa-file-circle-plus"></i>
+                        Create Bill
+                    `;
+
+                }
+            );
 
         }
-
-    })
-    .catch(error => {
-
-        console.error("Error:", error);
-
-        alert(
-            "Something went wrong while creating the bill."
-        );
-
-    });
+    );
 
 });
 
