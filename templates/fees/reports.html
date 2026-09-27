@@ -1,675 +1,807 @@
-# =========================================================
-# REPORTS
-# =========================================================
+{% extends "fees/base.html" %}
+{% load static %}
 
-from collections import defaultdict
-from decimal import Decimal
+{% block title %}Reports{% endblock %}
 
-from django.contrib.auth.decorators import login_required
-from django.db.models import Sum, Count
-from django.db.models.functions import TruncMonth
-from django.shortcuts import render
-from django.utils import timezone
+{% block extra_css %}
 
-from .models import (
-    Student,
-    SchoolSettings,
-    Payment,
-    Bill,
-    FeeStructure,
-)
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
 
+{% endblock %}
 
-@login_required
-@role_required("administrator")
-def reports(request):
 
-    today = timezone.localdate()
+{% block content %}
 
-    # -----------------------------------------------------
-    # CURRENT ACADEMIC YEAR
-    # -----------------------------------------------------
+<div class="reports-page">
 
-    school_settings = SchoolSettings.objects.first()
 
-    if school_settings:
-        current_academic_year = school_settings.academic_year
-    else:
-        current_academic_year = f"{today.year}/{today.year + 1}"
+<!-- =========================================================
+     PAGE HEADER
+========================================================= -->
 
+<div class="reports-header">
 
-    # -----------------------------------------------------
-    # CURRENT MONTH
-    # -----------------------------------------------------
+    <div>
 
-    current_month = today.month
-    current_year = today.year
+        <h1>
+            Reports
+        </h1>
 
+        <p>
+            View and generate detailed reports for your school fees system.
+        </p>
 
-    # -----------------------------------------------------
-    # STUDENTS
-    # -----------------------------------------------------
+    </div>
 
-    total_students = Student.objects.filter(
-        status="Active"
-    ).count()
 
+    <div class="date-filter">
 
-    # -----------------------------------------------------
-    # BILLS
-    # IMPORTANT:
-    # Use Bill.amount_due because this includes discounts.
-    # -----------------------------------------------------
+        <i class="fas fa-calendar-days"></i>
 
-    current_bills = Bill.objects.filter(
-        academic_year=current_academic_year
-    )
+        <span>
+            {{ current_academic_year }}
+        </span>
 
-    total_fees_due = (
-        current_bills.aggregate(
-            total=Sum("amount_due")
-        )["total"]
-        or Decimal("0.00")
-    )
+        <i class="fas fa-chevron-down"></i>
 
+    </div>
 
-    # -----------------------------------------------------
-    # PAYMENTS
-    # -----------------------------------------------------
+</div>
 
-    current_payments = Payment.objects.filter(
-        academic_year=current_academic_year
-    )
 
-    total_revenue = (
-        current_payments.aggregate(
-            total=Sum("amount")
-        )["total"]
-        or Decimal("0.00")
-    )
 
-    total_payment_count = current_payments.count()
+<!-- =========================================================
+     SUMMARY CARDS
+========================================================= -->
 
+<div class="reports-summary">
 
-    # -----------------------------------------------------
-    # OUTSTANDING
-    # -----------------------------------------------------
 
-    outstanding = (
-        total_fees_due - total_revenue
-    )
+    <!-- TOTAL REVENUE -->
 
-    if outstanding < Decimal("0.00"):
-        outstanding = Decimal("0.00")
+    <div class="report-summary-card">
 
+        <div class="report-icon revenue">
 
-    # -----------------------------------------------------
-    # CURRENT MONTH PAYMENTS
-    # -----------------------------------------------------
+            <i class="fas fa-money-bill-wave"></i>
 
-    monthly_payments = current_payments.filter(
-        payment_date__year=current_year,
-        payment_date__month=current_month
-    )
+        </div>
 
-    monthly_revenue = (
-        monthly_payments.aggregate(
-            total=Sum("amount")
-        )["total"]
-        or Decimal("0.00")
-    )
 
-    monthly_payment_count = monthly_payments.count()
+        <div class="report-summary-content">
 
+            <span>
+                Total Revenue
+            </span>
 
-    # -----------------------------------------------------
-    # CURRENT MONTH BILLS
-    # -----------------------------------------------------
+            <strong>
+                GH₵ {{ total_revenue|floatformat:2 }}
+            </strong>
 
-    monthly_bills = current_bills.filter(
-        created_at__year=current_year,
-        created_at__month=current_month
-    )
+            <div class="growth positive">
 
-    monthly_billed = (
-        monthly_bills.aggregate(
-            total=Sum("amount_due")
-        )["total"]
-        or Decimal("0.00")
-    )
+                <i class="fas fa-calendar"></i>
 
+                Current academic year
 
-    # -----------------------------------------------------
-    # PENDING PAYMENT COUNT
-    #
-    # Count bills that still have money outstanding.
-    # -----------------------------------------------------
+            </div>
 
-    pending_payments = 0
+        </div>
 
-    student_bill_data = defaultdict(Decimal)
+    </div>
 
-    for bill in current_bills:
 
-        student_bill_data[bill.student_id] += (
-            bill.amount_due
-        )
 
-    student_payment_data = defaultdict(Decimal)
+    <!-- TOTAL STUDENTS -->
 
-    for payment in current_payments:
+    <div class="report-summary-card">
 
-        student_payment_data[payment.student_id] += (
-            payment.amount
-        )
+        <div class="report-icon students">
 
-    for student_id, billed in student_bill_data.items():
+            <i class="fas fa-users"></i>
 
-        paid = student_payment_data.get(
-            student_id,
-            Decimal("0.00")
-        )
+        </div>
 
-        if billed > paid:
-            pending_payments += 1
 
+        <div class="report-summary-content">
 
-    # -----------------------------------------------------
-    # MONTHLY PAYMENT CHART
-    # -----------------------------------------------------
+            <span>
+                Total Students
+            </span>
 
-    monthly_payment_data = (
-        current_payments
-        .annotate(
-            month=TruncMonth("payment_date")
-        )
-        .values("month")
-        .annotate(
-            total=Sum("amount")
-        )
-        .order_by("month")
-    )
+            <strong>
+                {{ total_students }}
+            </strong>
 
+            <div class="growth positive">
 
-    monthly_bill_data = (
-        current_bills
-        .annotate(
-            month=TruncMonth("created_at")
-        )
-        .values("month")
-        .annotate(
-            total=Sum("amount_due")
-        )
-        .order_by("month")
-    )
+                <i class="fas fa-user-check"></i>
 
+                Active students
 
-    payments_by_month = {
-        item["month"].month:
-            item["total"]
-        for item in monthly_payment_data
-    }
+            </div>
 
+        </div>
 
-    bills_by_month = {
-        item["month"].month:
-            item["total"]
-        for item in monthly_bill_data
-    }
+    </div>
 
 
-    month_names = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ]
 
+    <!-- TOTAL PAYMENTS -->
 
-    monthly_chart = []
+    <div class="report-summary-card">
 
-    max_chart_value = Decimal("0.00")
+        <div class="report-icon payments">
 
+            <i class="fas fa-credit-card"></i>
 
-    for month_number in range(1, 13):
+        </div>
 
-        paid = payments_by_month.get(
-            month_number,
-            Decimal("0.00")
-        )
 
-        billed = bills_by_month.get(
-            month_number,
-            Decimal("0.00")
-        )
+        <div class="report-summary-content">
 
-        pending = billed - paid
+            <span>
+                Total Payments
+            </span>
 
-        if pending < Decimal("0.00"):
-            pending = Decimal("0.00")
+            <strong>
+                {{ total_payment_count }}
+            </strong>
 
+            <div class="growth positive">
 
-        # Simple overdue representation.
-        # Bills that remain unpaid are shown here.
-        overdue = Decimal("0.00")
+                <i class="fas fa-receipt"></i>
 
+                Recorded payments
 
-        max_chart_value = max(
-            max_chart_value,
-            paid,
-            pending,
-            overdue
-        )
+            </div>
 
+        </div>
 
-        monthly_chart.append({
-            "month": month_names[
-                month_number - 1
-            ],
-            "paid": paid,
-            "pending": pending,
-            "overdue": overdue,
-        })
+    </div>
 
 
-    # Avoid division by zero
-    if max_chart_value <= Decimal("0.00"):
-        max_chart_value = Decimal("1.00")
 
+    <!-- PENDING PAYMENTS -->
 
-    # Calculate chart heights
-    for item in monthly_chart:
+    <div class="report-summary-card">
 
-        item["paid_height"] = float(
-            (
-                item["paid"] /
-                max_chart_value
-            ) * 100
-        )
+        <div class="report-icon pending">
 
-        item["pending_height"] = float(
-            (
-                item["pending"] /
-                max_chart_value
-            ) * 100
-        )
+            <i class="fas fa-calendar-days"></i>
 
-        item["overdue_height"] = float(
-            (
-                item["overdue"] /
-                max_chart_value
-            ) * 100
-        )
+        </div>
 
 
-    # -----------------------------------------------------
-    # FEE CATEGORY TOTALS
-    # -----------------------------------------------------
-
-    fee_structures = FeeStructure.objects.filter(
-        academic_year=current_academic_year
-    )
-
-
-    tuition_total = (
-        fee_structures.aggregate(
-            total=Sum("tuition_fee")
-        )["total"]
-        or Decimal("0.00")
-    )
-
-
-    examination_total = (
-        fee_structures.aggregate(
-            total=Sum("examination_fee")
-        )["total"]
-        or Decimal("0.00")
-    )
-
-
-    library_total = (
-        fee_structures.aggregate(
-            total=Sum("library_fee")
-        )["total"]
-        or Decimal("0.00")
-    )
+        <div class="report-summary-content">
 
+            <span>
+                Pending Payments
+            </span>
 
-    activity_total = (
-        fee_structures.aggregate(
-            total=Sum("activity_fee")
-        )["total"]
-        or Decimal("0.00")
-    )
+            <strong>
+                {{ pending_payments }}
+            </strong>
 
+            <div class="growth negative">
 
-    registration_total = (
-        fee_structures.aggregate(
-            total=Sum("registration_fee")
-        )["total"]
-        or Decimal("0.00")
-    )
+                <i class="fas fa-clock"></i>
 
+                Outstanding students
 
-    category_total = (
-        tuition_total
-        + examination_total
-        + library_total
-        + activity_total
-        + registration_total
-    )
+            </div>
 
+        </div>
 
-    fee_categories = []
+    </div>
 
+</div>
 
-    categories = [
-        (
-            "Tuition Fee",
-            tuition_total,
-            "tuition"
-        ),
-        (
-            "Examination Fee",
-            examination_total,
-            "examination"
-        ),
-        (
-            "Library Fee",
-            library_total,
-            "library"
-        ),
-        (
-            "Activity Fee",
-            activity_total,
-            "activity"
-        ),
-        (
-            "Registration Fee",
-            registration_total,
-            "other"
-        ),
-    ]
 
-
-    for name, amount, css_class in categories:
-
-        percentage = (
-            (amount / category_total) * 100
-            if category_total > 0
-            else Decimal("0.00")
-        )
 
-        fee_categories.append({
-            "name": name,
-            "amount": amount,
-            "percentage": round(
-                percentage,
-                1
-            ),
-            "css_class": css_class,
-        })
+<!-- =========================================================
+     REPORT BODY
+========================================================= -->
 
+<div class="reports-grid">
 
-    # -----------------------------------------------------
-    # CLASS DISTRIBUTION
-    # -----------------------------------------------------
-
-    class_counts = (
-        Student.objects
-        .filter(status="Active")
-        .values("student_class")
-        .annotate(
-            total=Count("id")
-        )
-        .order_by("-total")
-    )
 
+    <!-- =====================================================
+         PAYMENT SUMMARY
+    ====================================================== -->
 
-    highest_class = None
+    <div class="report-card payment-summary-card">
 
-    if class_counts:
 
-        highest_class = class_counts[0]
+        <div class="report-card-header">
 
+            <h2>
+                Payment Summary
+            </h2>
 
-    # -----------------------------------------------------
-    # RECENT REPORT ACTIVITY
-    #
-    # These are based on actual database activity.
-    # -----------------------------------------------------
 
-    detailed_reports = []
+            <div class="chart-legend">
 
+                <span>
 
-    # Fee collection report
-    if current_payments.exists():
+                    <i class="legend paid"></i>
 
-        latest_payment = current_payments.order_by(
-            "-created_at"
-        ).first()
+                    Paid
 
-        detailed_reports.append({
-            "name": "Fee Collection Report",
-            "description": "Summary of all fee collections",
-            "date": latest_payment.created_at,
-            "icon": "fa-file-invoice",
-            "color": "green",
-        })
+                </span>
 
 
-    # Student payment report
-    if current_payments.exists():
+                <span>
 
-        latest_payment = current_payments.order_by(
-            "-created_at"
-        ).first()
-
-        detailed_reports.append({
-            "name": "Student Payment Report",
-            "description": "Individual student payment details",
-            "date": latest_payment.created_at,
-            "icon": "fa-users",
-            "color": "blue",
-        })
+                    <i class="legend pending"></i>
 
+                    Pending
 
-    # Class report
-    if class_counts:
-
-        latest_student = Student.objects.filter(
-            status="Active"
-        ).order_by(
-            "-date_registered"
-        ).first()
-
-        detailed_reports.append({
-            "name": "Class-wise Report",
-            "description": "Student distribution by class",
-            "date": (
-                latest_student.date_registered
-                if latest_student
-                else today
-            ),
-            "icon": "fa-graduation-cap",
-            "color": "purple",
-        })
+                </span>
 
-
-    # Outstanding report
-    if outstanding > 0:
 
-        detailed_reports.append({
-            "name": "Outstanding Fees Report",
-            "description": "Students with outstanding payments",
-            "date": timezone.now(),
-            "icon": "fa-triangle-exclamation",
-            "color": "red",
-        })
+                <span>
 
+                    <i class="legend overdue"></i>
 
-    # Monthly summary
-    detailed_reports.append({
-        "name": "Monthly Summary",
-        "description": "Income, billed fees and balance",
-        "date": timezone.now(),
-        "icon": "fa-chart-column",
-        "color": "orange",
-    })
+                    Overdue
 
+                </span>
 
-    # -----------------------------------------------------
-    # QUICK INSIGHTS
-    # -----------------------------------------------------
+            </div>
 
-    insights = []
+        </div>
 
 
-    if monthly_revenue > 0:
 
-        insights.append({
-            "color": "green",
-            "text": (
-                f"GH₵ {monthly_revenue:,.2f} "
-                f"has been collected this month."
-            ),
-        })
+        <div class="payment-chart">
 
 
-    if pending_payments > 0:
+            <div class="chart-values">
 
-        insights.append({
-            "color": "orange",
-            "text": (
-                f"{pending_payments} student"
-                f"{'s' if pending_payments != 1 else ''} "
-                "still have outstanding payments."
-            ),
-        })
+                <span>100%</span>
+                <span>80%</span>
+                <span>60%</span>
+                <span>40%</span>
+                <span>20%</span>
+                <span>0</span>
 
+            </div>
 
-    if highest_class:
 
-        class_percentage = (
-            (
-                highest_class["total"] /
-                total_students
-            ) * 100
-            if total_students
-            else 0
-        )
 
-        insights.append({
-            "color": "blue",
-            "text": (
-                f"{highest_class['student_class']} "
-                f"has the highest number of active students "
-                f"({highest_class['total']}, "
-                f"{class_percentage:.1f}%)."
-            ),
-        })
+            <div class="chart-container">
 
 
-    if fee_categories and category_total > 0:
+                <div class="chart-grid-lines">
 
-        highest_category = max(
-            fee_categories,
-            key=lambda item: item["amount"]
-        )
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
 
-        insights.append({
-            "color": "purple",
-            "text": (
-                f"{highest_category['name']} represents "
-                f"{highest_category['percentage']}% "
-                "of the fee structure."
-            ),
-        })
+                </div>
 
 
-    # -----------------------------------------------------
-    # NEXT MONTH
-    # -----------------------------------------------------
 
-    if current_month == 12:
+                <div class="columns">
 
-        next_month_name = "January"
-        next_month_year = current_year + 1
 
-    else:
+                    {% for item in monthly_chart %}
 
-        next_month_name = month_names[
-            current_month
-        ]
+                    <div class="chart-column">
 
-        next_month_year = current_year
 
+                        <div class="bar-group">
 
-    next_report_date = (
-        f"01 {next_month_name} "
-        f"{next_month_year}"
-    )
 
+                            <div
+                                class="bar paid-bar"
+                                style="height: {{ item.paid_height }}%;"
+                                title="Paid: GH₵ {{ item.paid|floatformat:2 }}"
+                            ></div>
 
-    # -----------------------------------------------------
-    # CONTEXT
-    # -----------------------------------------------------
 
-    context = {
+                            <div
+                                class="bar pending-bar"
+                                style="height: {{ item.pending_height }}%;"
+                                title="Pending: GH₵ {{ item.pending|floatformat:2 }}"
+                            ></div>
 
-        "today": today,
 
-        "current_academic_year":
-            current_academic_year,
+                            <div
+                                class="bar overdue-bar"
+                                style="height: {{ item.overdue_height }}%;"
+                                title="Overdue: GH₵ {{ item.overdue|floatformat:2 }}"
+                            ></div>
 
-        "total_revenue":
-            total_revenue,
 
-        "total_students":
-            total_students,
+                        </div>
 
-        "total_payment_count":
-            total_payment_count,
 
-        "pending_payments":
-            pending_payments,
+                        <span>
+                            {{ item.month }}
+                        </span>
 
-        "monthly_revenue":
-            monthly_revenue,
 
-        "monthly_payment_count":
-            monthly_payment_count,
+                    </div>
 
-        "monthly_chart":
-            monthly_chart,
+                    {% endfor %}
 
-        "fee_categories":
-            fee_categories,
 
-        "category_total":
-            category_total,
+                </div>
 
-        "detailed_reports":
-            detailed_reports,
+            </div>
 
-        "insights":
-            insights,
+        </div>
 
-        "next_report_date":
-            next_report_date,
-    }
+    </div>
 
 
-    return render(
-        request,
-        "fees/reports.html",
-        context
-    )
+
+    <!-- =====================================================
+         FEES BY CATEGORY
+    ====================================================== -->
+
+    <div class="report-card category-card">
+
+
+        <div class="report-card-header">
+
+            <h2>
+                Fees by Category
+            </h2>
+
+        </div>
+
+
+
+        <div class="category-content">
+
+
+            <div class="donut-chart">
+
+                <div class="donut-center">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        GH₵ {{ category_total|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="category-list">
+
+
+                {% for category in fee_categories %}
+
+                <div class="category-item">
+
+
+                    <span
+                        class="category-dot {{ category.css_class }}"
+                    ></span>
+
+
+                    <div>
+
+                        <strong>
+                            {{ category.name }}
+                        </strong>
+
+                        <span>
+                            GH₵ {{ category.amount|floatformat:2 }}
+                        </span>
+
+                    </div>
+
+
+                    <b>
+                        {{ category.percentage }}%
+                    </b>
+
+
+                </div>
+
+                {% empty %}
+
+                <div class="category-item">
+
+                    <div>
+
+                        <strong>
+                            No fee structure found
+                        </strong>
+
+                        <span>
+                            Create a fee structure to display categories.
+                        </span>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         REPORT ACTIONS
+    ====================================================== -->
+
+    <div class="report-card actions-card">
+
+
+        <div class="report-card-header">
+
+            <h2>
+                Report Actions
+            </h2>
+
+        </div>
+
+
+        <div class="report-actions">
+
+
+            <a
+                href="#"
+                class="report-action blue"
+            >
+
+                <i class="fas fa-print"></i>
+
+                <span>
+                    Generate Fee Report
+                </span>
+
+                <i class="fas fa-chevron-right"></i>
+
+            </a>
+
+
+
+            <a
+                href="#"
+                class="report-action green"
+            >
+
+                <i class="fas fa-users"></i>
+
+                <span>
+                    Student-wise Report
+                </span>
+
+                <i class="fas fa-chevron-right"></i>
+
+            </a>
+
+
+
+            <a
+                href="#"
+                class="report-action purple"
+            >
+
+                <i class="fas fa-graduation-cap"></i>
+
+                <span>
+                    Class-wise Report
+                </span>
+
+                <i class="fas fa-chevron-right"></i>
+
+            </a>
+
+
+
+            <a
+                href="#"
+                class="report-action orange"
+            >
+
+                <i class="fas fa-clock-rotate-left"></i>
+
+                <span>
+                    Payment History Report
+                </span>
+
+                <i class="fas fa-chevron-right"></i>
+
+            </a>
+
+
+
+            <a
+                href="#"
+                class="report-action red"
+            >
+
+                <i class="fas fa-triangle-exclamation"></i>
+
+                <span>
+                    Outstanding Report
+                </span>
+
+                <i class="fas fa-chevron-right"></i>
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         DETAILED REPORTS
+    ====================================================== -->
+
+    <div class="report-card detailed-reports-card">
+
+
+        <div class="report-card-header">
+
+            <h2>
+                Detailed Reports
+            </h2>
+
+
+            <a
+                href="#"
+                class="view-all"
+            >
+
+                View All Reports
+
+                <i class="fas fa-arrow-right"></i>
+
+            </a>
+
+        </div>
+
+
+
+        <div class="reports-table-wrapper">
+
+
+            <table class="reports-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Report Name
+                        </th>
+
+                        <th>
+                            Description
+                        </th>
+
+                        <th>
+                            Generated On
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+
+                <tbody>
+
+
+                    {% for report in detailed_reports %}
+
+                    <tr>
+
+
+                        <td>
+
+                            <div class="report-name">
+
+                                <span
+                                    class="table-icon {{ report.color }}"
+                                >
+
+                                    <i
+                                        class="fas {{ report.icon }}"
+                                    ></i>
+
+                                </span>
+
+                                {{ report.name }}
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+                            {{ report.description }}
+                        </td>
+
+
+                        <td>
+
+                            {{ report.date|date:"d M Y" }}
+
+                            &nbsp;
+
+                            {{ report.date|date:"h:i A" }}
+
+                        </td>
+
+
+                        <td>
+
+                            <a
+                                href="#"
+                                class="download-btn"
+                            >
+
+                                <i class="fas fa-download"></i>
+
+                                Download
+
+                            </a>
+
+
+                            <a
+                                href="#"
+                                class="table-view-btn"
+                            >
+
+                                <i class="fas fa-eye"></i>
+
+                                View
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="4">
+
+                            No report activity available yet.
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         QUICK INSIGHTS
+    ====================================================== -->
+
+    <div class="report-card insights-card">
+
+
+        <div class="report-card-header">
+
+            <h2>
+
+                <i class="fas fa-lightbulb"></i>
+
+                Quick Insights
+
+            </h2>
+
+        </div>
+
+
+        <ul>
+
+
+            {% for insight in insights %}
+
+            <li>
+
+                <span
+                    class="insight-dot {{ insight.color }}"
+                ></span>
+
+                {{ insight.text }}
+
+            </li>
+
+            {% empty %}
+
+            <li>
+
+                <span class="insight-dot blue"></span>
+
+                No insights available yet.
+
+            </li>
+
+            {% endfor %}
+
+
+        </ul>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         NEXT REPORT
+    ====================================================== -->
+
+    <div class="report-card next-report-card">
+
+
+        <div class="next-report-icon">
+
+            <i class="fas fa-calendar-days"></i>
+
+        </div>
+
+
+        <div>
+
+            <h3>
+                Next Report Generation
+            </h3>
+
+            <p>
+                Next monthly reporting period starts on
+            </p>
+
+            <strong>
+                {{ next_report_date }}.
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+{% endblock %}
