@@ -992,6 +992,8 @@
 
                         <div class="backup-buttons">
 
+                            <!-- EXPORT -->
+
                             <a
                                 href="{% url 'export_excel' %}"
                                 class="btn-secondary"
@@ -1001,16 +1003,36 @@
                             </a>
 
 
-                            <button
-                                type="button"
-                                class="btn-secondary"
+                            <!-- RESTORE -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'import_excel' %}"
+                                enctype="multipart/form-data"
+                                style="display: inline;"
                             >
 
-                                <i class="fa-solid fa-upload"></i>
+                                {% csrf_token %}
 
-                                Restore
+                                <input
+                                    type="file"
+                                    id="excel_restore_file"
+                                    name="excel_file"
+                                    accept=".xlsx"
+                                    style="display: none;"
+                                    onchange="this.form.submit();"
+                                >
 
-                            </button>
+                                <label
+                                    for="excel_restore_file"
+                                    class="btn-secondary"
+                                    style="cursor: pointer;"
+                                >
+                                    <i class="fa-solid fa-upload"></i>
+                                    Import from Excel
+                                </label>
+
+                            </form>
 
                         </div>
 
@@ -1133,4 +1155,3 @@
 
 
 {% endblock %}
-

@@ -258,5 +258,10 @@ path(
     name="print_receipt"
 ),
 
-    
+path(
+    "import-excel/",
+    views.import_excel,
+    name="import_excel",
+),
+
 ]
