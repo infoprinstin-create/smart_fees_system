@@ -5,7 +5,6 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
-
 {% endblock %}
 
 {% block content %}
@@ -20,12 +19,20 @@
 
         <div>
             <h1>Dashboard</h1>
-            <p>Welcome to the School Fees Management System</p>
+
+            <p>
+                Welcome to the School Fees Management System
+            </p>
         </div>
 
         <div class="dashboard-date">
+
             <i class="fas fa-calendar-days"></i>
-            <span>Monday, 16 June 2025</span>
+
+            <span>
+                {{ current_date|date:"l, d F Y" }}
+            </span>
+
         </div>
 
     </div>
@@ -49,11 +56,16 @@
 
                 <h3>Total Students</h3>
 
-                <strong>245</strong>
+                <strong>
+                    {{ total_students }}
+                </strong>
 
                 <a href="{% url 'students' %}">
+
                     View Students
+
                     <i class="fas fa-arrow-right"></i>
+
                 </a>
 
             </div>
@@ -73,11 +85,16 @@
 
                 <h3>Total Fees Due</h3>
 
-                <strong>AED 412,500.00</strong>
+                <strong>
+                    GH₵ {{ total_fees_due|floatformat:2 }}
+                </strong>
 
                 <a href="{% url 'fees_structure' %}">
+
                     View Details
+
                     <i class="fas fa-arrow-right"></i>
+
                 </a>
 
             </div>
@@ -97,11 +114,16 @@
 
                 <h3>Total Paid</h3>
 
-                <strong>AED 278,650.00</strong>
+                <strong>
+                    GH₵ {{ total_paid|floatformat:2 }}
+                </strong>
 
                 <a href="{% url 'payments' %}">
+
                     View Payments
+
                     <i class="fas fa-arrow-right"></i>
+
                 </a>
 
             </div>
@@ -121,11 +143,16 @@
 
                 <h3>Outstanding</h3>
 
-                <strong>AED 133,850.00</strong>
+                <strong>
+                    GH₵ {{ outstanding|floatformat:2 }}
+                </strong>
 
-                <a href="#">
+                <a href="{% url 'payments' %}">
+
                     View Outstanding
+
                     <i class="fas fa-arrow-right"></i>
+
                 </a>
 
             </div>
@@ -136,14 +163,14 @@
 
 
     <!-- =====================================================
-         MAIN DASHBOARD GRID
+         MAIN DASHBOARD
     ====================================================== -->
 
     <div class="dashboard-main-grid">
 
 
         <!-- =================================================
-             LEFT / MAIN COLUMN
+             LEFT SIDE
         ================================================== -->
 
         <div class="dashboard-left">
@@ -157,7 +184,9 @@
 
                 <div class="card-header">
 
-                    <h2>Fee Collection Overview</h2>
+                    <h2>
+                        Fee Collection Overview
+                    </h2>
 
                 </div>
 
@@ -166,11 +195,11 @@
 
                     <div class="chart-y-axis">
 
-                        <span>250,000</span>
-                        <span>200,000</span>
-                        <span>150,000</span>
-                        <span>100,000</span>
-                        <span>50,000</span>
+                        <span>100%</span>
+                        <span>80%</span>
+                        <span>60%</span>
+                        <span>40%</span>
+                        <span>20%</span>
                         <span>0</span>
 
                     </div>
@@ -178,178 +207,68 @@
 
                     <div class="chart-area">
 
-                        <!-- JANUARY -->
+                        {% for month in monthly_chart %}
 
-                        <div class="chart-column">
-
-                            <div class="bars">
-
-                                <div
-                                    class="bar paid"
-                                    style="height: 64%;"
-                                    title="Paid: AED 160,000">
-                                </div>
-
-                                <div
-                                    class="bar outstanding"
-                                    style="height: 29%;"
-                                    title="Outstanding: AED 72,000">
-                                </div>
-
-                            </div>
-
-                            <span>Jan</span>
-
-                        </div>
-
-
-                        <!-- FEBRUARY -->
-
-                        <div class="chart-column">
+                        <div
+                            class="chart-column"
+                            data-billed="{{ month.billed }}"
+                            data-paid="{{ month.paid }}"
+                            data-outstanding="{{ month.outstanding }}"
+                        >
 
                             <div class="bars">
 
                                 <div
                                     class="bar paid"
-                                    style="height: 70%;"
-                                    title="Paid: AED 175,000">
-                                </div>
+                                    data-value="{{ month.paid }}"
+                                    title="Paid: GH₵ {{ month.paid|floatformat:2 }}"
+                                    style="height: 0%;"
+                                ></div>
 
                                 <div
                                     class="bar outstanding"
-                                    style="height: 36%;"
-                                    title="Outstanding: AED 90,000">
-                                </div>
+                                    data-value="{{ month.outstanding }}"
+                                    title="Outstanding: GH₵ {{ month.outstanding|floatformat:2 }}"
+                                    style="height: 0%;"
+                                ></div>
 
                             </div>
 
-                            <span>Feb</span>
+                            <span>
+                                {{ month.month }}
+                            </span>
 
                         </div>
 
-
-                        <!-- MARCH -->
-
-                        <div class="chart-column">
-
-                            <div class="bars">
-
-                                <div
-                                    class="bar paid"
-                                    style="height: 55%;"
-                                    title="Paid: AED 138,000">
-                                </div>
-
-                                <div
-                                    class="bar outstanding"
-                                    style="height: 30%;"
-                                    title="Outstanding: AED 75,000">
-                                </div>
-
-                            </div>
-
-                            <span>Mar</span>
-
-                        </div>
-
-
-                        <!-- APRIL -->
-
-                        <div class="chart-column">
-
-                            <div class="bars">
-
-                                <div
-                                    class="bar paid"
-                                    style="height: 78%;"
-                                    title="Paid: AED 195,000">
-                                </div>
-
-                                <div
-                                    class="bar outstanding"
-                                    style="height: 45%;"
-                                    title="Outstanding: AED 112,000">
-                                </div>
-
-                            </div>
-
-                            <span>Apr</span>
-
-                        </div>
-
-
-                        <!-- MAY -->
-
-                        <div class="chart-column">
-
-                            <div class="bars">
-
-                                <div
-                                    class="bar paid"
-                                    style="height: 74%;"
-                                    title="Paid: AED 185,000">
-                                </div>
-
-                                <div
-                                    class="bar outstanding"
-                                    style="height: 42%;"
-                                    title="Outstanding: AED 105,000">
-                                </div>
-
-                            </div>
-
-                            <span>May</span>
-
-                        </div>
-
-
-                        <!-- JUNE -->
-
-                        <div class="chart-column">
-
-                            <div class="bars">
-
-                                <div
-                                    class="bar paid"
-                                    style="height: 58%;"
-                                    title="Paid: AED 145,000">
-                                </div>
-
-                                <div
-                                    class="bar outstanding"
-                                    style="height: 35%;"
-                                    title="Outstanding: AED 87,000">
-                                </div>
-
-                            </div>
-
-                            <span>Jun</span>
-
-                        </div>
+                        {% endfor %}
 
                     </div>
 
                 </div>
 
 
-                <!-- CHART LEGEND -->
-
                 <div class="chart-legend">
 
                     <span>
+
                         <i class="legend-dot paid-dot"></i>
+
                         Paid
+
                     </span>
 
+
                     <span>
+
                         <i class="legend-dot outstanding-dot"></i>
+
                         Outstanding
+
                     </span>
 
                 </div>
 
             </div>
-
 
 
             <!-- =============================================
@@ -360,11 +279,19 @@
 
                 <div class="card-header">
 
-                    <h2>Recent Payments</h2>
+                    <h2>
+                        Recent Payments
+                    </h2>
 
-                    <a href="{% url 'payments' %}" class="view-all">
+                    <a
+                        href="{% url 'payments' %}"
+                        class="view-all"
+                    >
+
                         View All Payments
+
                         <i class="fas fa-arrow-right"></i>
+
                     </a>
 
                 </div>
@@ -397,109 +324,70 @@
 
                         <tbody>
 
+                            {% for payment in recent_payments %}
+
                             <tr>
 
-                                <td>16 Jun 2025</td>
+                                <td>
+                                    {{ payment.payment_date|date:"d M Y" }}
+                                </td>
 
-                                <td>Emmanuel Mensah</td>
-
-                                <td>JHS 2</td>
-
-                                <td>AED 1,500.00</td>
-
-                                <td>Bank Transfer</td>
 
                                 <td>
+
+                                    {{ payment.student.first_name }}
+                                    {{ payment.student.last_name }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ payment.student.student_class }}
+
+                                </td>
+
+
+                                <td>
+
+                                    GH₵ {{ payment.amount|floatformat:2 }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ payment.payment_method }}
+
+                                </td>
+
+
+                                <td>
+
                                     <span class="status paid-status">
                                         Paid
                                     </span>
+
                                 </td>
 
                             </tr>
 
+                            {% empty %}
 
                             <tr>
 
-                                <td>15 Jun 2025</td>
+                                <td
+                                    colspan="6"
+                                    style="text-align: center;"
+                                >
 
-                                <td>Ama Serwaa</td>
+                                    No payments recorded yet.
 
-                                <td>Primary 4</td>
-
-                                <td>AED 1,200.00</td>
-
-                                <td>Cash</td>
-
-                                <td>
-                                    <span class="status paid-status">
-                                        Paid
-                                    </span>
                                 </td>
 
                             </tr>
 
-
-                            <tr>
-
-                                <td>14 Jun 2025</td>
-
-                                <td>Isaac Oteng</td>
-
-                                <td>SHS 1</td>
-
-                                <td>AED 2,000.00</td>
-
-                                <td>Mobile Money</td>
-
-                                <td>
-                                    <span class="status paid-status">
-                                        Paid
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>13 Jun 2025</td>
-
-                                <td>Esi Yeboah</td>
-
-                                <td>Primary 3</td>
-
-                                <td>AED 1,200.00</td>
-
-                                <td>Bank Transfer</td>
-
-                                <td>
-                                    <span class="status pending-status">
-                                        Pending
-                                    </span>
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>12 Jun 2025</td>
-
-                                <td>Kwame Asante</td>
-
-                                <td>JHS 1</td>
-
-                                <td>AED 1,500.00</td>
-
-                                <td>Cash</td>
-
-                                <td>
-                                    <span class="status paid-status">
-                                        Paid
-                                    </span>
-                                </td>
-
-                            </tr>
+                            {% endfor %}
 
                         </tbody>
 
@@ -512,95 +400,123 @@
         </div>
 
 
-
         <!-- =================================================
-             RIGHT COLUMN
+             RIGHT SIDE
         ================================================== -->
 
         <div class="dashboard-right">
 
 
             <!-- =============================================
-                 FEES BY CLASS
+                 FEES / STUDENTS BY CLASS
             ============================================== -->
 
             <div class="dashboard-card fees-class-card">
 
                 <div class="card-header">
 
-                    <h2>Fees by Class</h2>
+                    <h2>
+                        Students by Class
+                    </h2>
 
                 </div>
 
 
                 <div class="donut-section">
 
+
+                    <!-- DONUT -->
+
                     <div class="donut-chart">
 
                         <div class="donut-inner">
 
-                            <span>Total</span>
+                            <span>
+                                Total
+                            </span>
 
-                            <strong>245</strong>
+                            <strong>
+                                {{ total_students }}
+                            </strong>
 
-                            <small>Students</small>
+                            <small>
+                                Students
+                            </small>
 
                         </div>
 
                     </div>
 
 
+                    <!-- CLASS LEGEND -->
+
                     <div class="class-legend">
 
-                        <div class="class-legend-item">
-
-                            <span class="class-dot kg"></span>
-
-                            <span>KG</span>
-
-                            <strong>42 (17.1%)</strong>
-
-                        </div>
-
+                        {% for level in level_distribution %}
 
                         <div class="class-legend-item">
 
-                            <span class="class-dot primary"></span>
+                            {% if level.name == "Kindergarten" %}
 
-                            <span>Primary</span>
+                                <span class="class-dot kg"></span>
 
-                            <strong>98 (40.0%)</strong>
+                                <span>
+                                    KG
+                                </span>
+
+                            {% elif level.name == "Primary School" %}
+
+                                <span class="class-dot primary"></span>
+
+                                <span>
+                                    Primary
+                                </span>
+
+                            {% elif level.name == "Junior High School" %}
+
+                                <span class="class-dot jhs"></span>
+
+                                <span>
+                                    JHS
+                                </span>
+
+                            {% elif level.name == "Playgroup" %}
+
+                                <span class="class-dot shs"></span>
+
+                                <span>
+                                    Playgroup
+                                </span>
+
+                            {% endif %}
+
+
+                            <strong>
+
+                                {{ level.count }}
+                                ({{ level.percentage }}%)
+
+                            </strong>
 
                         </div>
 
+                        {% empty %}
 
                         <div class="class-legend-item">
 
-                            <span class="class-dot jhs"></span>
-
-                            <span>JHS</span>
-
-                            <strong>63 (25.7%)</strong>
+                            <span>
+                                No student data
+                            </span>
 
                         </div>
 
-
-                        <div class="class-legend-item">
-
-                            <span class="class-dot shs"></span>
-
-                            <span>SHS</span>
-
-                            <strong>42 (17.1%)</strong>
-
-                        </div>
+                        {% endfor %}
 
                     </div>
 
                 </div>
 
             </div>
-
 
 
             <!-- =============================================
@@ -611,56 +527,75 @@
 
                 <div class="card-header">
 
-                    <h2>Quick Actions</h2>
+                    <h2>
+                        Quick Actions
+                    </h2>
 
                 </div>
 
 
                 <div class="quick-actions">
 
-                    <a href="{% url 'add_student' %}"
-                       class="quick-action blue-action">
+
+                    <a
+                        href="{% url 'add_student' %}"
+                        class="quick-action blue-action"
+                    >
 
                         <i class="fas fa-plus"></i>
 
-                        <span>Add Student</span>
+                        <span>
+                            Add Student
+                        </span>
 
                     </a>
 
 
-                    <a href="{% url 'record_payment' %}"
-                       class="quick-action green-action">
+                    <a
+                        href="{% url 'record_payment' %}"
+                        class="quick-action green-action"
+                    >
 
                         <i class="fas fa-money-bill-wave"></i>
 
-                        <span>Record Payment</span>
+                        <span>
+                            Record Payment
+                        </span>
 
                     </a>
 
 
-                    <a href="{% url 'fees_structure' %}"
-                       class="quick-action purple-action">
+                    <a
+                        href="{% url 'fees_structure' %}"
+                        class="quick-action purple-action"
+                    >
 
                         <i class="fas fa-file-invoice"></i>
 
-                        <span>Set Fees Structure</span>
+                        <span>
+                            Set Fees Structure
+                        </span>
 
                     </a>
 
 
-                    <a href="{% url 'reports' %}"
-                       class="quick-action orange-action">
+                    <a
+                        href="{% url 'reports' %}"
+                        class="quick-action orange-action"
+                    >
 
                         <i class="fas fa-chart-column"></i>
 
-                        <span>Generate Report</span>
+                        <span>
+                            Generate Report
+                        </span>
 
                     </a>
+
 
                 </div>
 
             </div>
-
 
 
             <!-- =============================================
@@ -671,7 +606,9 @@
 
                 <div class="card-header">
 
-                    <h2>Recent Activity</h2>
+                    <h2>
+                        Recent Activity
+                    </h2>
 
                 </div>
 
@@ -679,109 +616,225 @@
                 <div class="activity-list">
 
 
-                    <div class="activity-item">
-
-                        <div class="activity-icon green-activity">
-                            <i class="fas fa-money-bill-wave"></i>
-                        </div>
-
-                        <div class="activity-info">
-
-                            <strong>Payment received from Emmanuel Mensah</strong>
-
-                            <span>AED 1,500.00</span>
-
-                        </div>
-
-                        <time>2 hours ago</time>
-
-                    </div>
-
+                    {% for activity in recent_activity %}
 
                     <div class="activity-item">
 
-                        <div class="activity-icon blue-activity">
-                            <i class="fas fa-user-plus"></i>
+
+                        <!-- ACTIVITY ICON -->
+
+                        <div
+                            class="activity-icon
+
+                            {% if activity.type == 'payment' %}
+                                green-activity
+
+                            {% elif activity.type == 'student' %}
+                                blue-activity
+
+                            {% elif activity.type == 'bill' %}
+                                orange-activity
+
+                            {% else %}
+                                purple-activity
+                            {% endif %}"
+
+                        >
+
+                            <i
+                                class="fas {{ activity.icon }}"
+                            ></i>
+
                         </div>
+
+
+                        <!-- ACTIVITY INFORMATION -->
 
                         <div class="activity-info">
 
-                            <strong>New student added</strong>
+                            <strong>
+                                {{ activity.title }}
+                            </strong>
 
-                            <span>Mary Agyemang (Primary 2)</span>
+                            <span>
+                                {{ activity.description }}
+                            </span>
 
                         </div>
 
-                        <time>4 hours ago</time>
+
+                        <!-- TIME -->
+
+                        <time
+                            class="activity-time"
+                            datetime="{{ activity.date|date:'c' }}"
+                        >
+                            {{ activity.date|date:"d M Y, H:i" }}
+                        </time>
+
 
                     </div>
 
+                    {% empty %}
 
                     <div class="activity-item">
 
-                        <div class="activity-icon orange-activity">
-                            <i class="fas fa-file-invoice"></i>
-                        </div>
-
                         <div class="activity-info">
 
-                            <strong>Fees structure updated</strong>
+                            <strong>
+                                No recent activity
+                            </strong>
 
-                            <span>New term fees</span>
+                            <span>
+                                There is no activity to display yet.
+                            </span>
 
                         </div>
-
-                        <time>6 hours ago</time>
 
                     </div>
 
-
-                    <div class="activity-item">
-
-                        <div class="activity-icon red-activity">
-                            <i class="fas fa-bell"></i>
-                        </div>
-
-                        <div class="activity-info">
-
-                            <strong>Outstanding fee reminder</strong>
-
-                            <span>15 students</span>
-
-                        </div>
-
-                        <time>8 hours ago</time>
-
-                    </div>
-
-
-                    <div class="activity-item">
-
-                        <div class="activity-icon purple-activity">
-                            <i class="fas fa-file-lines"></i>
-                        </div>
-
-                        <div class="activity-info">
-
-                            <strong>Monthly report generated</strong>
-
-                            <span>June 2025</span>
-
-                        </div>
-
-                        <time>1 day ago</time>
-
-                    </div>
+                    {% endfor %}
 
 
                 </div>
 
             </div>
 
+
         </div>
 
     </div>
 
 </div>
+
+
+<!-- =========================================================
+     DYNAMIC CHART SCRIPT
+     
+     This does NOT replace your CSS.
+     It simply calculates the bar heights from real
+     database values.
+========================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const columns = document.querySelectorAll(
+        ".chart-column"
+    );
+
+    if (!columns.length) {
+        return;
+    }
+
+    let maximum = 0;
+
+    /*
+     * Find the largest value in the chart.
+     */
+    columns.forEach(function (column) {
+
+        const paid = parseFloat(
+            column.dataset.paid || 0
+        );
+
+        const outstanding = parseFloat(
+            column.dataset.outstanding || 0
+        );
+
+        maximum = Math.max(
+            maximum,
+            paid,
+            outstanding
+        );
+
+    });
+
+
+    /*
+     * If there is no money recorded yet,
+     * keep all bars at zero.
+     */
+    if (maximum <= 0) {
+
+        columns.forEach(function (column) {
+
+            const paidBar = column.querySelector(
+                ".bar.paid"
+            );
+
+            const outstandingBar = column.querySelector(
+                ".bar.outstanding"
+            );
+
+            if (paidBar) {
+                paidBar.style.height = "0%";
+            }
+
+            if (outstandingBar) {
+                outstandingBar.style.height = "0%";
+            }
+
+        });
+
+        return;
+    }
+
+
+    /*
+     * Convert actual amounts into percentages
+     * for the existing CSS bar chart.
+     */
+    columns.forEach(function (column) {
+
+        const paid = parseFloat(
+            column.dataset.paid || 0
+        );
+
+        const outstanding = parseFloat(
+            column.dataset.outstanding || 0
+        );
+
+
+        const paidHeight = (
+            paid / maximum
+        ) * 100;
+
+
+        const outstandingHeight = (
+            outstanding / maximum
+        ) * 100;
+
+
+        const paidBar = column.querySelector(
+            ".bar.paid"
+        );
+
+        const outstandingBar = column.querySelector(
+            ".bar.outstanding"
+        );
+
+
+        if (paidBar) {
+
+            paidBar.style.height =
+                paidHeight + "%";
+
+        }
+
+
+        if (outstandingBar) {
+
+            outstandingBar.style.height =
+                outstandingHeight + "%";
+
+        }
+
+    });
+
+});
+
+</script>
 
 {% endblock %}

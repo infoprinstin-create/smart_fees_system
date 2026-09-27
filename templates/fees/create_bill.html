@@ -11,18 +11,25 @@
 
 <div class="create-bill-page">
 
-    <!-- PAGE HEADER -->
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
     <div class="page-header">
 
         <div>
             <h1>Create Student Bill</h1>
+
             <p>
                 Create a term bill for a student using the applicable
                 fee structure and discount.
             </p>
         </div>
 
-        <a href="{% url 'fees_structure' %}" class="back-button">
+        <a
+            href="{% url 'fees_structure' %}"
+            class="back-button"
+        >
             <i class="fas fa-arrow-left"></i>
             <span>Back to Fee Structure</span>
         </a>
@@ -30,10 +37,17 @@
     </div>
 
 
-    <!-- MAIN BILL CARD -->
+    <!-- =====================================================
+         MAIN BILL CARD
+    ====================================================== -->
+
     <div class="bill-card">
 
-        <!-- STUDENT SEARCH -->
+
+        <!-- =================================================
+             STUDENT SEARCH
+        ================================================== -->
+
         <div class="section">
 
             <div class="section-title">
@@ -44,13 +58,19 @@
 
                 <div>
                     <h2>Select Student</h2>
-                    <p>Search by student ID, name or class.</p>
+
+                    <p>
+                        Search by student ID, name or class.
+                    </p>
                 </div>
 
             </div>
 
 
             <div class="student-search-area">
+
+
+                <!-- SEARCH TYPE -->
 
                 <div class="search-type">
 
@@ -77,6 +97,8 @@
                 </div>
 
 
+                <!-- SEARCH BOX -->
+
                 <div class="student-search-box">
 
                     <label for="student_search">
@@ -101,7 +123,8 @@
             </div>
 
 
-            <!-- AJAX RESULTS -->
+            <!-- SEARCH RESULTS -->
+
             <div
                 id="student-results"
                 class="student-results"
@@ -109,6 +132,7 @@
 
 
             <!-- SELECTED STUDENT -->
+
             <div
                 id="selected-student"
                 class="selected-student"
@@ -116,7 +140,9 @@
             >
 
                 <div class="student-avatar">
+
                     <i class="fas fa-user"></i>
+
                 </div>
 
                 <div class="selected-student-info">
@@ -148,7 +174,10 @@
         </div>
 
 
-        <!-- BILL DETAILS -->
+        <!-- =================================================
+             BILL DETAILS
+        ================================================== -->
+
         <div
             id="bill-details"
             class="section"
@@ -158,23 +187,34 @@
             <div class="section-title">
 
                 <div class="section-icon purple">
+
                     <i class="fas fa-file-invoice-dollar"></i>
+
                 </div>
 
                 <div>
+
                     <h2>Bill Details</h2>
+
                     <p>
                         Select the academic year, term and discount
                         for this bill.
                     </p>
+
                 </div>
 
             </div>
 
 
+            <!-- =================================================
+                 FORM GRID
+            ================================================== -->
+
             <div class="form-grid">
 
+
                 <!-- ACADEMIC YEAR -->
+
                 <div class="form-group">
 
                     <label for="academic_year">
@@ -183,7 +223,11 @@
 
                     <select id="academic_year">
 
-                        <option value="" selected disabled>
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
                             Select Academic Year
                         </option>
 
@@ -213,6 +257,7 @@
 
 
                 <!-- TERM -->
+
                 <div class="form-group">
 
                     <label for="term">
@@ -221,7 +266,11 @@
 
                     <select id="term">
 
-                        <option value="" selected disabled>
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
                             Select Term
                         </option>
 
@@ -243,6 +292,7 @@
 
 
                 <!-- DISCOUNT -->
+
                 <div class="form-group">
 
                     <label for="discount">
@@ -282,27 +332,41 @@
             </div>
 
 
-            <!-- FEE PREVIEW -->
+            <!-- =================================================
+                 FEE PREVIEW
+            ================================================== -->
+
             <div class="fee-preview">
 
                 <div class="preview-header">
 
                     <div>
-                        <h3>Fee Summary</h3>
+
+                        <h3>
+                            Fee Summary
+                        </h3>
 
                         <p id="fee-summary-description">
                             Select an academic year and term.
                         </p>
+
                     </div>
 
                     <div class="preview-icon">
+
                         <i class="fas fa-calculator"></i>
+
                     </div>
 
                 </div>
 
 
+                <!-- FEE LINES -->
+
                 <div class="fee-lines">
+
+
+                    <!-- REGISTRATION -->
 
                     <div class="fee-line">
 
@@ -317,6 +381,8 @@
                     </div>
 
 
+                    <!-- TUITION -->
+
                     <div class="fee-line">
 
                         <span>
@@ -329,6 +395,8 @@
 
                     </div>
 
+
+                    <!-- EXAMINATION -->
 
                     <div class="fee-line">
 
@@ -343,6 +411,8 @@
                     </div>
 
 
+                    <!-- LIBRARY -->
+
                     <div class="fee-line">
 
                         <span>
@@ -355,6 +425,8 @@
 
                     </div>
 
+
+                    <!-- ACTIVITY -->
 
                     <div class="fee-line">
 
@@ -371,6 +443,8 @@
                 </div>
 
 
+                <!-- ORIGINAL TOTAL -->
+
                 <div class="fee-total">
 
                     <span>
@@ -384,6 +458,8 @@
                 </div>
 
 
+                <!-- DISCOUNT -->
+
                 <div class="discount-line">
 
                     <span>
@@ -396,6 +472,8 @@
 
                 </div>
 
+
+                <!-- AMOUNT DUE -->
 
                 <div class="amount-due">
 
@@ -412,7 +490,10 @@
             </div>
 
 
-            <!-- CREATE BUTTON -->
+            <!-- =================================================
+                 ACTION BUTTONS
+            ================================================== -->
+
             <div class="form-actions">
 
                 <a
@@ -444,6 +525,7 @@
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
+
 
     // =====================================================
     // ELEMENTS
@@ -488,6 +570,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const createBillButton =
         document.getElementById("create-bill-button");
 
+
     let selectedStudent = null;
 
     let searchTimer = null;
@@ -501,17 +584,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let cookieValue = null;
 
-        if (
-            document.cookie &&
-            document.cookie !== ""
-        ) {
+        if (document.cookie && document.cookie !== "") {
 
             const cookies =
                 document.cookie.split(";");
 
-            for (
-                let cookie of cookies
-            ) {
+            for (let cookie of cookies) {
 
                 cookie = cookie.trim();
 
@@ -519,8 +597,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     cookie.substring(
                         0,
                         name.length + 1
-                    ) ===
-                    name + "="
+                    ) === name + "="
                 ) {
 
                     cookieValue =
@@ -540,6 +617,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
+    // MONEY FORMAT
+    // =====================================================
+
+    function formatMoney(value) {
+
+        const number =
+            parseFloat(value) || 0;
+
+        return "GH₵ " +
+            number.toLocaleString(
+                "en-GH",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+    }
+
+
+    // =====================================================
     // STUDENT SEARCH
     // =====================================================
 
@@ -555,9 +652,9 @@ document.addEventListener("DOMContentLoaded", function () {
             resultsBox.innerHTML = "";
 
             if (!value) {
-
                 return;
             }
+
 
             searchTimer =
                 setTimeout(
@@ -576,6 +673,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             value
                         );
 
+
                         fetch(
                             "{% url 'student_payment_lookup' %}?" +
                             params.toString()
@@ -592,21 +690,23 @@ document.addEventListener("DOMContentLoaded", function () {
                                 }
 
                                 return response.json();
-
                             }
                         )
 
                         .then(
                             data => {
 
-                                resultsBox.innerHTML =
-                                    "";
+                                resultsBox.innerHTML = "";
+
 
                                 if (!data.success) {
 
                                     resultsBox.innerHTML = `
                                         <div class="search-message">
-                                            ${data.message || "No student found."}
+                                            ${
+                                                data.message ||
+                                                "No student found."
+                                            }
                                         </div>
                                     `;
 
@@ -655,17 +755,26 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <div class="result-info">
 
                                                 <strong>
-                                                    ${student.name}
+                                                    ${
+                                                        student.name ||
+                                                        "Unknown Student"
+                                                    }
                                                 </strong>
 
                                                 <span>
                                                     ID:
-                                                    ${student.student_id}
+                                                    ${
+                                                        student.student_id ||
+                                                        "—"
+                                                    }
                                                 </span>
 
                                                 <span>
                                                     Class:
-                                                    ${student.class}
+                                                    ${
+                                                        student.class ||
+                                                        "—"
+                                                    }
                                                 </span>
 
                                             </div>
@@ -673,6 +782,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                             <i class="fas fa-chevron-right"></i>
 
                                         `;
+
 
                                         item.addEventListener(
                                             "click",
@@ -684,6 +794,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                             }
                                         );
+
 
                                         resultsBox.appendChild(
                                             item
@@ -708,7 +819,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                         Unable to search students.
                                     </div>
                                 `;
-
                             }
                         );
 
@@ -729,25 +839,32 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedStudent =
             student;
 
+
         selectedStudentName.textContent =
             student.name || "—";
+
 
         selectedStudentId.textContent =
             "Student ID: " +
             (student.student_id || "—");
 
+
         selectedStudentClass.textContent =
             "Class: " +
             (student.class || "—");
 
+
         selectedStudentBox.style.display =
             "flex";
+
 
         billDetails.style.display =
             "block";
 
+
         resultsBox.innerHTML =
             "";
+
 
         searchInput.value =
             "";
@@ -761,6 +878,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.querySelector(
                 `#academic_year option[value="${student.academic_year}"]`
             );
+
 
         if (yearOption) {
 
@@ -804,6 +922,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         resetFeePreview();
 
+
         createBillButton.disabled =
             true;
 
@@ -817,9 +936,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadFeeInformation() {
 
         if (!selectedStudent) {
-
             return;
         }
+
 
         const year =
             academicYear.value;
@@ -827,10 +946,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const selectedTerm =
             term.value;
 
-        if (
-            !year ||
-            !selectedTerm
-        ) {
+
+        if (!year || !selectedTerm) {
 
             resetFeePreview();
 
@@ -844,15 +961,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const params =
             new URLSearchParams();
 
+
         params.append(
             "student_id",
             selectedStudent.id
         );
 
+
         params.append(
             "academic_year",
             year
         );
+
 
         params.append(
             "term",
@@ -916,12 +1036,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         fees.registration_fee
                     );
 
+
                 document.getElementById(
                     "tuition-fee"
                 ).textContent =
                     formatMoney(
                         fees.tuition_fee
                     );
+
 
                 document.getElementById(
                     "examination-fee"
@@ -930,12 +1052,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         fees.examination_fee
                     );
 
+
                 document.getElementById(
                     "library-fee"
                 ).textContent =
                     formatMoney(
                         fees.library_fee
                     );
+
 
                 document.getElementById(
                     "activity-fee"
@@ -946,7 +1070,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // =========================================
-                // TOTAL
+                // ORIGINAL TOTAL
                 // =========================================
 
                 document.getElementById(
@@ -983,18 +1107,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // =========================================
-                // UPDATE DISCOUNT
+                // SET DISCOUNT SELECTOR
                 // =========================================
 
                 const returnedDiscount =
                     parseFloat(
                         fees.discount_percent
-                    );
+                    ) || 0;
+
 
                 const discountOption =
                     document.querySelector(
                         `#discount option[value="${returnedDiscount}"]`
                     );
+
 
                 if (discountOption) {
 
@@ -1015,6 +1141,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     fees.amount_owed
                 );
 
+
+                // =========================================
+                // DESCRIPTION
+                // =========================================
 
                 document.getElementById(
                     "fee-summary-description"
@@ -1040,12 +1170,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     error
                 );
 
+
                 resetFeePreview();
+
 
                 document.getElementById(
                     "fee-summary-description"
                 ).textContent =
                     "Unable to load fee information.";
+
 
                 createBillButton.disabled =
                     true;
@@ -1070,6 +1203,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "total-paid-line"
             );
 
+
         let owedLine =
             document.getElementById(
                 "amount-owed-line"
@@ -1087,11 +1221,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     "div"
                 );
 
+
             paidLine.id =
                 "total-paid-line";
 
+
             paidLine.className =
                 "fee-line";
+
 
             paidLine.innerHTML = `
                 <span>
@@ -1103,10 +1240,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 </strong>
             `;
 
+
             const feeTotal =
                 document.querySelector(
                     ".fee-total"
                 );
+
 
             feeTotal.parentNode.insertBefore(
                 paidLine,
@@ -1127,11 +1266,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     "div"
                 );
 
+
             owedLine.id =
                 "amount-owed-line";
 
+
             owedLine.className =
                 "amount-owed";
+
 
             owedLine.innerHTML = `
                 <span>
@@ -1143,10 +1285,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 </strong>
             `;
 
+
             const amountDue =
                 document.querySelector(
                     ".amount-due"
                 );
+
 
             amountDue.parentNode.insertBefore(
                 owedLine,
@@ -1163,6 +1307,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 totalPaid
             );
 
+
         document.getElementById(
             "amount-owed"
         ).textContent =
@@ -1174,7 +1319,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // ACADEMIC YEAR
+    // ACADEMIC YEAR CHANGE
     // =====================================================
 
     academicYear.addEventListener(
@@ -1188,7 +1333,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // TERM
+    // TERM CHANGE
     // =====================================================
 
     term.addEventListener(
@@ -1202,7 +1347,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // DISCOUNT
+    // DISCOUNT CHANGE
     // =====================================================
 
     discount.addEventListener(
@@ -1226,29 +1371,54 @@ document.addEventListener("DOMContentLoaded", function () {
                 "original-total"
             );
 
+
         const originalText =
             originalElement.textContent
                 .replace(/[^\d.-]/g, "");
+
 
         const originalTotal =
             parseFloat(
                 originalText
             ) || 0;
 
+
         const discountPercent =
             parseFloat(
                 discount.value
             ) || 0;
+
+
+        // =================================================
+        // CALCULATE DISCOUNT AMOUNT
+        // =================================================
 
         const discountAmount =
             originalTotal *
             discountPercent /
             100;
 
-        const amountDue =
+
+        // =================================================
+        // CALCULATE FINAL AMOUNT
+        // =================================================
+
+        let amountDue =
             originalTotal -
             discountAmount;
 
+
+        if (amountDue < 0) {
+
+            amountDue =
+                0;
+
+        }
+
+
+        // =================================================
+        // DISPLAY DISCOUNT
+        // =================================================
 
         document.getElementById(
             "discount-amount"
@@ -1257,6 +1427,11 @@ document.addEventListener("DOMContentLoaded", function () {
             formatMoney(
                 discountAmount
             );
+
+
+        // =================================================
+        // DISPLAY FINAL AMOUNT
+        // =================================================
 
         document.getElementById(
             "amount-due"
@@ -1275,20 +1450,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 "total-paid"
             );
 
+
         if (paidElement) {
 
             const paidText =
                 paidElement.textContent
                     .replace(/[^\d.-]/g, "");
 
+
             const totalPaid =
                 parseFloat(
                     paidText
                 ) || 0;
 
+
             let amountOwed =
                 amountDue -
                 totalPaid;
+
 
             if (amountOwed < 0) {
 
@@ -1297,10 +1476,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
+
             const owedElement =
                 document.getElementById(
                     "amount-owed"
                 );
+
 
             if (owedElement) {
 
@@ -1317,7 +1498,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // RESET FEE PREVIEW
+    // RESET PREVIEW
     // =====================================================
 
     function resetFeePreview() {
@@ -1349,6 +1530,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         id
                     );
 
+
                 if (element) {
 
                     element.textContent =
@@ -1377,6 +1559,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "total-paid"
             );
 
+
         const owed =
             document.getElementById(
                 "amount-owed"
@@ -1390,33 +1573,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
         if (owed) {
 
             owed.textContent =
                 "GH₵ 0.00";
 
         }
-
-    }
-
-
-    // =====================================================
-    // MONEY FORMAT
-    // =====================================================
-
-    function formatMoney(value) {
-
-        const number =
-            parseFloat(value) || 0;
-
-        return "GH₵ " +
-            number.toLocaleString(
-                "en-GH",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            );
 
     }
 
@@ -1432,22 +1595,29 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedStudent =
                 null;
 
+
             selectedStudentBox.style.display =
                 "none";
+
 
             billDetails.style.display =
                 "none";
 
+
             searchInput.value =
                 "";
+
 
             resultsBox.innerHTML =
                 "";
 
+
             resetFeePreview();
+
 
             createBillButton.disabled =
                 true;
+
 
             searchInput.focus();
 
@@ -1462,6 +1632,7 @@ document.addEventListener("DOMContentLoaded", function () {
     createBillButton.addEventListener(
         "click",
         function () {
+
 
             // ---------------------------------------------
             // CHECK STUDENT
@@ -1484,11 +1655,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const academicYearValue =
                 academicYear.value;
 
+
             const termValue =
                 term.value;
 
+
             const discountValue =
-                discount.value;
+                discount.value || "0";
 
 
             // ---------------------------------------------
@@ -1520,11 +1693,46 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // ---------------------------------------------
+            // CONFIRM DISCOUNT
+            // ---------------------------------------------
+
+            const originalText =
+                document.getElementById(
+                    "original-total"
+                ).textContent
+                .replace(/[^\d.-]/g, "");
+
+
+            const originalTotal =
+                parseFloat(
+                    originalText
+                ) || 0;
+
+
+            const discountPercent =
+                parseFloat(
+                    discountValue
+                ) || 0;
+
+
+            const calculatedDiscount =
+                originalTotal *
+                discountPercent /
+                100;
+
+
+            const calculatedAmountDue =
+                originalTotal -
+                calculatedDiscount;
+
+
+            // ---------------------------------------------
             // DISABLE BUTTON
             // ---------------------------------------------
 
             createBillButton.disabled =
                 true;
+
 
             createBillButton.innerHTML = `
                 <i class="fas fa-spinner fa-spin"></i>
@@ -1539,24 +1747,45 @@ document.addEventListener("DOMContentLoaded", function () {
             const formData =
                 new FormData();
 
+
             formData.append(
                 "student_id",
                 selectedStudent.id
             );
+
 
             formData.append(
                 "academic_year",
                 academicYearValue
             );
 
+
             formData.append(
                 "term",
                 termValue
             );
 
+
             formData.append(
                 "discount_percent",
                 discountValue
+            );
+
+
+            // IMPORTANT:
+            // Django calculates the real discount again.
+            // We do NOT trust browser calculations.
+            // These two values are only sent for reference.
+
+            formData.append(
+                "discount_amount",
+                calculatedDiscount.toFixed(2)
+            );
+
+
+            formData.append(
+                "amount_due",
+                calculatedAmountDue.toFixed(2)
             );
 
 
@@ -1583,6 +1812,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             )
 
+
             .then(
                 response => {
 
@@ -1607,29 +1837,92 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     }
 
+
                     return response.json();
 
                 }
             )
 
+
             .then(
                 data => {
 
+
+                    // =====================================
+                    // SUCCESS
+                    // =====================================
+
                     if (data.success) {
 
+                        const savedOriginal =
+                            parseFloat(
+                                data.base_amount
+                            ) || 0;
+
+
+                        const savedDiscountPercent =
+                            parseFloat(
+                                data.discount_percent
+                            ) || 0;
+
+
+                        const savedDiscountAmount =
+                            parseFloat(
+                                data.discount_amount
+                            ) || 0;
+
+
+                        const savedAmountDue =
+                            parseFloat(
+                                data.amount_due
+                            ) || 0;
+
+
                         alert(
-                            "Bill created successfully!\n\n" +
+                            "BILL CREATED SUCCESSFULLY!\n\n" +
+
                             "Bill ID: " +
-                            data.bill_id
+                            data.bill_id +
+
+                            "\n\n" +
+
+                            "Original Amount: " +
+                            formatMoney(
+                                savedOriginal
+                            ) +
+
+                            "\nDiscount: " +
+                            savedDiscountPercent +
+                            "%" +
+
+                            "\nDiscount Amount: " +
+                            formatMoney(
+                                savedDiscountAmount
+                            ) +
+
+                            "\nAmount Due: " +
+                            formatMoney(
+                                savedAmountDue
+                            )
                         );
+
+
+                        // ---------------------------------
+                        // GO BACK TO FEE STRUCTURE
+                        // ---------------------------------
 
                         window.location.href =
                             "{% url 'fees_structure' %}";
+
 
                         return;
 
                     }
 
+
+                    // =====================================
+                    // ERROR FROM DJANGO
+                    // =====================================
 
                     alert(
                         data.message ||
@@ -1642,6 +1935,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     createBillButton.disabled =
                         false;
 
+
                     createBillButton.innerHTML = `
                         <i class="fas fa-file-circle-plus"></i>
                         Create Bill
@@ -1650,6 +1944,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             )
 
+
             .catch(
                 error => {
 
@@ -1657,6 +1952,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Create Bill Error:",
                         error
                     );
+
 
                     alert(
                         "Unable to create the bill.\n\n" +
@@ -1668,6 +1964,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     createBillButton.disabled =
                         false;
+
 
                     createBillButton.innerHTML = `
                         <i class="fas fa-file-circle-plus"></i>

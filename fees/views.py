@@ -1245,13 +1245,385 @@ def student_payment_lookup(request):
 # ADMINISTRATOR ONLY
 # =========================================================
 
+from collections import defaultdict
+from decimal import Decimal
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncMonth
+from django.shortcuts import render
+from django.utils import timezone
+
+from .models import (
+    Student,
+    SchoolSettings,
+    Payment,
+    Bill,
+)
+
+# Keep your existing role_required import
+# from .decorators import role_required
+
+
 @login_required
 @role_required("administrator")
 def home(request):
 
+    # =====================================================
+    # CURRENT DATE / ACADEMIC YEAR
+    # =====================================================
+
+    today = timezone.localdate()
+
+    school_settings = SchoolSettings.objects.first()
+
+    if school_settings:
+        current_academic_year = school_settings.academic_year
+    else:
+        current_academic_year = f"{today.year}/{today.year + 1}"
+
+    # =====================================================
+    # TOTAL ACTIVE STUDENTS
+    # =====================================================
+
+    total_students = Student.objects.filter(
+        status="Active"
+    ).count()
+
+    # =====================================================
+    # CURRENT ACADEMIC YEAR BILLS
+    #
+    # IMPORTANT:
+    # We use Bill.amount_due.
+    #
+    # This means discounts are already included.
+    # =====================================================
+
+    current_bills = Bill.objects.filter(
+        academic_year=current_academic_year
+    )
+
+    total_fees_due = (
+        current_bills.aggregate(
+            total=Sum("amount_due")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    # =====================================================
+    # TOTAL PAYMENTS
+    # =====================================================
+
+    current_payments = Payment.objects.filter(
+        academic_year=current_academic_year
+    )
+
+    total_paid = (
+        current_payments.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    # =====================================================
+    # OUTSTANDING
+    # =====================================================
+
+    outstanding = total_fees_due - total_paid
+
+    if outstanding < Decimal("0.00"):
+        outstanding = Decimal("0.00")
+
+    # =====================================================
+    # RECENT PAYMENTS
+    # =====================================================
+
+    recent_payments = (
+        current_payments
+        .select_related("student")
+        .order_by("-payment_date", "-created_at")[:5]
+    )
+
+    # =====================================================
+    # STUDENTS BY CLASS
+    # =====================================================
+
+    class_counts = (
+        Student.objects
+        .filter(status="Active")
+        .values("student_class")
+        .annotate(total=Count("id"))
+        .order_by("student_class")
+    )
+
+    class_distribution = []
+
+    for item in class_counts:
+
+        count = item["total"]
+
+        percentage = (
+            (count / total_students) * 100
+            if total_students
+            else 0
+        )
+
+        class_distribution.append({
+            "name": item["student_class"],
+            "count": count,
+            "percentage": round(percentage, 1),
+        })
+
+    # =====================================================
+    # STUDENTS BY SCHOOL LEVEL
+    #
+    # Student.student_class is stored as text, so we use
+    # SchoolClass to determine the level.
+    # =====================================================
+
+    school_classes = SchoolClass.objects.all()
+
+    level_class_names = defaultdict(set)
+
+    for school_class in school_classes:
+        level_class_names[
+            school_class.level
+        ].add(school_class.name)
+
+    level_distribution = []
+
+    level_names = [
+        "Kindergarten",
+        "Primary School",
+        "Junior High School",
+        "Playgroup",
+    ]
+
+    for level in level_names:
+
+        class_names = level_class_names.get(
+            level,
+            set()
+        )
+
+        count = Student.objects.filter(
+            status="Active",
+            student_class__in=class_names
+        ).count()
+
+        percentage = (
+            (count / total_students) * 100
+            if total_students
+            else 0
+        )
+
+        level_distribution.append({
+            "name": level,
+            "count": count,
+            "percentage": round(percentage, 1),
+        })
+
+    # =====================================================
+    # MONTHLY FEE COLLECTION
+    #
+    # We calculate:
+    #
+    # 1. Bills created each month
+    # 2. Payments received each month
+    # 3. Cumulative outstanding at the end of each month
+    #
+    # This is more accurate than simply doing:
+    # monthly bills - monthly payments
+    # =====================================================
+
+    monthly_bills = (
+        current_bills
+        .annotate(month=TruncMonth("created_at"))
+        .values("month")
+        .annotate(total=Sum("amount_due"))
+        .order_by("month")
+    )
+
+    monthly_payments = (
+        current_payments
+        .annotate(month=TruncMonth("payment_date"))
+        .values("month")
+        .annotate(total=Sum("amount"))
+        .order_by("month")
+    )
+
+    bills_by_month = {
+        item["month"].month: item["total"]
+        for item in monthly_bills
+    }
+
+    payments_by_month = {
+        item["month"].month: item["total"]
+        for item in monthly_payments
+    }
+
+    month_names = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
+
+    monthly_chart = []
+
+    cumulative_billed = Decimal("0.00")
+    cumulative_paid = Decimal("0.00")
+
+    for month_number in range(1, 13):
+
+        billed = bills_by_month.get(
+            month_number,
+            Decimal("0.00")
+        )
+
+        paid = payments_by_month.get(
+            month_number,
+            Decimal("0.00")
+        )
+
+        cumulative_billed += billed
+        cumulative_paid += paid
+
+        month_outstanding = (
+            cumulative_billed -
+            cumulative_paid
+        )
+
+        if month_outstanding < Decimal("0.00"):
+            month_outstanding = Decimal("0.00")
+
+        monthly_chart.append({
+            "month": month_names[month_number - 1],
+            "billed": billed,
+            "paid": paid,
+            "outstanding": month_outstanding,
+        })
+
+    # =====================================================
+    # RECENT ACTIVITY
+    #
+    # Built from actual database records.
+    # =====================================================
+
+    activities = []
+
+    # Recent payments
+    recent_payment_activity = (
+        current_payments
+        .select_related("student")
+        .order_by("-created_at")[:5]
+    )
+
+    for payment in recent_payment_activity:
+
+        activities.append({
+            "type": "payment",
+            "icon": "fa-money-bill-wave",
+            "title": (
+                f"Payment received from "
+                f"{payment.student.first_name} "
+                f"{payment.student.last_name}"
+            ),
+            "description": (
+                f"GH₵ {payment.amount:,.2f}"
+            ),
+            "date": payment.created_at,
+        })
+
+    # Recently added students
+    recent_students = (
+        Student.objects
+        .filter(status="Active")
+        .order_by("-date_registered")[:5]
+    )
+
+    for student in recent_students:
+
+        activities.append({
+            "type": "student",
+            "icon": "fa-user-plus",
+            "title": "New student added",
+            "description": (
+                f"{student.first_name} "
+                f"{student.last_name} "
+                f"({student.student_class})"
+            ),
+            "date": student.date_registered,
+        })
+
+    # Recently created bills
+    recent_bills = (
+        current_bills
+        .select_related("student")
+        .order_by("-created_at")[:5]
+    )
+
+    for bill in recent_bills:
+
+        activities.append({
+            "type": "bill",
+            "icon": "fa-file-invoice",
+            "title": (
+                f"Bill created for "
+                f"{bill.student.first_name} "
+                f"{bill.student.last_name}"
+            ),
+            "description": (
+                f"{bill.term} - "
+                f"GH₵ {bill.amount_due:,.2f}"
+            ),
+            "date": bill.created_at,
+        })
+
+    # Sort all activity together
+    activities.sort(
+        key=lambda item: item["date"],
+        reverse=True
+    )
+
+    recent_activity = activities[:5]
+
+    # =====================================================
+    # DASHBOARD CONTEXT
+    # =====================================================
+
+    context = {
+        "current_date": today,
+        "current_academic_year": current_academic_year,
+
+        "total_students": total_students,
+
+        "total_fees_due": total_fees_due,
+        "total_paid": total_paid,
+        "outstanding": outstanding,
+
+        "recent_payments": recent_payments,
+
+        "class_distribution": class_distribution,
+        "level_distribution": level_distribution,
+
+        "monthly_chart": monthly_chart,
+
+        "recent_activity": recent_activity,
+    }
+
     return render(
         request,
-        "fees/home.html"
+        "fees/home.html",
+        context
     )
 
 
@@ -1344,15 +1716,681 @@ def add_fee_structure(request):
 # SCHOOL FEES
 # =========================================================
 
+# =========================================================
+# REPORTS
+# =========================================================
+
+from collections import defaultdict
+from decimal import Decimal
+
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncMonth
+from django.shortcuts import render
+from django.utils import timezone
+
+from .models import (
+    Student,
+    SchoolSettings,
+    Payment,
+    Bill,
+    FeeStructure,
+)
+
+
 @login_required
-@role_required("school_fees")
+@role_required("administrator")
 def reports(request):
+
+    today = timezone.localdate()
+
+    # -----------------------------------------------------
+    # CURRENT ACADEMIC YEAR
+    # -----------------------------------------------------
+
+    school_settings = SchoolSettings.objects.first()
+
+    if school_settings:
+        current_academic_year = school_settings.academic_year
+    else:
+        current_academic_year = f"{today.year}/{today.year + 1}"
+
+
+    # -----------------------------------------------------
+    # CURRENT MONTH
+    # -----------------------------------------------------
+
+    current_month = today.month
+    current_year = today.year
+
+
+    # -----------------------------------------------------
+    # STUDENTS
+    # -----------------------------------------------------
+
+    total_students = Student.objects.filter(
+        status="Active"
+    ).count()
+
+
+    # -----------------------------------------------------
+    # BILLS
+    # IMPORTANT:
+    # Use Bill.amount_due because this includes discounts.
+    # -----------------------------------------------------
+
+    current_bills = Bill.objects.filter(
+        academic_year=current_academic_year
+    )
+
+    total_fees_due = (
+        current_bills.aggregate(
+            total=Sum("amount_due")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    # -----------------------------------------------------
+    # PAYMENTS
+    # -----------------------------------------------------
+
+    current_payments = Payment.objects.filter(
+        academic_year=current_academic_year
+    )
+
+    total_revenue = (
+        current_payments.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    total_payment_count = current_payments.count()
+
+
+    # -----------------------------------------------------
+    # OUTSTANDING
+    # -----------------------------------------------------
+
+    outstanding = (
+        total_fees_due - total_revenue
+    )
+
+    if outstanding < Decimal("0.00"):
+        outstanding = Decimal("0.00")
+
+
+    # -----------------------------------------------------
+    # CURRENT MONTH PAYMENTS
+    # -----------------------------------------------------
+
+    monthly_payments = current_payments.filter(
+        payment_date__year=current_year,
+        payment_date__month=current_month
+    )
+
+    monthly_revenue = (
+        monthly_payments.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    monthly_payment_count = monthly_payments.count()
+
+
+    # -----------------------------------------------------
+    # CURRENT MONTH BILLS
+    # -----------------------------------------------------
+
+    monthly_bills = current_bills.filter(
+        created_at__year=current_year,
+        created_at__month=current_month
+    )
+
+    monthly_billed = (
+        monthly_bills.aggregate(
+            total=Sum("amount_due")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    # -----------------------------------------------------
+    # PENDING PAYMENT COUNT
+    #
+    # Count bills that still have money outstanding.
+    # -----------------------------------------------------
+
+    pending_payments = 0
+
+    student_bill_data = defaultdict(Decimal)
+
+    for bill in current_bills:
+
+        student_bill_data[bill.student_id] += (
+            bill.amount_due
+        )
+
+    student_payment_data = defaultdict(Decimal)
+
+    for payment in current_payments:
+
+        student_payment_data[payment.student_id] += (
+            payment.amount
+        )
+
+    for student_id, billed in student_bill_data.items():
+
+        paid = student_payment_data.get(
+            student_id,
+            Decimal("0.00")
+        )
+
+        if billed > paid:
+            pending_payments += 1
+
+
+    # -----------------------------------------------------
+    # MONTHLY PAYMENT CHART
+    # -----------------------------------------------------
+
+    monthly_payment_data = (
+        current_payments
+        .annotate(
+            month=TruncMonth("payment_date")
+        )
+        .values("month")
+        .annotate(
+            total=Sum("amount")
+        )
+        .order_by("month")
+    )
+
+
+    monthly_bill_data = (
+        current_bills
+        .annotate(
+            month=TruncMonth("created_at")
+        )
+        .values("month")
+        .annotate(
+            total=Sum("amount_due")
+        )
+        .order_by("month")
+    )
+
+
+    payments_by_month = {
+        item["month"].month:
+            item["total"]
+        for item in monthly_payment_data
+    }
+
+
+    bills_by_month = {
+        item["month"].month:
+            item["total"]
+        for item in monthly_bill_data
+    }
+
+
+    month_names = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
+
+
+    monthly_chart = []
+
+    max_chart_value = Decimal("0.00")
+
+
+    for month_number in range(1, 13):
+
+        paid = payments_by_month.get(
+            month_number,
+            Decimal("0.00")
+        )
+
+        billed = bills_by_month.get(
+            month_number,
+            Decimal("0.00")
+        )
+
+        pending = billed - paid
+
+        if pending < Decimal("0.00"):
+            pending = Decimal("0.00")
+
+
+        # Simple overdue representation.
+        # Bills that remain unpaid are shown here.
+        overdue = Decimal("0.00")
+
+
+        max_chart_value = max(
+            max_chart_value,
+            paid,
+            pending,
+            overdue
+        )
+
+
+        monthly_chart.append({
+            "month": month_names[
+                month_number - 1
+            ],
+            "paid": paid,
+            "pending": pending,
+            "overdue": overdue,
+        })
+
+
+    # Avoid division by zero
+    if max_chart_value <= Decimal("0.00"):
+        max_chart_value = Decimal("1.00")
+
+
+    # Calculate chart heights
+    for item in monthly_chart:
+
+        item["paid_height"] = float(
+            (
+                item["paid"] /
+                max_chart_value
+            ) * 100
+        )
+
+        item["pending_height"] = float(
+            (
+                item["pending"] /
+                max_chart_value
+            ) * 100
+        )
+
+        item["overdue_height"] = float(
+            (
+                item["overdue"] /
+                max_chart_value
+            ) * 100
+        )
+
+
+    # -----------------------------------------------------
+    # FEE CATEGORY TOTALS
+    # -----------------------------------------------------
+
+    fee_structures = FeeStructure.objects.filter(
+        academic_year=current_academic_year
+    )
+
+
+    tuition_total = (
+        fee_structures.aggregate(
+            total=Sum("tuition_fee")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    examination_total = (
+        fee_structures.aggregate(
+            total=Sum("examination_fee")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    library_total = (
+        fee_structures.aggregate(
+            total=Sum("library_fee")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    activity_total = (
+        fee_structures.aggregate(
+            total=Sum("activity_fee")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    registration_total = (
+        fee_structures.aggregate(
+            total=Sum("registration_fee")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    category_total = (
+        tuition_total
+        + examination_total
+        + library_total
+        + activity_total
+        + registration_total
+    )
+
+
+    fee_categories = []
+
+
+    categories = [
+        (
+            "Tuition Fee",
+            tuition_total,
+            "tuition"
+        ),
+        (
+            "Examination Fee",
+            examination_total,
+            "examination"
+        ),
+        (
+            "Library Fee",
+            library_total,
+            "library"
+        ),
+        (
+            "Activity Fee",
+            activity_total,
+            "activity"
+        ),
+        (
+            "Registration Fee",
+            registration_total,
+            "other"
+        ),
+    ]
+
+
+    for name, amount, css_class in categories:
+
+        percentage = (
+            (amount / category_total) * 100
+            if category_total > 0
+            else Decimal("0.00")
+        )
+
+        fee_categories.append({
+            "name": name,
+            "amount": amount,
+            "percentage": round(
+                percentage,
+                1
+            ),
+            "css_class": css_class,
+        })
+
+
+    # -----------------------------------------------------
+    # CLASS DISTRIBUTION
+    # -----------------------------------------------------
+
+    class_counts = (
+        Student.objects
+        .filter(status="Active")
+        .values("student_class")
+        .annotate(
+            total=Count("id")
+        )
+        .order_by("-total")
+    )
+
+
+    highest_class = None
+
+    if class_counts:
+
+        highest_class = class_counts[0]
+
+
+    # -----------------------------------------------------
+    # RECENT REPORT ACTIVITY
+    #
+    # These are based on actual database activity.
+    # -----------------------------------------------------
+
+    detailed_reports = []
+
+
+    # Fee collection report
+    if current_payments.exists():
+
+        latest_payment = current_payments.order_by(
+            "-created_at"
+        ).first()
+
+        detailed_reports.append({
+            "name": "Fee Collection Report",
+            "description": "Summary of all fee collections",
+            "date": latest_payment.created_at,
+            "icon": "fa-file-invoice",
+            "color": "green",
+        })
+
+
+    # Student payment report
+    if current_payments.exists():
+
+        latest_payment = current_payments.order_by(
+            "-created_at"
+        ).first()
+
+        detailed_reports.append({
+            "name": "Student Payment Report",
+            "description": "Individual student payment details",
+            "date": latest_payment.created_at,
+            "icon": "fa-users",
+            "color": "blue",
+        })
+
+
+    # Class report
+    if class_counts:
+
+        latest_student = Student.objects.filter(
+            status="Active"
+        ).order_by(
+            "-date_registered"
+        ).first()
+
+        detailed_reports.append({
+            "name": "Class-wise Report",
+            "description": "Student distribution by class",
+            "date": (
+                latest_student.date_registered
+                if latest_student
+                else today
+            ),
+            "icon": "fa-graduation-cap",
+            "color": "purple",
+        })
+
+
+    # Outstanding report
+    if outstanding > 0:
+
+        detailed_reports.append({
+            "name": "Outstanding Fees Report",
+            "description": "Students with outstanding payments",
+            "date": timezone.now(),
+            "icon": "fa-triangle-exclamation",
+            "color": "red",
+        })
+
+
+    # Monthly summary
+    detailed_reports.append({
+        "name": "Monthly Summary",
+        "description": "Income, billed fees and balance",
+        "date": timezone.now(),
+        "icon": "fa-chart-column",
+        "color": "orange",
+    })
+
+
+    # -----------------------------------------------------
+    # QUICK INSIGHTS
+    # -----------------------------------------------------
+
+    insights = []
+
+
+    if monthly_revenue > 0:
+
+        insights.append({
+            "color": "green",
+            "text": (
+                f"GH₵ {monthly_revenue:,.2f} "
+                f"has been collected this month."
+            ),
+        })
+
+
+    if pending_payments > 0:
+
+        insights.append({
+            "color": "orange",
+            "text": (
+                f"{pending_payments} student"
+                f"{'s' if pending_payments != 1 else ''} "
+                "still have outstanding payments."
+            ),
+        })
+
+
+    if highest_class:
+
+        class_percentage = (
+            (
+                highest_class["total"] /
+                total_students
+            ) * 100
+            if total_students
+            else 0
+        )
+
+        insights.append({
+            "color": "blue",
+            "text": (
+                f"{highest_class['student_class']} "
+                f"has the highest number of active students "
+                f"({highest_class['total']}, "
+                f"{class_percentage:.1f}%)."
+            ),
+        })
+
+
+    if fee_categories and category_total > 0:
+
+        highest_category = max(
+            fee_categories,
+            key=lambda item: item["amount"]
+        )
+
+        insights.append({
+            "color": "purple",
+            "text": (
+                f"{highest_category['name']} represents "
+                f"{highest_category['percentage']}% "
+                "of the fee structure."
+            ),
+        })
+
+
+    # -----------------------------------------------------
+    # NEXT MONTH
+    # -----------------------------------------------------
+
+    if current_month == 12:
+
+        next_month_name = "January"
+        next_month_year = current_year + 1
+
+    else:
+
+        next_month_name = month_names[
+            current_month
+        ]
+
+        next_month_year = current_year
+
+
+    next_report_date = (
+        f"01 {next_month_name} "
+        f"{next_month_year}"
+    )
+
+
+    # -----------------------------------------------------
+    # CONTEXT
+    # -----------------------------------------------------
+
+    context = {
+
+        "today": today,
+
+        "current_academic_year":
+            current_academic_year,
+
+        "total_revenue":
+            total_revenue,
+
+        "total_students":
+            total_students,
+
+        "total_payment_count":
+            total_payment_count,
+
+        "pending_payments":
+            pending_payments,
+
+        "monthly_revenue":
+            monthly_revenue,
+
+        "monthly_payment_count":
+            monthly_payment_count,
+
+        "monthly_chart":
+            monthly_chart,
+
+        "fee_categories":
+            fee_categories,
+
+        "category_total":
+            category_total,
+
+        "detailed_reports":
+            detailed_reports,
+
+        "insights":
+            insights,
+
+        "next_report_date":
+            next_report_date,
+    }
+
 
     return render(
         request,
-        "fees/reports.html"
+        "fees/reports.html",
+        context
     )
-
 
 # =========================================================
 # CLASSES
@@ -1463,6 +2501,7 @@ def classes(request):
     )
 
 
+
 # =========================================================
 # CREATE BILL
 # SCHOOL FEES
@@ -1472,68 +2511,43 @@ def classes(request):
 @role_required("school_fees")
 def create_bill(request):
 
-    # =====================================================
-    # ONLY POST CREATES A BILL
-    # =====================================================
-
     if request.method == "POST":
 
-        # -------------------------------------------------
-        # GET FORM VALUES
-        # -------------------------------------------------
-
         student_id = request.POST.get("student_id", "").strip()
-
-        academic_year = request.POST.get(
-            "academic_year",
-            ""
-        ).strip()
-
-        term = request.POST.get(
-            "term",
-            ""
-        ).strip()
-
+        academic_year = request.POST.get("academic_year", "").strip()
+        term = request.POST.get("term", "").strip()
         discount_percent = request.POST.get(
             "discount_percent",
             "0"
         ).strip()
-
 
         # -------------------------------------------------
         # VALIDATION
         # -------------------------------------------------
 
         if not student_id:
-
             return JsonResponse({
                 "success": False,
                 "message": "Student not selected."
             })
 
-
         if not academic_year:
-
             return JsonResponse({
                 "success": False,
                 "message": "Academic year not selected."
             })
 
-
         if not term:
-
             return JsonResponse({
                 "success": False,
                 "message": "Term not selected."
             })
 
-
-        # =================================================
-        # FIND STUDENT
-        # =================================================
+        # -------------------------------------------------
+        # STUDENT
+        # -------------------------------------------------
 
         try:
-
             student = Student.objects.get(
                 id=student_id
             )
@@ -1549,10 +2563,9 @@ def create_bill(request):
                 "message": "Student not found."
             })
 
-
-        # =================================================
-        # FIND FEE STRUCTURE
-        # =================================================
+        # -------------------------------------------------
+        # FEE STRUCTURE
+        # -------------------------------------------------
 
         try:
 
@@ -1574,23 +2587,17 @@ def create_bill(request):
                 )
             })
 
+        # -------------------------------------------------
+        # ORIGINAL TOTAL
+        # -------------------------------------------------
 
-        # =================================================
-        # ORIGINAL FEE
-        # =================================================
-
-        original_total = fee_structure.total_fee
-
-
-        # Make sure the amount is a Decimal
         original_total = Decimal(
-            str(original_total or "0")
+            str(fee_structure.total_fee or "0")
         )
 
-
-        # =================================================
+        # -------------------------------------------------
         # DISCOUNT
-        # =================================================
+        # -------------------------------------------------
 
         try:
 
@@ -1604,26 +2611,18 @@ def create_bill(request):
             ValueError
         ):
 
-            discount_percent = Decimal("0")
+            discount_percent = Decimal("0.00")
 
-
-        # -------------------------------------------------
-        # LIMIT DISCOUNT
-        # -------------------------------------------------
-
+        # Keep discount between 0 and 100
         if discount_percent < Decimal("0"):
-
             discount_percent = Decimal("0")
-
 
         if discount_percent > Decimal("100"):
-
             discount_percent = Decimal("100")
 
-
-        # =================================================
-        # CALCULATE DISCOUNT
-        # =================================================
+        # -------------------------------------------------
+        # CALCULATE DISCOUNT AMOUNT
+        # -------------------------------------------------
 
         discount_amount = (
             original_total *
@@ -1631,25 +2630,29 @@ def create_bill(request):
             Decimal("100")
         )
 
+        discount_amount = discount_amount.quantize(
+            Decimal("0.01")
+        )
 
-        # =================================================
-        # CALCULATE AMOUNT DUE
-        # =================================================
+        # -------------------------------------------------
+        # FINAL AMOUNT DUE
+        # -------------------------------------------------
 
         amount_due = (
             original_total -
             discount_amount
         )
 
-
         if amount_due < Decimal("0"):
-
             amount_due = Decimal("0")
 
+        amount_due = amount_due.quantize(
+            Decimal("0.01")
+        )
 
-        # =================================================
+        # -------------------------------------------------
         # CREATE BILL
-        # =================================================
+        # -------------------------------------------------
 
         bill = Bill.objects.create(
 
@@ -1669,10 +2672,9 @@ def create_bill(request):
 
         )
 
-
-        # =================================================
-        # SUCCESS RESPONSE
-        # =================================================
+        # -------------------------------------------------
+        # RESPONSE
+        # -------------------------------------------------
 
         return JsonResponse({
 
@@ -1684,17 +2686,29 @@ def create_bill(request):
             "bill_id":
                 bill.id,
 
+            "base_amount":
+                str(bill.base_amount),
+
+            "discount_percent":
+                str(bill.discount_percent),
+
+            "discount_amount":
+                str(bill.discount_amount),
+
+            "amount_due":
+                str(bill.amount_due),
+
         })
 
-
-    # =====================================================
-    # GET REQUEST
-    # =====================================================
+    # -----------------------------------------------------
+    # GET
+    # -----------------------------------------------------
 
     return render(
         request,
         "fees/create_bill.html"
     )
+
 
 
 

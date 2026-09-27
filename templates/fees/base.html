@@ -50,7 +50,7 @@
 
     <div class="sidebar-logo">
 
-        {% if school_settings.logo %}
+        {% if school_settings and school_settings.logo %}
 
             <div class="school-logo-image">
 
@@ -108,9 +108,10 @@
 
 
             <!-- Dashboard -->
+
             <a
                 href="{% url 'home' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
             >
 
                 <i class="fas fa-home"></i>
@@ -123,9 +124,10 @@
 
 
             <!-- Students -->
+
             <a
                 href="{% url 'students' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'students' or request.resolver_match.url_name == 'add_student' or request.resolver_match.url_name == 'edit_student' or request.resolver_match.url_name == 'student_detail' %}active{% endif %}"
             >
 
                 <i class="fas fa-users"></i>
@@ -138,9 +140,10 @@
 
 
             <!-- Record Payment -->
+
             <a
                 href="{% url 'record_payment' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'record_payment' %}active{% endif %}"
             >
 
                 <i class="fas fa-money-bill-wave"></i>
@@ -153,9 +156,10 @@
 
 
             <!-- Fees Structure -->
+
             <a
                 href="{% url 'fees_structure' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'fees_structure' or request.resolver_match.url_name == 'create_bill' or request.resolver_match.url_name == 'edit_fee_structure' %}active{% endif %}"
             >
 
                 <i class="fas fa-file-invoice-dollar"></i>
@@ -168,9 +172,10 @@
 
 
             <!-- Payments -->
+
             <a
                 href="{% url 'payments' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'payments' %}active{% endif %}"
             >
 
                 <i class="fas fa-credit-card"></i>
@@ -183,9 +188,10 @@
 
 
             <!-- Bus Fees -->
+
             <a
                 href="{% url 'bus_fees' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'bus_fees' %}active{% endif %}"
             >
 
                 <i class="fas fa-bus"></i>
@@ -198,9 +204,10 @@
 
 
             <!-- Feeding Fees -->
+
             <a
                 href="{% url 'feeding_fees' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'feeding_fees' %}active{% endif %}"
             >
 
                 <i class="fas fa-utensils"></i>
@@ -213,24 +220,26 @@
 
 
             <!-- Bus & Feeding Fee Structure -->
+
             <a
                 href="{% url 'bus_fee_structure' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'bus_fee_structure' %}active{% endif %}"
             >
 
                 <i class="fas fa-layer-group"></i>
 
                 <span>
-                    Bus & Feed Structure
+                    Bus &amp; Feed Structure
                 </span>
 
             </a>
 
 
             <!-- Classes -->
+
             <a
                 href="{% url 'classes' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'classes' %}active{% endif %}"
             >
 
                 <i class="fas fa-user-group"></i>
@@ -243,9 +252,10 @@
 
 
             <!-- Reports -->
+
             <a
                 href="{% url 'reports' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'reports' %}active{% endif %}"
             >
 
                 <i class="fas fa-chart-column"></i>
@@ -258,9 +268,10 @@
 
 
             <!-- Settings -->
+
             <a
                 href="{% url 'settings' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}"
             >
 
                 <i class="fas fa-gear"></i>
@@ -285,9 +296,10 @@
 
 
             <!-- Dashboard -->
+
             <a
                 href="{% url 'home' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
             >
 
                 <i class="fas fa-home"></i>
@@ -300,9 +312,10 @@
 
 
             <!-- Students -->
+
             <a
                 href="{% url 'students' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'students' or request.resolver_match.url_name == 'add_student' or request.resolver_match.url_name == 'edit_student' or request.resolver_match.url_name == 'student_detail' %}active{% endif %}"
             >
 
                 <i class="fas fa-users"></i>
@@ -315,9 +328,10 @@
 
 
             <!-- Record Payment -->
+
             <a
                 href="{% url 'record_payment' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'record_payment' %}active{% endif %}"
             >
 
                 <i class="fas fa-money-bill-wave"></i>
@@ -330,9 +344,10 @@
 
 
             <!-- Fees Structure -->
+
             <a
                 href="{% url 'fees_structure' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'fees_structure' or request.resolver_match.url_name == 'create_bill' or request.resolver_match.url_name == 'edit_fee_structure' %}active{% endif %}"
             >
 
                 <i class="fas fa-file-invoice-dollar"></i>
@@ -345,9 +360,10 @@
 
 
             <!-- Payments -->
+
             <a
                 href="{% url 'payments' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'payments' %}active{% endif %}"
             >
 
                 <i class="fas fa-credit-card"></i>
@@ -360,9 +376,10 @@
 
 
             <!-- Classes -->
+
             <a
                 href="{% url 'classes' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'classes' %}active{% endif %}"
             >
 
                 <i class="fas fa-user-group"></i>
@@ -375,9 +392,10 @@
 
 
             <!-- Reports -->
+
             <a
                 href="{% url 'reports' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'reports' %}active{% endif %}"
             >
 
                 <i class="fas fa-chart-column"></i>
@@ -390,9 +408,10 @@
 
 
             <!-- Settings -->
+
             <a
                 href="{% url 'settings' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}"
             >
 
                 <i class="fas fa-gear"></i>
@@ -406,7 +425,6 @@
 
         <!-- =================================================
              BUS FEE USER
-             ONLY BUS FEES + LOGOUT
         ================================================== -->
 
         {% elif request.user.profile.role == "bus_fee" %}
@@ -417,10 +435,11 @@
             </p>
 
 
-            <!-- Bus Fees ONLY -->
+            <!-- Bus Fees -->
+
             <a
                 href="{% url 'bus_fees' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'bus_fees' %}active{% endif %}"
             >
 
                 <i class="fas fa-bus"></i>
@@ -434,7 +453,6 @@
 
         <!-- =================================================
              FEEDING FEE USER
-             ONLY FEEDING FEES + LOGOUT
         ================================================== -->
 
         {% elif request.user.profile.role == "feeding_fee" %}
@@ -445,10 +463,11 @@
             </p>
 
 
-            <!-- Feeding Fees ONLY -->
+            <!-- Feeding Fees -->
+
             <a
                 href="{% url 'feeding_fees' %}"
-                class="nav-item"
+                class="nav-item {% if request.resolver_match.url_name == 'feeding_fees' %}active{% endif %}"
             >
 
                 <i class="fas fa-utensils"></i>
@@ -470,7 +489,7 @@
 
         <a
             href="{% url 'logout' %}"
-            class="nav-item"
+            class="nav-item {% if request.resolver_match.url_name == 'logout' %}active{% endif %}"
         >
 
             <i class="fas fa-right-from-bracket"></i>
@@ -627,7 +646,81 @@
                 <span class="breadcrumb-current">
 
                     {% block breadcrumb %}
-                        Dashboard
+
+                        {% if request.resolver_match.url_name == "home" %}
+
+                            Dashboard
+
+                        {% elif request.resolver_match.url_name == "students" %}
+
+                            Students
+
+                        {% elif request.resolver_match.url_name == "add_student" %}
+
+                            Add Student
+
+                        {% elif request.resolver_match.url_name == "edit_student" %}
+
+                            Edit Student
+
+                        {% elif request.resolver_match.url_name == "student_detail" %}
+
+                            Student Details
+
+                        {% elif request.resolver_match.url_name == "record_payment" %}
+
+                            Record Payment
+
+                        {% elif request.resolver_match.url_name == "payments" %}
+
+                            Payments
+
+                        {% elif request.resolver_match.url_name == "fees_structure" %}
+
+                            Fees Structure
+
+                        {% elif request.resolver_match.url_name == "create_bill" %}
+
+                            Create Bill
+
+                        {% elif request.resolver_match.url_name == "edit_fee_structure" %}
+
+                            Edit Fee Structure
+
+                        {% elif request.resolver_match.url_name == "bus_fees" %}
+
+                            Bus Fees
+
+                        {% elif request.resolver_match.url_name == "feeding_fees" %}
+
+                            Feeding Fees
+
+                        {% elif request.resolver_match.url_name == "bus_fee_structure" %}
+
+                            Bus &amp; Feed Structure
+
+                        {% elif request.resolver_match.url_name == "classes" %}
+
+                            Classes
+
+                        {% elif request.resolver_match.url_name == "reports" %}
+
+                            Reports
+
+                        {% elif request.resolver_match.url_name == "settings" %}
+
+                            Settings
+
+                        {% elif request.resolver_match.url_name == "logout" %}
+
+                            Logout
+
+                        {% else %}
+
+                            Smart Fee
+
+                        {% endif %}
+
                     {% endblock %}
 
                 </span>
@@ -701,9 +794,13 @@
                 <div class="topbar-avatar">
 
                     {% if request.user.is_superuser %}
+
                         A
+
                     {% else %}
+
                         {{ request.user.username|first|upper }}
+
                     {% endif %}
 
                 </div>
