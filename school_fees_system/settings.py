@@ -1,6 +1,10 @@
 from pathlib import Path
+from dotenv import load_dotenv
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 
 # SECURITY
@@ -133,10 +137,9 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # =========================================================
-# CLOUDINARY MEDIA STORAGE
+# CLOUDINARY
 # =========================================================
 
-import os
 import cloudinary
 
 CLOUDINARY_URL = os.environ.get("CLOUDINARY_URL")
@@ -146,6 +149,10 @@ if CLOUDINARY_URL:
         cloudinary_url=CLOUDINARY_URL,
         secure=True,
     )
+
+print("CLOUDINARY URL FOUND:", bool(CLOUDINARY_URL))
+print("CLOUDINARY CLOUD NAME:", cloudinary.config().cloud_name)
+print("CLOUDINARY API KEY FOUND:", bool(cloudinary.config().api_key))
 
 # DEFAULT PRIMARY KEY
 

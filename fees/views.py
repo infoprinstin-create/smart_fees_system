@@ -192,23 +192,52 @@ def settings_view(request):
 
     if request.method == "POST":
 
-        settings.school_name = request.POST.get("school_name", "").strip()
-        settings.address = request.POST.get("address", "").strip()
-        settings.phone = request.POST.get("phone", "").strip()
-        settings.email = request.POST.get("email", "").strip()
-        settings.academic_year = request.POST.get("academic_year", "").strip()
-        settings.school_motto = request.POST.get("school_motto", "").strip()
+        settings.school_name = request.POST.get(
+            "school_name",
+            ""
+        ).strip()
+
+        settings.address = request.POST.get(
+            "address",
+            ""
+        ).strip()
+
+        settings.phone = request.POST.get(
+            "phone",
+            ""
+        ).strip()
+
+        settings.email = request.POST.get(
+            "email",
+            ""
+        ).strip()
+
+        settings.academic_year = request.POST.get(
+            "academic_year",
+            ""
+        ).strip()
+
+        settings.school_motto = request.POST.get(
+            "school_motto",
+            ""
+        ).strip()
 
         # SCHOOL LOGO
-        if request.FILES.get("school_logo"):
-            uploaded_logo = request.FILES.get("school_logo")
+        uploaded_logo = request.FILES.get("school_logo")
 
-            print("===== CLOUDINARY LOGO DEBUG =====")
-            print("File:", uploaded_logo)
-            print("Name:", uploaded_logo.name)
-            print("Content type:", uploaded_logo.content_type)
-            print("Size:", uploaded_logo.size)
-            print("=================================")
+        if uploaded_logo:
+
+            import os
+            import cloudinary
+
+            cloudinary_url = os.environ.get(
+                "CLOUDINARY_URL"
+            )
+
+            cloudinary.config(
+                cloudinary_url=cloudinary_url,
+                secure=True
+            )
 
             settings.logo = uploaded_logo
 
@@ -224,6 +253,7 @@ def settings_view(request):
         }
     )
 
+    
 # =========================================================
 # STUDENTS
 # SCHOOL FEES
