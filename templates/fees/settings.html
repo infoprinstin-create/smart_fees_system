@@ -1,4 +1,3 @@
-
 {% extends "fees/base.html" %}
 
 {% load static %}
@@ -14,790 +13,302 @@
 {% block content %}
 
 <div class="settings-page">
+    
+<!-- PAGE HEADER -->
 
-    <!-- PAGE HEADER -->
+<div class="settings-header">
 
-    <div class="settings-header">
+    <div>
 
-        <div>
+        <h1>Settings</h1>
 
-            <h1>Settings</h1>
-
-            <p>
-                Manage system settings, school information and preferences.
-            </p>
-
-        </div>
+        <p>
+            Manage system settings, school information and preferences.
+        </p>
 
     </div>
 
-
-    <div class="settings-layout">
-
-
-        <!-- SETTINGS MENU -->
-
-        <aside class="settings-menu">
+</div>
 
 
-            <button
-                type="button"
-                class="settings-menu-item active"
-            >
-
-                <i class="fa-solid fa-gear"></i>
-
-                <span>
-                    General Settings
-                </span>
-
-            </button>
+<div class="settings-layout">
 
 
-            <button
-                type="button"
-                class="settings-menu-item"
-            >
+    <!-- SETTINGS MENU -->
 
-                <i class="fa-solid fa-building-columns"></i>
-
-                <span>
-                    School Information
-                </span>
-
-            </button>
+    <aside class="settings-menu">
 
 
-            <button
-                type="button"
-                class="settings-menu-item"
-            >
+        <button
+            type="button"
+            class="settings-menu-item active"
+        >
 
-                <i class="fa-solid fa-circle-dollar-to-slot"></i>
+            <i class="fa-solid fa-gear"></i>
 
-                <span>
-                    Fee Settings
-                </span>
+            <span>
+                General Settings
+            </span>
 
-            </button>
-
-
-            <button
-                type="button"
-                class="settings-menu-item"
-            >
-
-                <i class="fa-solid fa-credit-card"></i>
-
-                <span>
-                    Payment Settings
-                </span>
-
-            </button>
+        </button>
 
 
-            <button
-                type="button"
-                class="settings-menu-item"
-            >
+        <button
+            type="button"
+            class="settings-menu-item"
+        >
 
-                <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-building-columns"></i>
 
-                <span>
-                    Notification Settings
-                </span>
+            <span>
+                School Information
+            </span>
 
-            </button>
-
-
-            <!-- USERS & ROLES -->
-
-            <button
-                type="button"
-                class="settings-menu-item"
-                onclick="window.location.href='{% url "users_management" %}'"
-            >
-
-                <i class="fa-solid fa-users"></i>
-
-                <span>
-                    Users & Roles
-                </span>
-
-            </button>
+        </button>
 
 
-            <button
-                type="button"
-                class="settings-menu-item"
-            >
+        <button
+            type="button"
+            class="settings-menu-item"
+        >
 
-                <i class="fa-solid fa-database"></i>
+            <i class="fa-solid fa-circle-dollar-to-slot"></i>
 
-                <span>
-                    Backup & Restore
-                </span>
+            <span>
+                Fee Settings
+            </span>
 
-            </button>
-
-
-        </aside>
+        </button>
 
 
+        <button
+            type="button"
+            class="settings-menu-item"
+        >
 
-        <!-- SETTINGS CONTENT -->
+            <i class="fa-solid fa-credit-card"></i>
 
-        <main class="settings-content">
+            <span>
+                Payment Settings
+            </span>
 
-
-            <!-- SCHOOL INFORMATION + FEE SETTINGS -->
-
-            <div class="settings-row">
-
-
-                <!-- SCHOOL INFORMATION -->
-
-                <section class="settings-card">
+        </button>
 
 
-                    <div class="card-title">
+        <button
+            type="button"
+            class="settings-menu-item"
+        >
 
-                        <div class="card-icon">
+            <i class="fa-solid fa-bell"></i>
 
-                            <i class="fa-solid fa-school"></i>
+            <span>
+                Notification Settings
+            </span>
 
-                        <div>
+        </button>
 
-                        <div>
 
-                            <h2>
-                                School Information
-                            </h2>
+        <!-- USERS & ROLES -->
 
-                            <p>
-                                Update your school details and contact information.
-                            </p>
+        <button
+            type="button"
+            class="settings-menu-item"
+            onclick="window.location.href='{% url "users_management" %}'"
+        >
 
-                        </div>
+            <i class="fa-solid fa-users"></i>
+
+            <span>
+                Users & Roles
+            </span>
+
+        </button>
+
+
+        <button
+            type="button"
+            class="settings-menu-item"
+        >
+
+            <i class="fa-solid fa-database"></i>
+
+            <span>
+                Backup & Restore
+            </span>
+
+        </button>
+
+
+    </aside>
+
+
+    <!-- SETTINGS CONTENT -->
+
+    <main class="settings-content">
+
+
+        <!-- SCHOOL INFORMATION + FEE SETTINGS -->
+
+        <div class="settings-row">
+
+
+            <!-- SCHOOL INFORMATION -->
+
+            <section class="settings-card">
+
+
+                <div class="card-title">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-school"></i>
 
                     </div>
 
-
-                    <form
-                        method="POST"
-                        enctype="multipart/form-data"
-                    >
-
-                        {% csrf_token %}
-
-
-                        <div class="settings-form-grid">
-
-
-                            <!-- SCHOOL NAME -->
-
-                            <div class="form-group full">
-
-                                <label>
-                                    School Name
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="school_name"
-                                    class="form-control"
-                                    value="{{ school_settings.school_name }}"
-                                    placeholder="Enter school name"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <!-- ADDRESS -->
-
-                            <div class="form-group full">
-
-                                <label>
-                                    Address
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="address"
-                                    class="form-control"
-                                    value="{{ school_settings.address|default:'' }}"
-                                    placeholder="Enter school address"
-                                >
-
-                            </div>
-
-
-                            <!-- PHONE -->
-
-                            <div class="form-group">
-
-                                <label>
-                                    Phone Number
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    class="form-control"
-                                    value="{{ school_settings.phone|default:'' }}"
-                                    placeholder="Enter phone number"
-                                >
-
-                            </div>
-
-
-                            <!-- EMAIL -->
-
-                            <div class="form-group">
-
-                                <label>
-                                    Email Address
-                                </label>
-
-                                <input
-                                    type="email"
-                                    name="email"
-                                    class="form-control"
-                                    value="{{ school_settings.email|default:'' }}"
-                                    placeholder="Enter school email"
-                                >
-
-                            </div>
-
-
-                            <!-- ACADEMIC YEAR -->
-
-                            <div class="form-group full">
-
-                                <label>
-                                    Academic Year
-                                </label>
-
-                                <select
-                                    name="academic_year"
-                                    class="form-control"
-                                >
-
-                                    <option
-                                        value="2025/2026"
-                                        {% if school_settings.academic_year == "2025/2026" %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        2025/2026
-                                    </option>
-
-
-                                    <option
-                                        value="2026/2027"
-                                        {% if school_settings.academic_year == "2026/2027" %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        2026/2027
-                                    </option>
-
-
-                                    <option
-                                        value="2027/2028"
-                                        {% if school_settings.academic_year == "2027/2028" %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        2027/2028
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-
-                            <!-- SCHOOL MOTTO -->
-
-                            <div class="form-group full">
-
-                                <label>
-                                    School Motto
-                                </label>
-
-                                <input
-                                    type="text"
-                                    name="school_motto"
-                                    class="form-control"
-                                    value="{{ school_settings.school_motto|default:'' }}"
-                                    placeholder="Enter school motto"
-                                >
-
-                            </div>
-
-
-                            <!-- SCHOOL LOGO -->
-
-                            <div class="form-group full">
-
-                                <label>
-                                    School Logo
-                                </label>
-
-                                <input
-                                    type="file"
-                                    name="school_logo"
-                                    class="form-control"
-                                    accept="image/*"
-                                >
-
-
-                                {% if school_settings.logo %}
-
-                                    <div style="margin-top: 12px;">
-
-                                        <img
-                                            src="{{ school_settings.logo }}"
-
-                                            alt="School Logo"
-                                            style="
-                                                width: 80px;
-                                                height: 80px;
-                                                object-fit: contain;
-                                                border-radius: 10px;
-                                            "
-                                        >
-
-                                    </div>
-
-                                {% endif %}
-
-                            </div>
-
-
-                        </div>
-
-
-                        <!-- SAVE BUTTON -->
-
-                        <div class="card-actions">
-
-                            <button
-                                type="submit"
-                                class="btn-primary"
-                            >
-
-                                <i class="fa-solid fa-floppy-disk"></i>
-
-                                Save Changes
-
-                            </button>
-
-                        </div>
-
-
-                    </form>
-
-                </section>
-
-
-
-                <!-- FEE SETTINGS -->
-
-                <section class="settings-card">
-
-
-                    <div class="card-title">
-
-                        <div class="card-icon">
-
-                            <i class="fa-solid fa-circle-dollar-to-slot"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h2>
-                                Fee Settings
-                            </h2>
-
-                            <p>
-                                Configure fee currency, due dates and late payment rules.
-                            </p>
-
-                        </div>
+                    <div>
+
+                        <h2>
+                            School Information
+                        </h2>
+
+                        <p>
+                            Update your school details and contact information.
+                        </p>
 
                     </div>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+
+                    {% csrf_token %}
 
 
                     <div class="settings-form-grid">
 
 
-                        <div class="form-group">
-
-                            <label>
-                                Currency
-                            </label>
-
-                            <select class="form-control">
-
-                                <option>
-                                    GH₵ (Ghana Cedi)
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>
-                                Default Due Date (Day)
-                            </label>
-
-                            <select class="form-control">
-
-                                <option>5</option>
-                                <option>10</option>
-                                <option>15</option>
-                                <option>20</option>
-                                <option>25</option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>
-                                Late Payment Penalty (%)
-                            </label>
-
-                            <input
-                                type="number"
-                                class="form-control"
-                                value="5"
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>
-                                Grace Period (Days)
-                            </label>
-
-                            <input
-                                type="number"
-                                class="form-control"
-                                value="3"
-                            >
-
-                        </div>
-
+                        <!-- SCHOOL NAME -->
 
                         <div class="form-group full">
 
                             <label>
-                                Tax / Additional Charges (%)
+                                School Name
                             </label>
 
                             <input
-                                type="number"
+                                type="text"
+                                name="school_name"
                                 class="form-control"
-                                value="0"
+                                value="{{ school_settings.school_name }}"
+                                placeholder="Enter school name"
+                                required
                             >
 
                         </div>
 
 
-                    </div>
+                        <!-- ADDRESS -->
 
+                        <div class="form-group full">
 
-                    <div class="info-box">
-
-                        <i class="fa-solid fa-circle-info"></i>
-
-                        <span>
-                            Late payment penalty will be applied after the grace
-                            period if the fee is not paid.
-                        </span>
-
-                    </div>
-
-
-                    <div class="card-actions">
-
-                        <button
-                            type="button"
-                            class="btn-primary"
-                        >
-
-                            <i class="fa-solid fa-floppy-disk"></i>
-
-                            Save Fee Settings
-
-                        </button>
-
-                    </div>
-
-
-                </section>
-
-
-            </div>
-
-
-
-            <!-- SYSTEM + NOTIFICATIONS -->
-
-            <div class="settings-row">
-
-
-                <!-- SYSTEM SETTINGS -->
-
-                <section class="settings-card">
-
-
-                    <div class="card-title">
-
-                        <div class="card-icon">
-
-                            <i class="fa-solid fa-gear"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h2>
-                                System Settings
-                            </h2>
-
-                            <p>
-                                Manage general system preferences.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="switch-list">
-
-
-                        <div class="switch-row">
-
-                            <div>
-
-                                <strong>
-                                    Enable Online Payments
-                                </strong>
-
-                                <span>
-                                    Allow parents to pay fees online.
-                                </span>
-
-                            </div>
-
-                            <label class="switch">
-
-                                <input
-                                    type="checkbox"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
+                            <label>
+                                Address
                             </label>
 
-                        </div>
-
-
-                        <div class="switch-row">
-
-                            <div>
-
-                                <strong>
-                                    Auto Generate Receipts
-                                </strong>
-
-                                <span>
-                                    Automatically generate receipt after payment.
-                                </span>
-
-                            </div>
-
-                            <label class="switch">
-
-                                <input
-                                    type="checkbox"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
+                            <input
+                                type="text"
+                                name="address"
+                                class="form-control"
+                                value="{{ school_settings.address|default:'' }}"
+                                placeholder="Enter school address"
+                            >
 
                         </div>
 
 
-                        <div class="switch-row">
-
-                            <div>
-
-                                <strong>
-                                    Show Student Photo
-                                </strong>
-
-                                <span>
-                                    Display student photo in reports and lists.
-                                </span>
-
-                            </div>
-
-                            <label class="switch">
-
-                                <input
-                                    type="checkbox"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-
-                        <div class="switch-row">
-
-                            <div>
-
-                                <strong>
-                                    Enable SMS Notifications
-                                </strong>
-
-                                <span>
-                                    Send SMS alerts for payments and due dates.
-                                </span>
-
-                            </div>
-
-                            <label class="switch">
-
-                                <input type="checkbox">
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-
-                        <div class="switch-row">
-
-                            <div>
-
-                                <strong>
-                                    Enable Email Notifications
-                                </strong>
-
-                                <span>
-                                    Send email alerts for important updates.
-                                </span>
-
-                            </div>
-
-                            <label class="switch">
-
-                                <input
-                                    type="checkbox"
-                                    checked
-                                >
-
-                                <span class="slider"></span>
-
-                            </label>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div class="card-actions">
-
-                        <button
-                            type="button"
-                            class="btn-primary"
-                        >
-
-                            <i class="fa-solid fa-floppy-disk"></i>
-
-                            Save System Settings
-
-                        </button>
-
-                    </div>
-
-
-                </section>
-
-
-
-                <!-- NOTIFICATION SETTINGS -->
-
-                <section class="settings-card">
-
-
-                    <div class="card-title">
-
-                        <div class="card-icon">
-
-                            <i class="fa-solid fa-bell"></i>
-
-                        </div>
-
-                        <div>
-
-                            <h2>
-                                Notification Settings
-                            </h2>
-
-                            <p>
-                                Set up who receives notifications and when.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="settings-form-grid">
-
+                        <!-- PHONE -->
 
                         <div class="form-group">
 
                             <label>
-                                Email Notifications To
+                                Phone Number
                             </label>
 
-                            <select class="form-control">
+                            <input
+                                type="text"
+                                name="phone"
+                                class="form-control"
+                                value="{{ school_settings.phone|default:'' }}"
+                                placeholder="Enter phone number"
+                            >
 
-                                <option>
-                                    All Staff
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ school_settings.email|default:'' }}"
+                                placeholder="Enter school email"
+                            >
+
+                        </div>
+
+
+                        <!-- ACADEMIC YEAR -->
+
+                        <div class="form-group full">
+
+                            <label>
+                                Academic Year
+                            </label>
+
+                            <select
+                                name="academic_year"
+                                class="form-control"
+                            >
+
+                                <option
+                                    value="2025/2026"
+                                    {% if school_settings.academic_year == "2025/2026" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    2025/2026
                                 </option>
 
-                                <option>
-                                    Administrators Only
+
+                                <option
+                                    value="2026/2027"
+                                    {% if school_settings.academic_year == "2026/2027" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    2026/2027
                                 </option>
 
-                                <option>
-                                    Teachers Only
+
+                                <option
+                                    value="2027/2028"
+                                    {% if school_settings.academic_year == "2027/2028" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    2027/2028
                                 </option>
 
                             </select>
@@ -805,27 +316,59 @@
                         </div>
 
 
-                        <div class="form-group">
+                        <!-- SCHOOL MOTTO -->
+
+                        <div class="form-group full">
 
                             <label>
-                                SMS Notifications To
+                                School Motto
                             </label>
 
-                            <select class="form-control">
+                            <input
+                                type="text"
+                                name="school_motto"
+                                class="form-control"
+                                value="{{ school_settings.school_motto|default:'' }}"
+                                placeholder="Enter school motto"
+                            >
 
-                                <option>
-                                    Parents Only
-                                </option>
+                        </div>
 
-                                <option>
-                                    All Staff
-                                </option>
 
-                                <option>
-                                    Disabled
-                                </option>
+                        <!-- SCHOOL LOGO -->
 
-                            </select>
+                        <div class="form-group full">
+
+                            <label>
+                                School Logo
+                            </label>
+
+                            <input
+                                type="file"
+                                name="school_logo"
+                                class="form-control"
+                                accept="image/*"
+                            >
+
+
+                            {% if school_settings.logo %}
+
+                                <div style="margin-top: 12px;">
+
+                                    <img
+                                        src="{{ school_settings.logo }}"
+                                        alt="School Logo"
+                                        style="
+                                            width: 80px;
+                                            height: 80px;
+                                            object-fit: contain;
+                                            border-radius: 10px;
+                                        "
+                                    >
+
+                                </div>
+
+                            {% endif %}
 
                         </div>
 
@@ -833,326 +376,782 @@
                     </div>
 
 
-                    <div class="notification-events">
+                    <!-- SAVE BUTTON -->
+
+                    <div class="card-actions">
+
+                        <button
+                            type="submit"
+                            class="btn-primary"
+                        >
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            Save Changes
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </section>
+
+
+            <!-- FEE SETTINGS -->
+
+            <section class="settings-card">
+
+
+                <div class="card-title">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-circle-dollar-to-slot"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Fee Settings
+                        </h2>
+
+                        <p>
+                            Configure fee currency, due dates and late payment rules.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="settings-form-grid">
+
+
+                    <div class="form-group">
 
                         <label>
-                            Notification Events
+                            Currency
                         </label>
 
+                        <select class="form-control">
 
-                        <label class="checkbox-row">
+                            <option>
+                                GH₵ (Ghana Cedi)
+                            </option>
 
-                            <input
-                                type="checkbox"
-                                checked
-                            >
-
-                            <span>
-                                Payment Received
-                            </span>
-
-                        </label>
-
-
-                        <label class="checkbox-row">
-
-                            <input
-                                type="checkbox"
-                                checked
-                            >
-
-                            <span>
-                                Payment Due Reminder
-                            </span>
-
-                        </label>
-
-
-                        <label class="checkbox-row">
-
-                            <input
-                                type="checkbox"
-                                checked
-                            >
-
-                            <span>
-                                Overdue Payment
-                            </span>
-
-                        </label>
-
-
-                        <label class="checkbox-row">
-
-                            <input
-                                type="checkbox"
-                                checked
-                            >
-
-                            <span>
-                                New Student Registration
-                            </span>
-
-                        </label>
-
-
-                        <label class="checkbox-row">
-
-                            <input
-                                type="checkbox"
-                                checked
-                            >
-
-                            <span>
-                                System Updates
-                            </span>
-
-                        </label>
-
+                        </select>
 
                     </div>
 
 
-                    <div class="card-actions">
+                    <div class="form-group">
 
-                        <button
-                            type="button"
-                            class="btn-primary"
+                        <label>
+                            Default Due Date (Day)
+                        </label>
+
+                        <select class="form-control">
+
+                            <option>5</option>
+                            <option>10</option>
+                            <option>15</option>
+                            <option>20</option>
+                            <option>25</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Late Payment Penalty (%)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            value="5"
                         >
 
-                            <i class="fa-solid fa-floppy-disk"></i>
+                    </div>
 
-                            Save Notification Settings
 
-                        </button>
+                    <div class="form-group">
+
+                        <label>
+                            Grace Period (Days)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            value="3"
+                        >
 
                     </div>
 
 
-                </section>
+                    <div class="form-group full">
+
+                        <label>
+                            Tax / Additional Charges (%)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            value="0"
+                        >
+
+                    </div>
 
 
-            </div>
+                </div>
 
 
+                <div class="info-box">
 
-            <!-- BACKUP + PASSWORD -->
+                    <i class="fa-solid fa-circle-info"></i>
 
-            <div class="settings-row">
+                    <span>
+                        Late payment penalty will be applied after the grace
+                        period if the fee is not paid.
+                    </span>
+
+                </div>
 
 
-                <!-- BACKUP -->
+                <div class="card-actions">
 
-                <section class="settings-card">
+                    <button
+                        type="button"
+                        class="btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Save Fee Settings
+
+                    </button>
+
+                </div>
 
 
-                    <div class="card-title">
+            </section>
 
-                        <div class="card-icon">
 
-                            <i class="fa-solid fa-database"></i>
+        </div>
 
-                        </div>
+
+        <!-- SYSTEM + NOTIFICATIONS -->
+
+        <div class="settings-row">
+
+
+            <!-- SYSTEM SETTINGS -->
+
+            <section class="settings-card">
+
+
+                <div class="card-title">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-gear"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            System Settings
+                        </h2>
+
+                        <p>
+                            Manage general system preferences.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="switch-list">
+
+
+                    <div class="switch-row">
 
                         <div>
 
-                            <h2>
-                                Backup & Restore
-                            </h2>
+                            <strong>
+                                Enable Online Payments
+                            </strong>
 
-                            <p>
-                                Keep your data safe with regular backups.
-                            </p>
+                            <span>
+                                Allow parents to pay fees online.
+                            </span>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="switch-row">
+
+                        <div>
+
+                            <strong>
+                                Auto Generate Receipts
+                            </strong>
+
+                            <span>
+                                Automatically generate receipt after payment.
+                            </span>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="switch-row">
+
+                        <div>
+
+                            <strong>
+                                Show Student Photo
+                            </strong>
+
+                            <span>
+                                Display student photo in reports and lists.
+                            </span>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="switch-row">
+
+                        <div>
+
+                            <strong>
+                                Enable SMS Notifications
+                            </strong>
+
+                            <span>
+                                Send SMS alerts for payments and due dates.
+                            </span>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input type="checkbox">
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="switch-row">
+
+                        <div>
+
+                            <strong>
+                                Enable Email Notifications
+                            </strong>
+
+                            <span>
+                                Send email alerts for important updates.
+                            </span>
+
+                        </div>
+
+                        <label class="switch">
+
+                            <input
+                                type="checkbox"
+                                checked
+                            >
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="card-actions">
+
+                    <button
+                        type="button"
+                        class="btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Save System Settings
+
+                    </button>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- NOTIFICATION SETTINGS -->
+
+            <section class="settings-card">
+
+
+                <div class="card-title">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-bell"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Notification Settings
+                        </h2>
+
+                        <p>
+                            Set up who receives notifications and when.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="settings-form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email Notifications To
+                        </label>
+
+                        <select class="form-control">
+
+                            <option>
+                                All Staff
+                            </option>
+
+                            <option>
+                                Administrators Only
+                            </option>
+
+                            <option>
+                                Teachers Only
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            SMS Notifications To
+                        </label>
+
+                        <select class="form-control">
+
+                            <option>
+                                Parents Only
+                            </option>
+
+                            <option>
+                                All Staff
+                            </option>
+
+                            <option>
+                                Disabled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="notification-events">
+
+                    <label>
+                        Notification Events
+                    </label>
+
+
+                    <label class="checkbox-row">
+
+                        <input
+                            type="checkbox"
+                            checked
+                        >
+
+                        <span>
+                            Payment Received
+                        </span>
+
+                    </label>
+
+
+                    <label class="checkbox-row">
+
+                        <input
+                            type="checkbox"
+                            checked
+                        >
+
+                        <span>
+                            Payment Due Reminder
+                        </span>
+
+                    </label>
+
+
+                    <label class="checkbox-row">
+
+                        <input
+                            type="checkbox"
+                            checked
+                        >
+
+                        <span>
+                            Overdue Payment
+                        </span>
+
+                    </label>
+
+
+                    <label class="checkbox-row">
+
+                        <input
+                            type="checkbox"
+                            checked
+                        >
+
+                        <span>
+                            New Student Registration
+                        </span>
+
+                    </label>
+
+
+                    <label class="checkbox-row">
+
+                        <input
+                            type="checkbox"
+                            checked
+                        >
+
+                        <span>
+                            System Updates
+                        </span>
+
+                    </label>
+
+
+                </div>
+
+
+                <div class="card-actions">
+
+                    <button
+                        type="button"
+                        class="btn-primary"
+                    >
+
+                        <i class="fa-solid fa-floppy-disk"></i>
+
+                        Save Notification Settings
+
+                    </button>
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
+
+        <!-- BACKUP + PASSWORD -->
+
+        <div class="settings-row">
+
+
+            <!-- BACKUP -->
+
+            <section class="settings-card">
+
+
+                <div class="card-title">
+
+                    <div class="card-icon">
+
+                        <i class="fa-solid fa-database"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Backup & Restore
+                        </h2>
+
+                        <p>
+                            Keep your data safe with regular backups.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="backup-layout">
+
+
+                    <div class="backup-status">
+
+                        <i class="fa-solid fa-shield-halved"></i>
+
+                        <div>
+
+                            <strong>
+                                Last Backup: 10 Jun 2025&nbsp; 08:30 AM
+                            </strong>
+
+                            <span>
+                                Next scheduled backup: 11 Jun 2025&nbsp; 08:30 AM
+                            </span>
 
                         </div>
 
                     </div>
 
 
-                    <div class="backup-layout">
+                    <div class="backup-buttons">
 
 
-                        <div class="backup-status">
+                        <!-- EXPORT -->
 
-                            <i class="fa-solid fa-shield-halved"></i>
+                        <a
+                            href="{% url 'export_excel' %}"
+                            class="btn-secondary"
+                        >
 
-                            <div>
+                            <i class="fa-solid fa-file-excel"></i>
 
-                                <strong>
-                                    Last Backup: 10 Jun 2025&nbsp; 08:30 AM
-                                </strong>
+                            Export to Excel
 
-                                <span>
-                                    Next scheduled backup: 11 Jun 2025&nbsp; 08:30 AM
-                                </span>
-
-                            </div>
-
-                        </div>
+                        </a>
 
 
-                        <div class="backup-buttons">
+                        <!-- RESTORE -->
 
-                            <!-- EXPORT -->
+                        <form
+                            method="POST"
+                            action="{% url 'import_excel' %}"
+                            enctype="multipart/form-data"
+                            style="display: inline;"
+                        >
 
-                            <a
-                                href="{% url 'export_excel' %}"
+                            {% csrf_token %}
+
+                            <input
+                                type="file"
+                                id="excel_restore_file"
+                                name="excel_file"
+                                accept=".xlsx"
+                                style="display: none;"
+                                onchange="this.form.submit();"
+                            >
+
+                            <label
+                                for="excel_restore_file"
                                 class="btn-secondary"
-                            >
-                                <i class="fa-solid fa-file-excel"></i>
-                                Export to Excel
-                            </a>
-
-
-                            <!-- RESTORE -->
-
-                            <form
-                                method="POST"
-                                action="{% url 'import_excel' %}"
-                                enctype="multipart/form-data"
-                                style="display: inline;"
+                                style="cursor: pointer;"
                             >
 
-                                {% csrf_token %}
+                                <i class="fa-solid fa-upload"></i>
 
-                                <input
-                                    type="file"
-                                    id="excel_restore_file"
-                                    name="excel_file"
-                                    accept=".xlsx"
-                                    style="display: none;"
-                                    onchange="this.form.submit();"
-                                >
+                                Import from Excel
 
-                                <label
-                                    for="excel_restore_file"
-                                    class="btn-secondary"
-                                    style="cursor: pointer;"
-                                >
-                                    <i class="fa-solid fa-upload"></i>
-                                    Import from Excel
-                                </label>
+                            </label>
 
-                            </form>
-
-                        </div>
+                        </form>
 
 
                     </div>
 
 
-                </section>
+                </div>
 
 
-
-                <!-- CHANGE PASSWORD -->
-
-                <section class="settings-card">
+            </section>
 
 
-                    <div class="card-title">
+            <!-- CHANGE PASSWORD -->
 
-                        <div class="card-icon">
+            <section class="settings-card">
 
-                            <i class="fa-solid fa-lock"></i>
 
-                        </div>
+                <div class="card-title">
 
-                        <div>
+                    <div class="card-icon">
 
-                            <h2>
-                                Change Password
-                            </h2>
-
-                            <p>
-                                Update your account password for security.
-                            </p>
-
-                        </div>
+                        <i class="fa-solid fa-lock"></i>
 
                     </div>
 
+                    <div>
 
-                    <div class="password-grid">
+                        <h2>
+                            Change Password
+                        </h2>
 
-
-                        <div class="form-group">
-
-                            <label>
-                                Current Password
-                            </label>
-
-                            <input
-                                type="password"
-                                class="form-control"
-                                placeholder="Enter current password"
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>
-                                New Password
-                            </label>
-
-                            <input
-                                type="password"
-                                class="form-control"
-                                placeholder="Enter new password"
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>
-                                Confirm Password
-                            </label>
-
-                            <input
-                                type="password"
-                                class="form-control"
-                                placeholder="Confirm new password"
-                            >
-
-                        </div>
-
+                        <p>
+                            Update your account password for security.
+                        </p>
 
                     </div>
 
+                </div>
 
-                    <div class="card-actions">
 
-                        <button
-                            type="button"
-                            class="btn-primary"
+                <div class="password-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Current Password
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            placeholder="Enter current password"
                         >
 
-                            <i class="fa-solid fa-lock"></i>
+                    </div>
 
-                            Change Password
 
-                        </button>
+                    <div class="form-group">
+
+                        <label>
+                            New Password
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            placeholder="Enter new password"
+                        >
 
                     </div>
 
 
-                </section>
+                    <div class="form-group">
+
+                        <label>
+                            Confirm Password
+                        </label>
+
+                        <input
+                            type="password"
+                            class="form-control"
+                            placeholder="Confirm new password"
+                        >
+
+                    </div>
 
 
-            </div>
+                </div>
 
 
-        </main>
+                <div class="card-actions">
+
+                    <button
+                        type="button"
+                        class="btn-primary"
+                    >
+
+                        <i class="fa-solid fa-lock"></i>
+
+                        Change Password
+
+                    </button>
+
+                </div>
 
 
-    </div>
+            </section>
+
+
+        </div>
+
+
+    </main>
 
 
 </div>
 
+
+</div>
 
 {% endblock %}
