@@ -3,6 +3,8 @@ from functools import wraps
 from datetime import date, timedelta
 from decimal import Decimal, InvalidOperation
 from django.utils import timezone
+from django.http import JsonResponse
+from django.db import models
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from openpyxl.utils import get_column_letter
@@ -347,17 +349,40 @@ def students(request):
 
     for student in students:
 
+        # -------------------------------------------------
+        # FEE STRUCTURE
+        # -------------------------------------------------
+
         student.fee_structure = FeeStructure.objects.filter(
             student_class=student.student_class,
             academic_year=student.academic_year
         ).first()
 
         # -------------------------------------------------
+        # FIND LATEST BILL
+        # -------------------------------------------------
+
+        student.bill = Bill.objects.filter(
+            student=student,
+            academic_year=student.academic_year
+        ).order_by(
+            "-id"
+        ).first()
+
+        # -------------------------------------------------
         # TOTAL FEE
         # -------------------------------------------------
 
-        if student.fee_structure:
+        if student.bill:
 
+            # Use discounted amount from the bill
+            student.total_fee = (
+                student.bill.amount_due
+            )
+
+        elif student.fee_structure:
+
+            # No bill yet — use original fee
             student.total_fee = (
                 student.fee_structure.total_fee
             )
@@ -385,6 +410,10 @@ def students(request):
             student.total_fee -
             student.total_paid
         )
+
+        if student.calculated_balance < 0:
+
+            student.calculated_balance = 0
 
         # -------------------------------------------------
         # FEE STATUS
@@ -472,107 +501,247 @@ def students(request):
 
 
 # =========================================================
-# STUDENT PROFILE
+# STUDENTS
 # SCHOOL FEES
 # =========================================================
 
 @login_required
 @role_required("school_fees")
-def student_profile(request, student_id):
+def students(request):
 
-    student = get_object_or_404(
-        Student,
-        id=student_id
+    students = Student.objects.all().order_by(
+        "-date_registered"
     )
 
     # =====================================================
-    # FEE STRUCTURE
+    # SEARCH
     # =====================================================
 
-    fee_structure = FeeStructure.objects.filter(
-        student_class=student.student_class,
-        academic_year=student.academic_year
-    ).first()
+    search = request.GET.get(
+        "search",
+        ""
+    ).strip()
+
+    if search:
+
+        students = students.filter(
+            models.Q(
+                first_name__icontains=search
+            )
+            |
+            models.Q(
+                last_name__icontains=search
+            )
+            |
+            models.Q(
+                student_id__icontains=search
+            )
+            |
+            models.Q(
+                registration_number__icontains=search
+            )
+        )
 
     # =====================================================
-    # TOTAL FEE
+    # CLASS FILTER
     # =====================================================
 
-    if fee_structure:
+    selected_class = request.GET.get(
+        "class",
+        ""
+    ).strip()
 
-        total_fee = fee_structure.total_fee
+    if selected_class:
 
-    else:
-
-        total_fee = 0
+        students = students.filter(
+            student_class=selected_class
+        )
 
     # =====================================================
-    # PAYMENT HISTORY
+    # STATUS FILTER
     # =====================================================
 
-    payments = Payment.objects.filter(
-        student=student,
-        academic_year=student.academic_year
-    ).order_by(
-        "-payment_date",
-        "-id"
+    selected_status = request.GET.get(
+        "status",
+        ""
+    ).strip()
+
+    if selected_status:
+
+        students = students.filter(
+            status=selected_status
+        )
+
+    # =====================================================
+    # GENDER FILTER
+    # =====================================================
+
+    selected_gender = request.GET.get(
+        "gender",
+        ""
+    ).strip()
+
+    if selected_gender:
+
+        students = students.filter(
+            gender=selected_gender
+        )
+
+    # =====================================================
+    # CALCULATE FEES FOR EACH STUDENT
+    # =====================================================
+
+    for student in students:
+
+        # -------------------------------------------------
+        # FEE STRUCTURE
+        # -------------------------------------------------
+
+        student.fee_structure = FeeStructure.objects.filter(
+            student_class=student.student_class,
+            academic_year=student.academic_year
+        ).first()
+
+        # -------------------------------------------------
+        # FIND LATEST BILL
+        # -------------------------------------------------
+
+        student.bill = Bill.objects.filter(
+            student=student,
+            academic_year=student.academic_year
+        ).order_by(
+            "-id"
+        ).first()
+
+        # -------------------------------------------------
+        # TOTAL FEE
+        # -------------------------------------------------
+
+        if student.bill:
+
+            # Use discounted amount from the bill
+            student.total_fee = (
+                student.bill.amount_due
+            )
+
+        elif student.fee_structure:
+
+            # No bill yet — use original fee
+            student.total_fee = (
+                student.fee_structure.total_fee
+            )
+
+        else:
+
+            student.total_fee = 0
+
+        # -------------------------------------------------
+        # TOTAL PAID
+        # -------------------------------------------------
+
+        student.total_paid = Payment.objects.filter(
+            student=student,
+            academic_year=student.academic_year
+        ).aggregate(
+            total=models.Sum("amount")
+        )["total"] or 0
+
+        # -------------------------------------------------
+        # BALANCE
+        # -------------------------------------------------
+
+        student.calculated_balance = (
+            student.total_fee -
+            student.total_paid
+        )
+
+        if student.calculated_balance < 0:
+
+            student.calculated_balance = 0
+
+        # -------------------------------------------------
+        # FEE STATUS
+        # -------------------------------------------------
+
+        if student.total_fee <= 0:
+
+            student.calculated_fee_status = "Pending"
+
+        elif student.total_paid >= student.total_fee:
+
+            student.calculated_fee_status = "Paid"
+
+        else:
+
+            student.calculated_fee_status = "Pending"
+
+    # =====================================================
+    # CLASS OPTIONS
+    # =====================================================
+
+    classes = Student.objects.values_list(
+        "student_class",
+        flat=True
+    ).distinct().order_by(
+        "student_class"
     )
 
     # =====================================================
-    # TOTAL PAID
+    # STATISTICS
     # =====================================================
 
-    total_paid = payments.aggregate(
-        total=models.Sum("amount")
-    )["total"] or 0
+    all_students = Student.objects.all()
+
+    total_students = all_students.count()
+
+    active_students = all_students.filter(
+        status="Active"
+    ).count()
+
+    inactive_students = all_students.filter(
+        status="Inactive"
+    ).count()
 
     # =====================================================
-    # BALANCE
+    # CURRENT ACADEMIC YEAR
     # =====================================================
 
-    balance = total_fee - total_paid
+    school_settings = SchoolSettings.objects.first()
 
-    # =====================================================
-    # FEE STATUS
-    # =====================================================
+    if school_settings:
 
-    if total_fee <= 0:
-
-        fee_status = "Pending"
-
-    elif total_paid >= total_fee:
-
-        fee_status = "Paid"
+        current_academic_year = (
+            school_settings.academic_year
+        )
 
     else:
 
-        fee_status = "Pending"
+        current_academic_year = "2026/2027"
+
+    new_admissions = all_students.filter(
+        academic_year=current_academic_year
+    ).count()
 
     # =====================================================
-    # PAYMENT COUNT
-    # =====================================================
-
-    payment_count = payments.count()
-
-    # =====================================================
-    # RETURN PROFILE
+    # RETURN PAGE
     # =====================================================
 
     return render(
         request,
-        "fees/student_profile.html",
+        "fees/students.html",
         {
-            "student": student,
-            "fee_structure": fee_structure,
-            "payments": payments,
-            "total_fee": total_fee,
-            "total_paid": total_paid,
-            "balance": balance,
-            "fee_status": fee_status,
-            "payment_count": payment_count,
+            "students": students,
+            "total_students": total_students,
+            "active_students": active_students,
+            "inactive_students": inactive_students,
+            "new_admissions": new_admissions,
+            "classes": classes,
+            "search": search,
+            "selected_class": selected_class,
+            "selected_status": selected_status,
+            "selected_gender": selected_gender,
         }
     )
-
 
 # =========================================================
 # EDIT STUDENT
@@ -782,7 +951,9 @@ def add_student(request):
             "classes": classes
         }
     
-)# =========================================================
+)
+
+# =========================================================
 # PAYMENTS
 # SCHOOL FEES
 # =========================================================
@@ -954,6 +1125,112 @@ def payments(request):
         }
     )
 
+@login_required
+@role_required("school_fees")
+def student_profile(request, student_id):
+
+    student = get_object_or_404(
+        Student,
+        id=student_id
+    )
+
+    fee_structure = FeeStructure.objects.filter(
+        student_class=student.student_class,
+        academic_year=student.academic_year
+    ).order_by(
+        "-id"
+    ).first()
+
+    bill = Bill.objects.filter(
+        student=student,
+        academic_year=student.academic_year
+    ).order_by(
+        "-id"
+    ).first()
+
+    if bill:
+
+        total_fee = bill.amount_due
+
+    elif fee_structure:
+
+        total_fee = fee_structure.total_fee
+
+    else:
+
+        total_fee = 0
+
+    total_paid = Payment.objects.filter(
+        student=student,
+        academic_year=student.academic_year
+    ).aggregate(
+        total=models.Sum("amount")
+    )["total"] or 0
+
+    balance = (
+        total_fee -
+        total_paid
+    )
+
+    if balance < 0:
+
+        balance = 0
+
+    payments = Payment.objects.filter(
+        student=student,
+        academic_year=student.academic_year
+    ).order_by(
+        "-payment_date",
+        "-id"
+    )
+
+    discount_percent = (
+        bill.discount_percent
+        if bill
+        else 0
+    )
+
+    discount_amount = (
+        bill.discount_amount
+        if bill
+        else 0
+    )
+
+    amount_due = (
+        bill.amount_due
+        if bill
+        else total_fee
+    )
+
+    context = {
+
+        "student": student,
+
+        "fee_structure": fee_structure,
+
+        "bill": bill,
+
+        "payments": payments,
+
+        "total_fee": total_fee,
+
+        "total_paid": total_paid,
+
+        "balance": balance,
+
+        "discount_percent": discount_percent,
+
+        "discount_amount": discount_amount,
+
+        "amount_due": amount_due,
+
+    }
+
+    return render(
+        request,
+        "fees/student_profile.html",
+        context
+    )
 
 # =========================================================
 # RECORD PAYMENT
@@ -1097,6 +1374,15 @@ def student_payment_lookup(request):
         ""
     ).strip()
 
+    term = request.GET.get(
+        "term",
+        ""
+    ).strip()
+
+    # =====================================================
+    # CHECK SEARCH VALUE
+    # =====================================================
+
     if not search_value:
 
         return JsonResponse({
@@ -1146,6 +1432,10 @@ def student_payment_lookup(request):
             "last_name"
         )
 
+    # =====================================================
+    # INVALID SEARCH TYPE
+    # =====================================================
+
     else:
 
         return JsonResponse({
@@ -1165,7 +1455,7 @@ def student_payment_lookup(request):
         })
 
     # =====================================================
-    # PREPARE RESULTS
+    # PREPARE STUDENT RESULTS
     # =====================================================
 
     results = []
@@ -1190,32 +1480,145 @@ def student_payment_lookup(request):
         })
 
     # =====================================================
-    # ONLY ONE STUDENT
+    # ONE STUDENT FOUND
     # =====================================================
 
     if len(results) == 1:
 
         student = students.first()
 
-        fee_structure = FeeStructure.objects.filter(
-            student_class=student.student_class,
-            academic_year=student.academic_year
+        # =================================================
+        # NO TERM SELECTED
+        # =================================================
+
+        if not term:
+
+            return JsonResponse({
+
+                "success": True,
+
+                "multiple": False,
+
+                "student": results[0],
+
+                "fees": {
+
+                    "total_fee": 0,
+
+                    "total_paid": 0,
+
+                    "balance": 0,
+
+                    "discount_percent": 0,
+
+                    "discount_amount": 0,
+
+                    "amount_due": 0,
+
+                }
+
+            })
+
+        # =================================================
+        # FIND BILL FOR EXACT TERM
+        # =================================================
+
+        bill = Bill.objects.filter(
+
+            student=student,
+
+            academic_year=student.academic_year,
+
+            term=term
+
+        ).order_by(
+
+            "-id"
+
         ).first()
 
-        total_fee = (
-            fee_structure.total_fee
-            if fee_structure
-            else 0
-        )
+        # =================================================
+        # FIND FEE STRUCTURE FOR EXACT TERM
+        # =================================================
+
+        fee_structure = FeeStructure.objects.filter(
+
+            student_class=student.student_class,
+
+            academic_year=student.academic_year,
+
+            term=term
+
+        ).first()
+
+        # =================================================
+        # DETERMINE TOTAL FEE
+        # =================================================
+
+        if bill:
+
+            total_fee = bill.amount_due
+
+            discount_percent = (
+                bill.discount_percent
+            )
+
+            discount_amount = (
+                bill.discount_amount
+            )
+
+        elif fee_structure:
+
+            total_fee = (
+                fee_structure.total_fee
+            )
+
+            discount_percent = 0
+
+            discount_amount = 0
+
+        else:
+
+            total_fee = 0
+
+            discount_percent = 0
+
+            discount_amount = 0
+
+        # =================================================
+        # TOTAL PAID FOR EXACT TERM
+        # =================================================
 
         total_paid = Payment.objects.filter(
+
             student=student,
-            academic_year=student.academic_year
+
+            academic_year=student.academic_year,
+
+            term=term
+
         ).aggregate(
+
             total=models.Sum("amount")
+
         )["total"] or 0
 
-        balance = total_fee - total_paid
+        # =================================================
+        # CALCULATE BALANCE
+        # =================================================
+
+        balance = (
+            total_fee -
+            total_paid
+        )
+
+        if balance < 0:
+
+            balance = 0
+
+        # =================================================
+        # RETURN STUDENT + FEE INFORMATION
+        # =================================================
 
         return JsonResponse({
 
@@ -1227,18 +1630,36 @@ def student_payment_lookup(request):
 
             "fees": {
 
-                "total_fee": float(total_fee),
+                "total_fee": float(
+                    total_fee
+                ),
 
-                "total_paid": float(total_paid),
+                "total_paid": float(
+                    total_paid
+                ),
 
-                "balance": float(balance),
+                "balance": float(
+                    balance
+                ),
+
+                "discount_percent": float(
+                    discount_percent
+                ),
+
+                "discount_amount": float(
+                    discount_amount
+                ),
+
+                "amount_due": float(
+                    total_fee
+                ),
 
             }
 
         })
 
     # =====================================================
-    # MULTIPLE STUDENTS
+    # MULTIPLE STUDENTS FOUND
     # =====================================================
 
     return JsonResponse({
@@ -1250,7 +1671,8 @@ def student_payment_lookup(request):
         "students": results,
 
     })
-    
+
+
 # =========================================================
 # HOME
 # ADMINISTRATOR ONLY
@@ -1721,11 +2143,6 @@ def add_fee_structure(request):
         "fees/add_fee_structure.html"
     )
 
-
-# =========================================================
-# REPORTS
-# SCHOOL FEES
-# =========================================================
 
 # =========================================================
 # REPORTS
