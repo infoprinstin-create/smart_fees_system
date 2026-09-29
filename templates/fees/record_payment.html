@@ -733,157 +733,100 @@
 </div>
 
 
-
 <script>
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
 
-
         /* =================================================
            ELEMENTS
            ================================================= */
 
         const searchType =
-            document.getElementById(
-                "search_type"
-            );
+            document.getElementById("search_type");
 
         const searchInput =
-            document.getElementById(
-                "student_search"
-            );
+            document.getElementById("student_search");
 
         const lookupMessage =
-            document.getElementById(
-                "studentLookupMessage"
-            );
+            document.getElementById("studentLookupMessage");
 
         const resultsContainer =
-            document.getElementById(
-                "studentResultsContainer"
-            );
+            document.getElementById("studentResultsContainer");
 
         const resultsBox =
-            document.getElementById(
-                "studentResults"
-            );
+            document.getElementById("studentResults");
 
         const selectedStudentId =
-            document.getElementById(
-                "selected_student_id"
-            );
+            document.getElementById("selected_student_id");
 
         const studentName =
-            document.getElementById(
-                "student_name"
-            );
+            document.getElementById("student_name");
 
         const studentClass =
-            document.getElementById(
-                "student_class"
-            );
+            document.getElementById("student_class");
 
         const academicYear =
-            document.getElementById(
-                "academic_year"
-            );
+            document.getElementById("academic_year");
 
         const totalFee =
-            document.getElementById(
-                "totalFee"
-            );
+            document.getElementById("totalFee");
 
         const totalPaid =
-            document.getElementById(
-                "totalPaid"
-            );
+            document.getElementById("totalPaid");
 
         const currentBalance =
-            document.getElementById(
-                "currentBalance"
-            );
+            document.getElementById("currentBalance");
 
         const totalArrears =
-            document.getElementById(
-                "totalArrears"
-            );
+            document.getElementById("totalArrears");
 
         const recordPaymentButton =
-            document.getElementById(
-                "recordPaymentButton"
-            );
+            document.getElementById("recordPaymentButton");
 
         const termInput =
-            document.getElementById(
-                "term"
-            );
+            document.getElementById("term");
 
         const amountInput =
-            document.getElementById(
-                "amount"
-            );
+            document.getElementById("amount");
 
         const methodInput =
-            document.getElementById(
-                "payment_method"
-            );
+            document.getElementById("payment_method");
 
         const paymentDateInput =
-            document.getElementById(
-                "payment_date"
-            );
-
+            document.getElementById("payment_date");
 
         const summaryStudent =
-            document.getElementById(
-                "summaryStudent"
-            );
+            document.getElementById("summaryStudent");
 
         const summaryStudentId =
-            document.getElementById(
-                "summaryStudentId"
-            );
+            document.getElementById("summaryStudentId");
 
         const summaryClass =
-            document.getElementById(
-                "summaryClass"
-            );
+            document.getElementById("summaryClass");
 
         const summaryAcademicYear =
-            document.getElementById(
-                "summaryAcademicYear"
-            );
+            document.getElementById("summaryAcademicYear");
 
         const summaryTerm =
-            document.getElementById(
-                "summaryTerm"
-            );
+            document.getElementById("summaryTerm");
 
         const summaryAmount =
-            document.getElementById(
-                "summaryAmount"
-            );
+            document.getElementById("summaryAmount");
 
         const summaryMethod =
-            document.getElementById(
-                "summaryMethod"
-            );
+            document.getElementById("summaryMethod");
 
         const summaryTotal =
-            document.getElementById(
-                "summaryTotal"
-            );
-
+            document.getElementById("summaryTotal");
 
 
         /* =================================================
            CURRENT DATE
            ================================================= */
 
-        const today =
-            new Date();
+        const today = new Date();
 
         const formattedDate =
             today.toLocaleDateString(
@@ -897,9 +840,7 @@ document.addEventListener(
 
         document.getElementById(
             "currentDate"
-        ).textContent =
-            formattedDate;
-
+        ).textContent = formattedDate;
 
 
         /* =================================================
@@ -912,22 +853,15 @@ document.addEventListener(
         const month =
             String(
                 today.getMonth() + 1
-            ).padStart(
-                2,
-                "0"
-            );
+            ).padStart(2, "0");
 
         const day =
             String(
                 today.getDate()
-            ).padStart(
-                2,
-                "0"
-            );
+            ).padStart(2, "0");
 
         paymentDateInput.value =
             `${year}-${month}-${day}`;
-
 
 
         /* =================================================
@@ -948,7 +882,6 @@ document.addEventListener(
                 );
 
         }
-
 
 
         /* =================================================
@@ -990,6 +923,29 @@ document.addEventListener(
         }
 
 
+        /* =================================================
+           RESET FEE SUMMARY
+           ================================================= */
+
+        function resetFeeSummary() {
+
+            totalFee.textContent =
+                "GH₵ 0.00";
+
+            totalPaid.textContent =
+                "GH₵ 0.00";
+
+            currentBalance.textContent =
+                "GH₵ 0.00";
+
+            totalArrears.textContent =
+                "GH₵ 0.00";
+
+            recordPaymentButton.disabled =
+                true;
+
+        }
+
 
         /* =================================================
            RESET STUDENT
@@ -1009,17 +965,7 @@ document.addEventListener(
             academicYear.value =
                 "";
 
-            totalFee.textContent =
-                "GH₵ 0.00";
-
-            totalPaid.textContent =
-                "GH₵ 0.00";
-
-            currentBalance.textContent =
-                "GH₵ 0.00";
-
-            totalArrears.textContent =
-                "GH₵ 0.00";
+            resetFeeSummary();
 
             summaryStudent.textContent =
                 "Select student";
@@ -1033,17 +979,16 @@ document.addEventListener(
             summaryAcademicYear.textContent =
                 "—";
 
+            summaryTerm.textContent =
+                "Select term";
+
             resultsContainer.style.display =
                 "none";
 
             resultsBox.innerHTML =
                 "";
 
-            recordPaymentButton.disabled =
-                true;
-
         }
-
 
 
         /* =================================================
@@ -1086,12 +1031,29 @@ document.addEventListener(
                 "lookup-message success";
 
 
-            getStudentFees(
-                student.student_id
-            );
+            /*
+             * Only load fees when a term
+             * has been selected.
+             */
+
+            if (termInput.value) {
+
+                getStudentFees(
+                    student.student_id
+                );
+
+            }
+
+            else {
+
+                resetFeeSummary();
+
+                lookupMessage.textContent =
+                    "Student selected. Please select a term.";
+
+            }
 
         }
-
 
 
         /* =================================================
@@ -1100,12 +1062,32 @@ document.addEventListener(
 
         function getStudentFees(studentId) {
 
-            fetch(
+            /*
+             * A term is required because the Bill
+             * is stored for a specific term.
+             */
+
+            if (!termInput.value) {
+
+                resetFeeSummary();
+
+                return;
+
+            }
+
+
+            const url =
                 "{% url 'student_payment_lookup' %}" +
                 "?search_type=student_id" +
                 "&search_value=" +
-                encodeURIComponent(studentId)
-            )
+                encodeURIComponent(studentId) +
+                "&term=" +
+                encodeURIComponent(
+                    termInput.value
+                );
+
+
+            fetch(url)
 
             .then(
                 response =>
@@ -1115,9 +1097,7 @@ document.addEventListener(
             .then(
                 data => {
 
-                    if (
-                        !data.success
-                    ) {
+                    if (!data.success) {
 
                         lookupMessage.textContent =
                             data.message;
@@ -1125,16 +1105,24 @@ document.addEventListener(
                         lookupMessage.className =
                             "lookup-message error";
 
-                        recordPaymentButton.disabled =
-                            true;
+                        resetFeeSummary();
 
                         return;
+
                     }
 
 
                     const fees =
                         data.fees;
 
+
+                    /*
+                     * IMPORTANT:
+                     *
+                     * fees.total_fee is now
+                     * Bill.amount_due when a
+                     * discounted Bill exists.
+                     */
 
                     totalFee.textContent =
                         formatMoney(
@@ -1155,8 +1143,8 @@ document.addEventListener(
                     /*
                      * Temporary arrears calculation.
                      *
-                     * Later we will separate historical
-                     * arrears from the current academic year.
+                     * Later we can separate
+                     * historical arrears.
                      */
 
                     totalArrears.textContent =
@@ -1182,14 +1170,12 @@ document.addEventListener(
                     lookupMessage.className =
                         "lookup-message error";
 
-                    recordPaymentButton.disabled =
-                        true;
+                    resetFeeSummary();
 
                 }
             );
 
         }
-
 
 
         /* =================================================
@@ -1199,9 +1185,7 @@ document.addEventListener(
         function createStudentResult(student) {
 
             const result =
-                document.createElement(
-                    "button"
-                );
+                document.createElement("button");
 
             result.type =
                 "button";
@@ -1261,7 +1245,6 @@ document.addEventListener(
             );
 
         }
-
 
 
         /* =================================================
@@ -1418,7 +1401,6 @@ document.addEventListener(
         );
 
 
-
         /* =================================================
            CHANGE SEARCH TYPE
            ================================================= */
@@ -1443,7 +1425,6 @@ document.addEventListener(
         );
 
 
-
         /* =================================================
            TERM
            ================================================= */
@@ -1456,9 +1437,34 @@ document.addEventListener(
                     this.value ||
                     "Select term";
 
+
+                /*
+                 * IMPORTANT:
+                 *
+                 * When the term changes,
+                 * reload the Bill for that
+                 * exact term.
+                 */
+
+                if (
+                    selectedStudentId.value &&
+                    this.value
+                ) {
+
+                    getStudentFees(
+                        selectedStudentId.value
+                    );
+
+                }
+
+                else {
+
+                    resetFeeSummary();
+
+                }
+
             }
         );
-
 
 
         /* =================================================
@@ -1475,7 +1481,6 @@ document.addEventListener(
 
             }
         );
-
 
 
         /* =================================================
@@ -1505,7 +1510,6 @@ document.addEventListener(
         );
 
 
-
         /* =================================================
            INITIAL PLACEHOLDER
            ================================================= */
@@ -1517,5 +1521,6 @@ document.addEventListener(
 );
 
 </script>
+
 
 {% endblock %}
