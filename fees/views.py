@@ -1118,18 +1118,29 @@ def payments(request):
         )
 
     # =====================================================
-    # ACADEMIC YEAR FILTER
+    # DATE FILTER
     # =====================================================
 
-    academic_year = request.GET.get(
-        "academic_year",
+    from_date = request.GET.get(
+        "from_date",
         ""
     ).strip()
 
-    if academic_year:
+    to_date = request.GET.get(
+        "to_date",
+        ""
+    ).strip()
+
+    if from_date:
 
         payments = payments.filter(
-            academic_year=academic_year
+            payment_date__gte=from_date
+        )
+
+    if to_date:
+
+        payments = payments.filter(
+            payment_date__lte=to_date
         )
 
     # =====================================================
@@ -1193,13 +1204,6 @@ def payments(request):
         "student_class"
     )
 
-    academic_years = Payment.objects.values_list(
-        "academic_year",
-        flat=True
-    ).distinct().order_by(
-        "-academic_year"
-    )
-
     payment_methods = [
         "Cash",
         "Bank Transfer",
@@ -1208,22 +1212,38 @@ def payments(request):
         "Card",
     ]
 
+    # =====================================================
+    # RENDER
+    # =====================================================
+
     return render(
         request,
         "fees/payments.html",
         {
             "payments": payments,
+
             "total_payments": total_payments,
+
             "total_collected": total_collected,
+
             "today_payments": today_payments.count(),
+
             "today_collected": today_collected,
+
             "classes": classes,
-            "academic_years": academic_years,
+
             "payment_methods": payment_methods,
+
             "search": search,
+
             "selected_class": student_class,
-            "selected_academic_year": academic_year,
+
+            "from_date": from_date,
+
+            "to_date": to_date,
+
             "selected_term": term,
+
             "selected_payment_method": payment_method,
         }
     )

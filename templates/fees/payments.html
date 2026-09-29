@@ -167,36 +167,38 @@
             </div>
 
 
-            <!-- ACADEMIC YEAR -->
-            <div class="filter-group">
+            <!-- FROM DATE -->
+<div class="filter-group">
 
-                <label>
-                    Academic Year
-                </label>
+    <label>
+        From Date
+    </label>
 
-                <select name="academic_year">
+    <input
+        type="date"
+        name="from_date"
+        value="{{ from_date }}"
+        class="date-filter"
+    >
 
-                    <option value="">
-                        All Years
-                    </option>
+</div>
 
-                    {% for year in academic_years %}
 
-                        <option
-                            value="{{ year }}"
-                            {% if selected_academic_year == year %}
-                                selected
-                            {% endif %}
-                        >
-                            {{ year }}
-                        </option>
+<!-- TO DATE -->
+<div class="filter-group">
 
-                    {% endfor %}
+    <label>
+        To Date
+    </label>
 
-                </select>
+    <input
+        type="date"
+        name="to_date"
+        value="{{ to_date }}"
+        class="date-filter"
+    >
 
-            </div>
-
+</div>
 
             <!-- TERM -->
             <div class="filter-group">
