@@ -287,22 +287,35 @@
 
                             <div class="table-actions">
 
-                                <button
-                                    type="button"
-                                    class="edit-btn"
-                                >
-                                    <i class="fas fa-pen-to-square"></i>
-                                </button>
+    <a
+        href="{% url 'edit_fee_structure' fee.id %}"
+        class="edit-btn"
+        title="Edit Fee Structure"
+    >
+        <i class="fas fa-pen-to-square"></i>
+    </a>
 
 
-                                <button
-                                    type="button"
-                                    class="delete-btn"
-                                >
-                                    <i class="fas fa-trash"></i>
-                                </button>
+    <form
+        method="POST"
+        action="{% url 'delete_fee_structure' fee.id %}"
+        style="display: inline;"
+        onsubmit="return confirm('Are you sure you want to delete this fee structure?');"
+    >
 
-                            </div>
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="delete-btn"
+            title="Delete Fee Structure"
+        >
+            <i class="fas fa-trash"></i>
+        </button>
+
+    </form>
+
+</div>
 
                         </td>
 

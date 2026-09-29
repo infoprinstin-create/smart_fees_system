@@ -839,3 +839,44 @@ body.dark-mode .profile-term {
     }
 
 }
+
+/* =========================================================
+   RECEIPT NUMBER LINK
+   ========================================================= */
+
+.profile-receipt.receipt-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    color: #2563eb;
+    text-decoration: none;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: color 0.2s ease;
+}
+
+.profile-receipt.receipt-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.profile-receipt.receipt-link i {
+    font-size: 13px;
+}
+
+
+/* DARK MODE */
+
+.dark-mode .profile-receipt.receipt-link,
+[data-theme="dark"] .profile-receipt.receipt-link {
+    color: #60a5fa;
+}
+
+.dark-mode .profile-receipt.receipt-link:hover,
+[data-theme="dark"] .profile-receipt.receipt-link:hover {
+    color: #93c5fd;
+}

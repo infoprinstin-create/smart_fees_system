@@ -1,0 +1,520 @@
+/* =========================================================
+   EDIT FEE STRUCTURE
+   ========================================================= */
+
+.fee-structure-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.fee-structure-page .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.fee-structure-page .page-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.fee-structure-page .page-header p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: #64748b;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.fee-structure-page .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 10px 16px;
+
+    border-radius: 9px;
+
+    background: #f1f5f9;
+    color: #334155;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.fee-structure-page .back-btn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+
+/* =========================================================
+   MAIN FORM CARD
+   ========================================================= */
+
+.fee-structure-page .fee-main-card {
+    width: 100%;
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
+
+.fee-structure-page .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+
+    margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.fee-structure-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fee-structure-page .form-group label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+}
+
+
+/* =========================================================
+   INPUTS AND SELECTS
+   ========================================================= */
+
+.fee-structure-page .form-group input,
+.fee-structure-page .form-group select {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 14px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #1e293b;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.fee-structure-page .form-group input:hover,
+.fee-structure-page .form-group select:hover {
+    border-color: #94a3b8;
+}
+
+.fee-structure-page .form-group input:focus,
+.fee-structure-page .form-group select:focus {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* =========================================================
+   AMOUNT INPUT
+   ========================================================= */
+
+.fee-structure-page .amount-input {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 48px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.fee-structure-page .amount-input:hover {
+    border-color: #94a3b8;
+}
+
+.fee-structure-page .amount-input:focus-within {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* GH₵ LABEL */
+
+.fee-structure-page .amount-input span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+
+    padding: 0 13px;
+
+    background: #f8fafc;
+
+    border-right: 1px solid #e2e8f0;
+
+    color: #2563eb;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+
+/* AMOUNT FIELD */
+
+.fee-structure-page .amount-input input {
+    flex: 1;
+
+    width: 100%;
+    height: 100%;
+
+    border: none !important;
+    outline: none !important;
+
+    box-shadow: none !important;
+
+    border-radius: 0;
+
+    padding: 0 14px;
+
+    background: transparent;
+
+    font-size: 14px;
+    color: #1e293b;
+}
+
+
+/* =========================================================
+   TOTAL FIELD
+   ========================================================= */
+
+.fee-structure-page .total-input {
+    background: #f8fafc;
+}
+
+.fee-structure-page .total-input input {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.fee-structure-page .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid #e2e8f0;
+}
+
+
+/* CANCEL BUTTON */
+
+.fee-structure-page .cancel-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-width: 130px;
+    height: 46px;
+
+    padding: 0 20px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+
+    background: #ffffff;
+    color: #475569;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.fee-structure-page .cancel-btn:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #1e293b;
+}
+
+
+/* UPDATE BUTTON */
+
+.fee-structure-page .save-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-width: 170px;
+    height: 46px;
+
+    padding: 0 22px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.22);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.fee-structure-page .save-btn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.28);
+}
+
+.fee-structure-page .save-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .fee-structure-page {
+        padding: 24px;
+    }
+
+    .fee-structure-page .form-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+    .fee-structure-page {
+        padding: 16px;
+    }
+
+    .fee-structure-page .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .fee-structure-page .page-header h1 {
+        font-size: 25px;
+    }
+
+    .fee-structure-page .fee-main-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .fee-structure-page .form-row {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .fee-structure-page .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .fee-structure-page .cancel-btn,
+    .fee-structure-page .save-btn {
+        width: 100%;
+    }
+
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+.dark-mode .fee-structure-page .page-header h1,
+[data-theme="dark"] .fee-structure-page .page-header h1 {
+    color: #f8fafc;
+}
+
+.dark-mode .fee-structure-page .page-header p,
+[data-theme="dark"] .fee-structure-page .page-header p {
+    color: #94a3b8;
+}
+
+.dark-mode .fee-structure-page .fee-main-card,
+[data-theme="dark"] .fee-structure-page .fee-main-card {
+    background: #0f172a;
+
+    border-color: #1e293b;
+
+    box-shadow: none;
+}
+
+.dark-mode .fee-structure-page .form-group label,
+[data-theme="dark"] .fee-structure-page .form-group label {
+    color: #cbd5e1;
+}
+
+.dark-mode .fee-structure-page .form-group input,
+.dark-mode .fee-structure-page .form-group select,
+[data-theme="dark"] .fee-structure-page .form-group input,
+[data-theme="dark"] .fee-structure-page .form-group select {
+    background: #111827;
+
+    border-color: #334155;
+
+    color: #f8fafc;
+}
+
+.dark-mode .fee-structure-page .amount-input,
+[data-theme="dark"] .fee-structure-page .amount-input {
+    background: #111827;
+
+    border-color: #334155;
+}
+
+.dark-mode .fee-structure-page .amount-input span,
+[data-theme="dark"] .fee-structure-page .amount-input span {
+    background: #1e293b;
+
+    border-color: #334155;
+
+    color: #60a5fa;
+}
+
+.dark-mode .fee-structure-page .amount-input input,
+[data-theme="dark"] .fee-structure-page .amount-input input {
+    color: #f8fafc;
+}
+
+.dark-mode .fee-structure-page .total-input,
+[data-theme="dark"] .fee-structure-page .total-input {
+    background: #111827;
+}
+
+.dark-mode .fee-structure-page .total-input input,
+[data-theme="dark"] .fee-structure-page .total-input input {
+    color: #60a5fa;
+}
+
+.dark-mode .fee-structure-page .form-actions,
+[data-theme="dark"] .fee-structure-page .form-actions {
+    border-color: #1e293b;
+}
+
+.dark-mode .fee-structure-page .cancel-btn,
+[data-theme="dark"] .fee-structure-page .cancel-btn {
+    background: #111827;
+
+    border-color: #334155;
+
+    color: #cbd5e1;
+}
+
+.dark-mode .fee-structure-page .cancel-btn:hover,
+[data-theme="dark"] .fee-structure-page .cancel-btn:hover {
+    background: #1e293b;
+}
+
+.dark-mode .fee-structure-page .back-btn,
+[data-theme="dark"] .fee-structure-page .back-btn {
+    background: #1e293b;
+    color: #cbd5e1;
+}
+
+.dark-mode .fee-structure-page .back-btn:hover,
+[data-theme="dark"] .fee-structure-page .back-btn:hover {
+    background: #334155;
+}

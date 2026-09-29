@@ -183,6 +183,7 @@ def login_view(request):
 # SETTINGS
 # ADMINISTRATOR ONLY
 # =========================================================
+
 @login_required
 @role_required("administrator")
 def settings_view(request):
@@ -193,6 +194,96 @@ def settings_view(request):
         settings = SchoolSettings.objects.create()
 
     if request.method == "POST":
+
+        # =====================================================
+        # CHANGE ADMIN PASSWORD
+        # =====================================================
+
+        if request.POST.get("change_password") == "1":
+
+            current_password = request.POST.get(
+                "current_password",
+                ""
+            )
+
+            new_password = request.POST.get(
+                "new_password",
+                ""
+            )
+
+            confirm_password = request.POST.get(
+                "confirm_password",
+                ""
+            )
+
+            # CHECK CURRENT PASSWORD
+            if not request.user.check_password(
+                current_password
+            ):
+
+                messages.error(
+                    request,
+                    "Current password is incorrect."
+                )
+
+                return redirect("settings")
+
+            # CHECK NEW PASSWORD
+            if not new_password:
+
+                messages.error(
+                    request,
+                    "Please enter a new password."
+                )
+
+                return redirect("settings")
+
+            # CHECK PASSWORD MATCH
+            if new_password != confirm_password:
+
+                messages.error(
+                    request,
+                    "New password and confirmation password do not match."
+                )
+
+                return redirect("settings")
+
+            # CHECK PASSWORD LENGTH
+            if len(new_password) < 8:
+
+                messages.error(
+                    request,
+                    "Password must be at least 8 characters long."
+                )
+
+                return redirect("settings")
+
+            # CHANGE PASSWORD
+            request.user.set_password(
+                new_password
+            )
+
+            request.user.save()
+
+            messages.success(
+                request,
+                "Your password has been changed successfully."
+            )
+
+            # Keep the administrator logged in
+            from django.contrib.auth import update_session_auth_hash
+
+            update_session_auth_hash(
+                request,
+                request.user
+            )
+
+            return redirect("settings")
+
+
+        # =====================================================
+        # SCHOOL SETTINGS
+        # =====================================================
 
         settings.school_name = request.POST.get(
             "school_name",
@@ -224,8 +315,14 @@ def settings_view(request):
             ""
         ).strip()
 
+
+        # =====================================================
         # SCHOOL LOGO
-        uploaded_logo = request.FILES.get("school_logo")
+        # =====================================================
+
+        uploaded_logo = request.FILES.get(
+            "school_logo"
+        )
 
         if uploaded_logo:
 
@@ -243,9 +340,16 @@ def settings_view(request):
 
             settings.logo = uploaded_logo
 
+
         settings.save()
 
+        messages.success(
+            request,
+            "School settings have been updated successfully."
+        )
+
         return redirect("settings")
+
 
     return render(
         request,
@@ -255,7 +359,6 @@ def settings_view(request):
         }
     )
 
-    
 # =========================================================
 # STUDENTS
 # SCHOOL FEES
@@ -2087,9 +2190,21 @@ def fees_structure(request):
 # SCHOOL FEES
 # =========================================================
 
+# =========================================================
+# ADD FEE STRUCTURE
+# SCHOOL FEES
+# =========================================================
+
 @login_required
 @role_required("school_fees")
 def add_fee_structure(request):
+
+    registered_classes = SchoolClass.objects.filter(
+        status="Active"
+    ).order_by(
+        "level",
+        "name"
+    )
 
     if request.method == "POST":
 
@@ -2140,9 +2255,125 @@ def add_fee_structure(request):
 
     return render(
         request,
-        "fees/add_fee_structure.html"
+        "fees/add_fee_structure.html",
+        {
+            "registered_classes": registered_classes
+        }
     )
 
+# =========================================================
+# EDIT FEE STRUCTURE
+# SCHOOL FEES
+# =========================================================
+
+
+@login_required
+@role_required("school_fees")
+def edit_fee_structure(request, fee_id):
+
+    fee_structure = get_object_or_404(
+        FeeStructure,
+        id=fee_id
+    )
+
+    registered_classes = SchoolClass.objects.filter(
+        status="Active"
+    ).order_by(
+        "level",
+        "name"
+    )
+
+    # Make sure the currently selected class is still available
+    # even if it has been changed to Inactive.
+    if fee_structure.student_class:
+        current_class = SchoolClass.objects.filter(
+            name=fee_structure.student_class
+        ).first()
+
+        if current_class and current_class not in registered_classes:
+            registered_classes = (
+                SchoolClass.objects.filter(
+                    id=current_class.id
+                ) |
+                registered_classes
+            )
+
+    if request.method == "POST":
+
+        fee_structure.student_class = request.POST.get(
+            "student_class",
+            ""
+        ).strip()
+
+        fee_structure.academic_year = request.POST.get(
+            "academic_year",
+            "2026/2027"
+        ).strip()
+
+        fee_structure.term = request.POST.get(
+            "term",
+            "First Term"
+        ).strip()
+
+        fee_structure.registration_fee = request.POST.get(
+            "registration_fee",
+            0
+        )
+
+        fee_structure.tuition_fee = request.POST.get(
+            "tuition_fee",
+            0
+        )
+
+        fee_structure.examination_fee = request.POST.get(
+            "examination_fee",
+            0
+        )
+
+        fee_structure.library_fee = request.POST.get(
+            "library_fee",
+            0
+        )
+
+        fee_structure.activity_fee = request.POST.get(
+            "activity_fee",
+            0
+        )
+
+        fee_structure.save()
+
+        return redirect("fees_structure")
+
+    return render(
+        request,
+        "fees/edit_fee_structure.html",
+        {
+            "fee_structure": fee_structure,
+            "registered_classes": registered_classes,
+        }
+    )
+
+# =========================================================
+# DELETE FEE STRUCTURE
+# SCHOOL FEES
+# =========================================================
+
+@login_required
+@role_required("school_fees")
+def delete_fee_structure(request, fee_id):
+
+    fee_structure = get_object_or_404(
+        FeeStructure,
+        id=fee_id
+    )
+
+    if request.method == "POST":
+
+        fee_structure.delete()
+
+        return redirect("fees_structure")
+
+    return redirect("fees_structure")
 
 # =========================================================
 # REPORTS

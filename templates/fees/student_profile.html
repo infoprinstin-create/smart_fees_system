@@ -127,18 +127,6 @@
                 <div class="student-quick-info">
 
                     <div>
-                        <i class="fa-solid fa-graduation-cap"></i>
-                        <span>
-                            {{ student.student_class }}
-
-                            {% if student.stream %}
-                                — {{ student.stream }}
-                            {% endif %}
-                        </span>
-                    </div>
-
-
-                    <div>
                         <i class="fa-solid fa-calendar"></i>
                         <span>
                             {{ student.academic_year }}
@@ -161,6 +149,7 @@
 
 
         <!-- REGISTRATION -->
+
         <div class="registration-info">
 
             <span>
@@ -187,9 +176,11 @@
     <div class="section-heading">
 
         <div>
+
             <i class="fa-solid fa-wallet"></i>
 
             <div>
+
                 <h3>
                     Fee Summary
                 </h3>
@@ -197,7 +188,9 @@
                 <span>
                     Current fee position for this student
                 </span>
+
             </div>
+
         </div>
 
     </div>
@@ -214,6 +207,7 @@
             </div>
 
             <div>
+
                 <span>
                     Total Fee
                 </span>
@@ -221,6 +215,7 @@
                 <strong>
                     GH₵ {{ total_fee|floatformat:2|intcomma }}
                 </strong>
+
             </div>
 
         </div>
@@ -235,6 +230,7 @@
             </div>
 
             <div>
+
                 <span>
                     Total Paid
                 </span>
@@ -242,6 +238,7 @@
                 <strong>
                     GH₵ {{ total_paid|floatformat:2|intcomma }}
                 </strong>
+
             </div>
 
         </div>
@@ -256,6 +253,7 @@
             </div>
 
             <div>
+
                 <span>
                     Current Balance
                 </span>
@@ -263,6 +261,7 @@
                 <strong>
                     GH₵ {{ balance|floatformat:2|intcomma }}
                 </strong>
+
             </div>
 
         </div>
@@ -277,6 +276,7 @@
             </div>
 
             <div>
+
                 <span>
                     Payments Made
                 </span>
@@ -284,6 +284,7 @@
                 <strong>
                     {{ payment_count }}
                 </strong>
+
             </div>
 
         </div>
@@ -307,9 +308,11 @@
             <div class="profile-card-header">
 
                 <div>
+
                     <i class="fa-solid fa-user"></i>
 
                     <div>
+
                         <h3>
                             Personal Information
                         </h3>
@@ -317,7 +320,9 @@
                         <span>
                             Student details
                         </span>
+
                     </div>
+
                 </div>
 
             </div>
@@ -325,9 +330,13 @@
 
             <div class="information-grid">
 
+                <!-- FIRST NAME -->
+
                 <div class="information-item">
 
-                    <span>First Name</span>
+                    <span>
+                        First Name
+                    </span>
 
                     <strong>
                         {{ student.first_name }}
@@ -336,9 +345,13 @@
                 </div>
 
 
+                <!-- LAST NAME -->
+
                 <div class="information-item">
 
-                    <span>Last Name</span>
+                    <span>
+                        Last Name
+                    </span>
 
                     <strong>
                         {{ student.last_name }}
@@ -347,24 +360,34 @@
                 </div>
 
 
+                <!-- DATE OF BIRTH -->
+
                 <div class="information-item">
 
-                    <span>Date of Birth</span>
+                    <span>
+                        Date of Birth
+                    </span>
 
                     <strong>
+
                         {% if student.date_of_birth %}
                             {{ student.date_of_birth|date:"d M Y" }}
                         {% else %}
                             —
                         {% endif %}
+
                     </strong>
 
                 </div>
 
 
+                <!-- GENDER -->
+
                 <div class="information-item">
 
-                    <span>Gender</span>
+                    <span>
+                        Gender
+                    </span>
 
                     <strong>
                         {{ student.gender }}
@@ -373,9 +396,13 @@
                 </div>
 
 
+                <!-- CLASS -->
+
                 <div class="information-item">
 
-                    <span>Class</span>
+                    <span>
+                        Class
+                    </span>
 
                     <strong>
                         {{ student.student_class }}
@@ -384,24 +411,13 @@
                 </div>
 
 
-                <div class="information-item">
-
-                    <span>Stream</span>
-
-                    <strong>
-                        {% if student.stream %}
-                            {{ student.stream }}
-                        {% else %}
-                            —
-                        {% endif %}
-                    </strong>
-
-                </div>
-
+                <!-- ACADEMIC YEAR -->
 
                 <div class="information-item">
 
-                    <span>Academic Year</span>
+                    <span>
+                        Academic Year
+                    </span>
 
                     <strong>
                         {{ student.academic_year }}
@@ -410,12 +426,22 @@
                 </div>
 
 
+                <!-- DATE REGISTERED -->
+
                 <div class="information-item">
 
-                    <span>Date Registered</span>
+                    <span>
+                        Date Registered
+                    </span>
 
                     <strong>
-                        {{ student.date_registered|date:"d M Y" }}
+
+                        {% if student.date_registered %}
+                            {{ student.date_registered|date:"d M Y" }}
+                        {% else %}
+                            —
+                        {% endif %}
+
                     </strong>
 
                 </div>
@@ -434,9 +460,11 @@
             <div class="profile-card-header">
 
                 <div>
+
                     <i class="fa-solid fa-users"></i>
 
                     <div>
+
                         <h3>
                             Parent / Guardian
                         </h3>
@@ -444,13 +472,17 @@
                         <span>
                             Contact information
                         </span>
+
                     </div>
+
                 </div>
 
             </div>
 
 
             <div class="guardian-details">
+
+                <!-- PARENT NAME -->
 
                 <div class="guardian-item">
 
@@ -459,21 +491,27 @@
                     </div>
 
                     <div>
+
                         <span>
                             Parent / Guardian Name
                         </span>
 
                         <strong>
+
                             {% if student.parent_name %}
                                 {{ student.parent_name }}
                             {% else %}
                                 —
                             {% endif %}
+
                         </strong>
+
                     </div>
 
                 </div>
 
+
+                <!-- CONTACT -->
 
                 <div class="guardian-item">
 
@@ -482,21 +520,27 @@
                     </div>
 
                     <div>
+
                         <span>
                             Contact Number
                         </span>
 
                         <strong>
+
                             {% if student.parent_contact %}
                                 {{ student.parent_contact }}
                             {% else %}
                                 —
                             {% endif %}
+
                         </strong>
+
                     </div>
 
                 </div>
 
+
+                <!-- ADDRESS -->
 
                 <div class="guardian-item">
 
@@ -505,17 +549,21 @@
                     </div>
 
                     <div>
+
                         <span>
                             Address
                         </span>
 
                         <strong>
+
                             {% if student.address %}
                                 {{ student.address }}
                             {% else %}
                                 —
                             {% endif %}
+
                         </strong>
+
                     </div>
 
                 </div>
@@ -537,9 +585,11 @@
         <div class="profile-card-header">
 
             <div>
+
                 <i class="fa-solid fa-file-invoice"></i>
 
                 <div>
+
                     <h3>
                         Fee Structure
                     </h3>
@@ -547,7 +597,9 @@
                     <span>
                         Fees assigned to {{ student.student_class }}
                     </span>
+
                 </div>
+
             </div>
 
         </div>
@@ -557,45 +609,82 @@
 
             <div class="fee-breakdown">
 
+                <!-- REGISTRATION -->
+
                 <div class="fee-line">
-                    <span>Registration Fee</span>
+
+                    <span>
+                        Registration Fee
+                    </span>
+
                     <strong>
                         GH₵ {{ fee_structure.registration_fee|floatformat:2|intcomma }}
                     </strong>
+
                 </div>
 
 
+                <!-- TUITION -->
+
                 <div class="fee-line">
-                    <span>Tuition Fee</span>
+
+                    <span>
+                        Tuition Fee
+                    </span>
+
                     <strong>
                         GH₵ {{ fee_structure.tuition_fee|floatformat:2|intcomma }}
                     </strong>
+
                 </div>
 
 
+                <!-- EXAMINATION -->
+
                 <div class="fee-line">
-                    <span>Examination Fee</span>
+
+                    <span>
+                        Examination Fee
+                    </span>
+
                     <strong>
                         GH₵ {{ fee_structure.examination_fee|floatformat:2|intcomma }}
                     </strong>
+
                 </div>
 
 
+                <!-- LIBRARY -->
+
                 <div class="fee-line">
-                    <span>Library Fee</span>
+
+                    <span>
+                        Library Fee
+                    </span>
+
                     <strong>
                         GH₵ {{ fee_structure.library_fee|floatformat:2|intcomma }}
                     </strong>
+
                 </div>
 
 
+                <!-- ACTIVITY -->
+
                 <div class="fee-line">
-                    <span>Activity Fee</span>
+
+                    <span>
+                        Activity Fee
+                    </span>
+
                     <strong>
                         GH₵ {{ fee_structure.activity_fee|floatformat:2|intcomma }}
                     </strong>
+
                 </div>
 
+
+                <!-- TOTAL -->
 
                 <div class="fee-line total">
 
@@ -641,9 +730,11 @@
         <div class="profile-card-header payment-history-header">
 
             <div>
+
                 <i class="fa-solid fa-clock-rotate-left"></i>
 
                 <div>
+
                     <h3>
                         Payment History
                     </h3>
@@ -651,7 +742,9 @@
                     <span>
                         All payments made by this student
                     </span>
+
                 </div>
+
             </div>
 
 
@@ -701,29 +794,54 @@
 
                             <tr>
 
+                                <!-- NUMBER -->
+
                                 <td>
                                     {{ forloop.counter }}
                                 </td>
 
 
+                                <!-- RECEIPT NUMBER -->
+
                                 <td>
 
-                                    <span class="profile-receipt">
-                                        {{ payment.receipt_number|default:"—" }}
-                                    </span>
+                                    {% if payment.receipt_number %}
+
+                                        <a
+                                            href="{% url 'print_receipt' payment.id %}"
+                                            class="profile-receipt receipt-link"
+                                            title="Preview Receipt"
+                                        >
+                                            <i class="fa-solid fa-receipt"></i>
+                                            {{ payment.receipt_number }}
+                                        </a>
+
+                                    {% else %}
+
+                                        <span class="profile-receipt">
+                                            —
+                                        </span>
+
+                                    {% endif %}
 
                                 </td>
 
+
+                                <!-- DATE -->
 
                                 <td>
                                     {{ payment.payment_date|date:"d M Y" }}
                                 </td>
 
 
+                                <!-- ACADEMIC YEAR -->
+
                                 <td>
                                     {{ payment.academic_year }}
                                 </td>
 
+
+                                <!-- TERM -->
 
                                 <td>
 
@@ -734,6 +852,8 @@
                                 </td>
 
 
+                                <!-- AMOUNT -->
+
                                 <td>
 
                                     <strong class="history-amount">
@@ -742,6 +862,8 @@
 
                                 </td>
 
+
+                                <!-- PAYMENT METHOD -->
 
                                 <td>
 
@@ -803,9 +925,11 @@
             <div class="profile-card-header">
 
                 <div>
+
                     <i class="fa-solid fa-circle-info"></i>
 
                     <div>
+
                         <h3>
                             Additional Information
                         </h3>
@@ -813,7 +937,9 @@
                         <span>
                             Other information about the student
                         </span>
+
                     </div>
+
                 </div>
 
             </div>

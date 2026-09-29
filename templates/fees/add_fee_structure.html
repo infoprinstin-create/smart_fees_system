@@ -60,55 +60,18 @@
             Class
         </label>
 
-        <select
-            name="student_class"
-            id="student_class"
-            required
-        >
+        <select name="student_class" id="student_class" required>
+            <option value="">Select Class</option>
 
-            <option value="" selected disabled>
-                Select Class
+            {% for school_class in registered_classes %}
+            <option value="{{ school_class.name }}">
+            {{ school_class.name }}
             </option>
-
-            <option value="Playgroup">
-                Playgroup
+            {% empty %}
+            <option value="" disabled>
+            No registered classes available
             </option>
-
-            <option value="KG">
-                KG
-            </option>
-
-            <option value="Primary 1">
-                Primary 1
-            </option>
-
-            <option value="Primary 2">
-                Primary 2
-            </option>
-
-            <option value="Primary 3">
-                Primary 3
-            </option>
-
-            <option value="Primary 4">
-                Primary 4
-            </option>
-
-            <option value="Primary 5">
-                Primary 5
-            </option>
-
-            <option value="JHS 1">
-                JHS 1
-            </option>
-
-            <option value="JHS 2">
-                JHS 2
-            </option>
-
-            <option value="JHS 3">
-                JHS 3
-            </option>
+            {% endfor %}
 
         </select>
 

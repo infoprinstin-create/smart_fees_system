@@ -366,14 +366,24 @@
                         </td>
 
 
+                        
                         <!-- RECEIPT -->
-                        <td>
-
-                            <span class="receipt-number">
-                                {{ payment.receipt_number|default:"—" }}
-                            </span>
-
-                        </td>
+<td>
+    {% if payment.receipt_number %}
+        <a
+            href="{% url 'print_receipt' payment.id %}"
+            class="receipt-number receipt-link"
+            title="Preview Receipt"
+        >
+            <i class="fa-solid fa-receipt"></i>
+            {{ payment.receipt_number }}
+        </a>
+    {% else %}
+        <span class="receipt-number">
+            —
+        </span>
+    {% endif %}
+</td>
 
 
                         <!-- DATE -->
