@@ -18,12 +18,17 @@
     <div class="dashboard-header">
 
         <div>
-            <h1>Dashboard</h1>
+
+            <h1>
+                Dashboard
+            </h1>
 
             <p>
                 Welcome to the School Fees Management System
             </p>
+
         </div>
+
 
         <div class="dashboard-date">
 
@@ -44,17 +49,23 @@
 
     <div class="summary-grid">
 
+
         <!-- TOTAL STUDENTS -->
 
         <div class="summary-card">
 
             <div class="summary-icon blue">
+
                 <i class="fas fa-users"></i>
+
             </div>
+
 
             <div class="summary-content">
 
-                <h3>Total Students</h3>
+                <h3>
+                    Total Students
+                </h3>
 
                 <strong>
                     {{ total_students }}
@@ -78,12 +89,17 @@
         <div class="summary-card">
 
             <div class="summary-icon green">
+
                 <i class="fas fa-circle-dollar-to-slot"></i>
+
             </div>
+
 
             <div class="summary-content">
 
-                <h3>Total Fees Due</h3>
+                <h3>
+                    Total Fees Due
+                </h3>
 
                 <strong>
                     GH₵ {{ total_fees_due|floatformat:2 }}
@@ -107,12 +123,17 @@
         <div class="summary-card">
 
             <div class="summary-icon purple">
+
                 <i class="fas fa-check"></i>
+
             </div>
+
 
             <div class="summary-content">
 
-                <h3>Total Paid</h3>
+                <h3>
+                    Total Paid
+                </h3>
 
                 <strong>
                     GH₵ {{ total_paid|floatformat:2 }}
@@ -136,12 +157,17 @@
         <div class="summary-card">
 
             <div class="summary-icon red">
+
                 <i class="fas fa-clock"></i>
+
             </div>
+
 
             <div class="summary-content">
 
-                <h3>Outstanding</h3>
+                <h3>
+                    Outstanding
+                </h3>
 
                 <strong>
                     GH₵ {{ outstanding|floatformat:2 }}
@@ -163,7 +189,573 @@
 
 
     <!-- =====================================================
+         COLLECTION UPDATES
+         
+         THIS SECTION IS FULL WIDTH AND COMES DIRECTLY
+         AFTER THE SUMMARY CARDS.
+    ====================================================== -->
+
+    <section class="collection-updates-card">
+
+
+        <!-- =================================================
+             COLLECTION HEADER
+        ================================================== -->
+
+        <div class="collection-updates-header">
+
+
+            <div class="collection-title">
+
+                <h2>
+
+                    <i class="fas fa-chart-line"></i>
+
+                    Collection Updates
+
+                </h2>
+
+                <p>
+                    View fee collections by date and class.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 DATE FILTER
+            ================================================== -->
+
+            <form
+                method="GET"
+                class="collection-date-filter"
+            >
+
+                <div class="date-field">
+
+                    <label for="from_date">
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="from_date"
+                        name="from_date"
+                        value="{{ from_date }}"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="date-field">
+
+                    <label for="to_date">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="to_date"
+                        name="to_date"
+                        value="{{ to_date }}"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="collection-filter-btn"
+                >
+
+                    <i class="fas fa-filter"></i>
+
+                    Apply
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- =================================================
+             COLLECTION SUMMARY CARDS
+        ================================================== -->
+
+        <div class="collection-summary-grid">
+
+
+            <!-- =================================================
+                 SCHOOL FEE
+            ================================================== -->
+
+            <button
+                type="button"
+                class="collection-summary-card school-collection"
+                data-target="school-fee-details"
+                aria-expanded="false"
+            >
+
+                <div class="collection-card-icon">
+
+                    <i class="fas fa-money-bill-wave"></i>
+
+                </div>
+
+
+                <div class="collection-card-content">
+
+                    <span>
+                        School Fee Collected
+                    </span>
+
+                    <strong>
+                        GH₵ {{ school_fee_collected|floatformat:2 }}
+                    </strong>
+
+                    <small>
+
+                        <span>
+                            View by Class
+                        </span>
+
+                        <i class="fas fa-chevron-down"></i>
+
+                    </small>
+
+                </div>
+
+            </button>
+
+
+            <!-- =================================================
+                 FEEDING FEE
+            ================================================== -->
+
+            <button
+                type="button"
+                class="collection-summary-card feeding-collection"
+                data-target="feeding-fee-details"
+                aria-expanded="false"
+            >
+
+                <div class="collection-card-icon">
+
+                    <i class="fas fa-utensils"></i>
+
+                </div>
+
+
+                <div class="collection-card-content">
+
+                    <span>
+                        Feeding Fee Collected
+                    </span>
+
+                    <strong>
+                        GH₵ {{ feeding_fee_collected|floatformat:2 }}
+                    </strong>
+
+                    <small>
+
+                        <span>
+                            View by Class
+                        </span>
+
+                        <i class="fas fa-chevron-down"></i>
+
+                    </small>
+
+                </div>
+
+            </button>
+
+
+            <!-- =================================================
+                 BUS FEE
+            ================================================== -->
+
+            <button
+                type="button"
+                class="collection-summary-card bus-collection"
+                data-target="bus-fee-details"
+                aria-expanded="false"
+            >
+
+                <div class="collection-card-icon">
+
+                    <i class="fas fa-bus"></i>
+
+                </div>
+
+
+                <div class="collection-card-content">
+
+                    <span>
+                        Bus Fee Collected
+                    </span>
+
+                    <strong>
+                        GH₵ {{ bus_fee_collected|floatformat:2 }}
+                    </strong>
+
+                    <small>
+
+                        <span>
+                            View by Class
+                        </span>
+
+                        <i class="fas fa-chevron-down"></i>
+
+                    </small>
+
+                </div>
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             SCHOOL FEE CLASS BREAKDOWN
+        ================================================== -->
+
+        <div
+            id="school-fee-details"
+            class="collection-details"
+        >
+
+            <div class="collection-details-header">
+
+                <div>
+
+                    <h3>
+
+                        <i class="fas fa-money-bill-wave"></i>
+
+                        School Fee Collection by Class
+
+                    </h3>
+
+                    <span>
+
+                        {{ from_date }}
+                        -
+                        {{ to_date }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="collection-table-wrapper">
+
+                <table class="collection-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Payments
+                            </th>
+
+                            <th>
+                                Total Collected
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in school_fee_by_class %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.class_name }}
+                            </td>
+
+                            <td>
+                                {{ item.payments }}
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    GH₵ {{ item.total|floatformat:2 }}
+                                </strong>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="3"
+                                class="collection-empty"
+                            >
+
+                                No school fee payments
+                                found for this date range.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FEEDING FEE CLASS BREAKDOWN
+        ================================================== -->
+
+        <div
+            id="feeding-fee-details"
+            class="collection-details"
+        >
+
+            <div class="collection-details-header">
+
+                <div>
+
+                    <h3>
+
+                        <i class="fas fa-utensils"></i>
+
+                        Feeding Fee Collection by Class
+
+                    </h3>
+
+                    <span>
+
+                        {{ from_date }}
+                        -
+                        {{ to_date }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="collection-table-wrapper">
+
+                <table class="collection-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Payments
+                            </th>
+
+                            <th>
+                                Total Collected
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in feeding_fee_by_class %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.class_name }}
+                            </td>
+
+                            <td>
+                                {{ item.payments }}
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    GH₵ {{ item.total|floatformat:2 }}
+                                </strong>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="3"
+                                class="collection-empty"
+                            >
+
+                                No feeding fee payments
+                                found for this date range.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BUS FEE CLASS BREAKDOWN
+        ================================================== -->
+
+        <div
+            id="bus-fee-details"
+            class="collection-details"
+        >
+
+            <div class="collection-details-header">
+
+                <div>
+
+                    <h3>
+
+                        <i class="fas fa-bus"></i>
+
+                        Bus Fee Collection by Class
+
+                    </h3>
+
+                    <span>
+
+                        {{ from_date }}
+                        -
+                        {{ to_date }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="collection-table-wrapper">
+
+                <table class="collection-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Class
+                            </th>
+
+                            <th>
+                                Payments
+                            </th>
+
+                            <th>
+                                Total Collected
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in bus_fee_by_class %}
+
+                        <tr>
+
+                            <td>
+                                {{ item.class_name }}
+                            </td>
+
+                            <td>
+                                {{ item.payments }}
+                            </td>
+
+                            <td>
+
+                                <strong>
+                                    GH₵ {{ item.total|floatformat:2 }}
+                                </strong>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="3"
+                                class="collection-empty"
+                            >
+
+                                No bus fee payments
+                                found for this date range.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
          MAIN DASHBOARD
+         
+         EVERYTHING BELOW THIS POINT IS YOUR EXISTING
+         DASHBOARD CONTENT.
     ====================================================== -->
 
     <div class="dashboard-main-grid">
@@ -225,6 +817,7 @@
                                     style="height: 0%;"
                                 ></div>
 
+
                                 <div
                                     class="bar outstanding"
                                     data-value="{{ month.outstanding }}"
@@ -233,6 +826,7 @@
                                 ></div>
 
                             </div>
+
 
                             <span>
                                 {{ month.month }}
@@ -283,6 +877,7 @@
                         Recent Payments
                     </h2>
 
+
                     <a
                         href="{% url 'payments' %}"
                         class="view-all"
@@ -305,17 +900,29 @@
 
                             <tr>
 
-                                <th>Date</th>
+                                <th>
+                                    Date
+                                </th>
 
-                                <th>Student Name</th>
+                                <th>
+                                    Student Name
+                                </th>
 
-                                <th>Class</th>
+                                <th>
+                                    Class
+                                </th>
 
-                                <th>Amount</th>
+                                <th>
+                                    Amount
+                                </th>
 
-                                <th>Payment Method</th>
+                                <th>
+                                    Payment Method
+                                </th>
 
-                                <th>Status</th>
+                                <th>
+                                    Status
+                                </th>
 
                             </tr>
 
@@ -336,6 +943,7 @@
                                 <td>
 
                                     {{ payment.student.first_name }}
+
                                     {{ payment.student.last_name }}
 
                                 </td>
@@ -343,7 +951,9 @@
 
                                 <td>
 
-                                    {{ payment.student.student_class }}
+                                    <span class="class-badge">
+                                        {{ payment.student.student_class }}
+                                    </span>
 
                                 </td>
 
@@ -371,6 +981,7 @@
                                 </td>
 
                             </tr>
+
 
                             {% empty %}
 
@@ -408,7 +1019,7 @@
 
 
             <!-- =============================================
-                 FEES / STUDENTS BY CLASS
+                 STUDENTS BY CLASS
             ============================================== -->
 
             <div class="dashboard-card fees-class-card">
@@ -456,37 +1067,41 @@
 
                         <div class="class-legend-item">
 
+
                             {% if level.name == "Kindergarten" %}
 
-                                <span class="class-dot kg"></span>
+                            <span class="class-dot kg"></span>
 
-                                <span>
-                                    KG
-                                </span>
+                            <span>
+                                KG
+                            </span>
+
 
                             {% elif level.name == "Primary School" %}
 
-                                <span class="class-dot primary"></span>
+                            <span class="class-dot primary"></span>
 
-                                <span>
-                                    Primary
-                                </span>
+                            <span>
+                                Primary
+                            </span>
+
 
                             {% elif level.name == "Junior High School" %}
 
-                                <span class="class-dot jhs"></span>
+                            <span class="class-dot jhs"></span>
 
-                                <span>
-                                    JHS
-                                </span>
+                            <span>
+                                JHS
+                            </span>
+
 
                             {% elif level.name == "Playgroup" %}
 
-                                <span class="class-dot shs"></span>
+                            <span class="class-dot shs"></span>
 
-                                <span>
-                                    Playgroup
-                                </span>
+                            <span>
+                                Playgroup
+                            </span>
 
                             {% endif %}
 
@@ -494,11 +1109,13 @@
                             <strong>
 
                                 {{ level.count }}
+
                                 ({{ level.percentage }}%)
 
                             </strong>
 
                         </div>
+
 
                         {% empty %}
 
@@ -592,7 +1209,6 @@
 
                     </a>
 
-
                 </div>
 
             </div>
@@ -637,6 +1253,7 @@
 
                             {% else %}
                                 purple-activity
+
                             {% endif %}"
 
                         >
@@ -669,11 +1286,13 @@
                             class="activity-time"
                             datetime="{{ activity.date|date:'c' }}"
                         >
+
                             {{ activity.date|date:"d M Y, H:i" }}
+
                         </time>
 
-
                     </div>
+
 
                     {% empty %}
 
@@ -695,11 +1314,9 @@
 
                     {% endfor %}
 
-
                 </div>
 
             </div>
-
 
         </div>
 
@@ -709,131 +1326,287 @@
 
 
 <!-- =========================================================
-     DYNAMIC CHART SCRIPT
-     
-     This does NOT replace your CSS.
-     It simply calculates the bar heights from real
-     database values.
+     EXISTING DYNAMIC CHART SCRIPT
 ========================================================== -->
 
 <script>
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    const columns = document.querySelectorAll(
-        ".chart-column"
-    );
-
-    if (!columns.length) {
-        return;
-    }
-
-    let maximum = 0;
-
-    /*
-     * Find the largest value in the chart.
-     */
-    columns.forEach(function (column) {
-
-        const paid = parseFloat(
-            column.dataset.paid || 0
-        );
-
-        const outstanding = parseFloat(
-            column.dataset.outstanding || 0
-        );
-
-        maximum = Math.max(
-            maximum,
-            paid,
-            outstanding
-        );
-
-    });
-
-
-    /*
-     * If there is no money recorded yet,
-     * keep all bars at zero.
-     */
-    if (maximum <= 0) {
-
-        columns.forEach(function (column) {
-
-            const paidBar = column.querySelector(
-                ".bar.paid"
+        const columns =
+            document.querySelectorAll(
+                ".chart-column"
             );
 
-            const outstandingBar = column.querySelector(
-                ".bar.outstanding"
-            );
 
-            if (paidBar) {
-                paidBar.style.height = "0%";
-            }
-
-            if (outstandingBar) {
-                outstandingBar.style.height = "0%";
-            }
-
-        });
-
-        return;
-    }
-
-
-    /*
-     * Convert actual amounts into percentages
-     * for the existing CSS bar chart.
-     */
-    columns.forEach(function (column) {
-
-        const paid = parseFloat(
-            column.dataset.paid || 0
-        );
-
-        const outstanding = parseFloat(
-            column.dataset.outstanding || 0
-        );
-
-
-        const paidHeight = (
-            paid / maximum
-        ) * 100;
-
-
-        const outstandingHeight = (
-            outstanding / maximum
-        ) * 100;
-
-
-        const paidBar = column.querySelector(
-            ".bar.paid"
-        );
-
-        const outstandingBar = column.querySelector(
-            ".bar.outstanding"
-        );
-
-
-        if (paidBar) {
-
-            paidBar.style.height =
-                paidHeight + "%";
-
+        if (!columns.length) {
+            return;
         }
 
 
-        if (outstandingBar) {
+        let maximum = 0;
 
-            outstandingBar.style.height =
-                outstandingHeight + "%";
 
+        columns.forEach(
+            function (column) {
+
+                const paid =
+                    parseFloat(
+                        column.dataset.paid || 0
+                    );
+
+                const outstanding =
+                    parseFloat(
+                        column.dataset.outstanding || 0
+                    );
+
+
+                maximum = Math.max(
+                    maximum,
+                    paid,
+                    outstanding
+                );
+
+            }
+        );
+
+
+        if (maximum <= 0) {
+
+            columns.forEach(
+                function (column) {
+
+                    const paidBar =
+                        column.querySelector(
+                            ".bar.paid"
+                        );
+
+                    const outstandingBar =
+                        column.querySelector(
+                            ".bar.outstanding"
+                        );
+
+
+                    if (paidBar) {
+
+                        paidBar.style.height =
+                            "0%";
+
+                    }
+
+
+                    if (outstandingBar) {
+
+                        outstandingBar.style.height =
+                            "0%";
+
+                    }
+
+                }
+            );
+
+            return;
         }
 
-    });
 
-});
+        columns.forEach(
+            function (column) {
+
+                const paid =
+                    parseFloat(
+                        column.dataset.paid || 0
+                    );
+
+                const outstanding =
+                    parseFloat(
+                        column.dataset.outstanding || 0
+                    );
+
+
+                const paidHeight =
+                    (paid / maximum) * 100;
+
+
+                const outstandingHeight =
+                    (outstanding / maximum) * 100;
+
+
+                const paidBar =
+                    column.querySelector(
+                        ".bar.paid"
+                    );
+
+                const outstandingBar =
+                    column.querySelector(
+                        ".bar.outstanding"
+                    );
+
+
+                if (paidBar) {
+
+                    paidBar.style.height =
+                        paidHeight + "%";
+
+                }
+
+
+                if (outstandingBar) {
+
+                    outstandingBar.style.height =
+                        outstandingHeight + "%";
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+<!-- =========================================================
+     COLLECTION UPDATES EXPAND / COLLAPSE
+========================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const collectionCards =
+            document.querySelectorAll(
+                ".collection-summary-card"
+            );
+
+
+        collectionCards.forEach(
+            function (card) {
+
+                card.addEventListener(
+                    "click",
+                    function () {
+
+                        const targetId =
+                            card.dataset.target;
+
+                        const target =
+                            document.getElementById(
+                                targetId
+                            );
+
+
+                        if (!target) {
+                            return;
+                        }
+
+
+                        const alreadyOpen =
+                            target.classList.contains(
+                                "active"
+                            );
+
+
+                        /*
+                         * Close all collection
+                         * detail tables.
+                         */
+
+                        document
+                            .querySelectorAll(
+                                ".collection-details"
+                            )
+                            .forEach(
+                                function (detail) {
+
+                                    detail.classList.remove(
+                                        "active"
+                                    );
+
+                                }
+                            );
+
+
+                        /*
+                         * Reset all cards.
+                         */
+
+                        collectionCards.forEach(
+                            function (item) {
+
+                                item.setAttribute(
+                                    "aria-expanded",
+                                    "false"
+                                );
+
+
+                                const icon =
+                                    item.querySelector(
+                                        "small i"
+                                    );
+
+
+                                if (icon) {
+
+                                    icon.style.transform =
+                                        "rotate(0deg)";
+
+                                }
+
+                            }
+                        );
+
+
+                        /*
+                         * If it was already open,
+                         * leave everything closed.
+                         */
+
+                        if (alreadyOpen) {
+                            return;
+                        }
+
+
+                        /*
+                         * Open selected table.
+                         */
+
+                        target.classList.add(
+                            "active"
+                        );
+
+
+                        card.setAttribute(
+                            "aria-expanded",
+                            "true"
+                        );
+
+
+                        const arrow =
+                            card.querySelector(
+                                "small i"
+                            );
+
+
+                        if (arrow) {
+
+                            arrow.style.transform =
+                                "rotate(180deg)";
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
 
 </script>
 

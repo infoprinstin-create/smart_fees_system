@@ -13,10 +13,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.db import IntegrityError, models
+from django.db import IntegrityError
 from django.contrib import messages
 from django.db.models import Sum
-from django.http import JsonResponse
+from collections import defaultdict
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncMonth
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
@@ -1838,6 +1840,32 @@ def home(request):
     else:
         current_academic_year = f"{today.year}/{today.year + 1}"
 
+
+    # =====================================================
+    # COLLECTION DATE FILTER
+    #
+    # Default:
+    # From Date = Today
+    # To Date   = Today
+    # =====================================================
+
+    from_date = request.GET.get(
+        "from_date",
+        ""
+    ).strip()
+
+    to_date = request.GET.get(
+        "to_date",
+        ""
+    ).strip()
+
+    if not from_date:
+        from_date = today.strftime("%Y-%m-%d")
+
+    if not to_date:
+        to_date = today.strftime("%Y-%m-%d")
+
+
     # =====================================================
     # TOTAL ACTIVE STUDENTS
     # =====================================================
@@ -1846,13 +1874,9 @@ def home(request):
         status="Active"
     ).count()
 
+
     # =====================================================
     # CURRENT ACADEMIC YEAR BILLS
-    #
-    # IMPORTANT:
-    # We use Bill.amount_due.
-    #
-    # This means discounts are already included.
     # =====================================================
 
     current_bills = Bill.objects.filter(
@@ -1866,8 +1890,9 @@ def home(request):
         or Decimal("0.00")
     )
 
+
     # =====================================================
-    # TOTAL PAYMENTS
+    # TOTAL SCHOOL FEE PAYMENTS
     # =====================================================
 
     current_payments = Payment.objects.filter(
@@ -1881,6 +1906,7 @@ def home(request):
         or Decimal("0.00")
     )
 
+
     # =====================================================
     # OUTSTANDING
     # =====================================================
@@ -1890,6 +1916,7 @@ def home(request):
     if outstanding < Decimal("0.00"):
         outstanding = Decimal("0.00")
 
+
     # =====================================================
     # RECENT PAYMENTS
     # =====================================================
@@ -1897,8 +1924,12 @@ def home(request):
     recent_payments = (
         current_payments
         .select_related("student")
-        .order_by("-payment_date", "-created_at")[:5]
+        .order_by(
+            "-payment_date",
+            "-created_at"
+        )[:5]
     )
+
 
     # =====================================================
     # STUDENTS BY CLASS
@@ -1927,14 +1958,15 @@ def home(request):
         class_distribution.append({
             "name": item["student_class"],
             "count": count,
-            "percentage": round(percentage, 1),
+            "percentage": round(
+                percentage,
+                1
+            ),
         })
+
 
     # =====================================================
     # STUDENTS BY SCHOOL LEVEL
-    #
-    # Student.student_class is stored as text, so we use
-    # SchoolClass to determine the level.
     # =====================================================
 
     school_classes = SchoolClass.objects.all()
@@ -1942,9 +1974,12 @@ def home(request):
     level_class_names = defaultdict(set)
 
     for school_class in school_classes:
+
         level_class_names[
             school_class.level
-        ].add(school_class.name)
+        ].add(
+            school_class.name
+        )
 
     level_distribution = []
 
@@ -1976,35 +2011,38 @@ def home(request):
         level_distribution.append({
             "name": level,
             "count": count,
-            "percentage": round(percentage, 1),
+            "percentage": round(
+                percentage,
+                1
+            ),
         })
+
 
     # =====================================================
     # MONTHLY FEE COLLECTION
-    #
-    # We calculate:
-    #
-    # 1. Bills created each month
-    # 2. Payments received each month
-    # 3. Cumulative outstanding at the end of each month
-    #
-    # This is more accurate than simply doing:
-    # monthly bills - monthly payments
     # =====================================================
 
     monthly_bills = (
         current_bills
-        .annotate(month=TruncMonth("created_at"))
+        .annotate(
+            month=TruncMonth("created_at")
+        )
         .values("month")
-        .annotate(total=Sum("amount_due"))
+        .annotate(
+            total=Sum("amount_due")
+        )
         .order_by("month")
     )
 
     monthly_payments = (
         current_payments
-        .annotate(month=TruncMonth("payment_date"))
+        .annotate(
+            month=TruncMonth("payment_date")
+        )
         .values("month")
-        .annotate(total=Sum("amount"))
+        .annotate(
+            total=Sum("amount")
+        )
         .order_by("month")
     )
 
@@ -2062,19 +2100,192 @@ def home(request):
             month_outstanding = Decimal("0.00")
 
         monthly_chart.append({
-            "month": month_names[month_number - 1],
+            "month": month_names[
+                month_number - 1
+            ],
             "billed": billed,
             "paid": paid,
             "outstanding": month_outstanding,
         })
 
+
+    # =====================================================
+    # COLLECTION UPDATES
+    #
+    # DATE RANGE
+    # =====================================================
+
+    date_filtered_school_payments = (
+        Payment.objects
+        .filter(
+            payment_date__gte=from_date,
+            payment_date__lte=to_date
+        )
+        .select_related("student")
+    )
+
+
+    # =====================================================
+    # SCHOOL FEE COLLECTION
+    # =====================================================
+
+    school_fee_collected = (
+        date_filtered_school_payments.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+    school_fee_by_class_query = (
+        date_filtered_school_payments
+        .values(
+            "student__student_class"
+        )
+        .annotate(
+            total=Sum("amount"),
+            payments=Count("id")
+        )
+        .order_by(
+            "student__student_class"
+        )
+    )
+
+    school_fee_by_class = []
+
+    for item in school_fee_by_class_query:
+
+        school_fee_by_class.append({
+            "class_name": (
+                item["student__student_class"]
+                or "Unassigned"
+            ),
+            "payments": item["payments"],
+            "total": item["total"] or Decimal("0.00"),
+        })
+
+
+    # =====================================================
+    # FEEDING FEE COLLECTION
+    #
+    # Paid records and advance payments are counted.
+    # =====================================================
+
+    feeding_records = (
+        FeedingFeeRecord.objects
+        .filter(
+            date__gte=from_date,
+            date__lte=to_date
+        )
+        .filter(
+            models.Q(status="paid")
+            |
+            models.Q(status="advance")
+            |
+            models.Q(is_advance_payment=True)
+        )
+        .select_related("student")
+    )
+
+
+    feeding_fee_collected = (
+        feeding_records.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    feeding_fee_by_class_query = (
+        feeding_records
+        .values(
+            "student__student_class"
+        )
+        .annotate(
+            total=Sum("amount"),
+            payments=Count("id")
+        )
+        .order_by(
+            "student__student_class"
+        )
+    )
+
+    feeding_fee_by_class = []
+
+    for item in feeding_fee_by_class_query:
+
+        feeding_fee_by_class.append({
+            "class_name": (
+                item["student__student_class"]
+                or "Unassigned"
+            ),
+            "payments": item["payments"],
+            "total": item["total"] or Decimal("0.00"),
+        })
+
+
+    # =====================================================
+    # BUS FEE COLLECTION
+    #
+    # Paid records and advance payments are counted.
+    # =====================================================
+
+    bus_records = (
+        BusFeeRecord.objects
+        .filter(
+            date__gte=from_date,
+            date__lte=to_date
+        )
+        .filter(
+            models.Q(status="paid")
+            |
+            models.Q(is_advance_payment=True)
+        )
+        .select_related("student")
+    )
+
+
+    bus_fee_collected = (
+        bus_records.aggregate(
+            total=Sum("amount")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    bus_fee_by_class_query = (
+        bus_records
+        .values(
+            "student__student_class"
+        )
+        .annotate(
+            total=Sum("amount"),
+            payments=Count("id")
+        )
+        .order_by(
+            "student__student_class"
+        )
+    )
+
+    bus_fee_by_class = []
+
+    for item in bus_fee_by_class_query:
+
+        bus_fee_by_class.append({
+            "class_name": (
+                item["student__student_class"]
+                or "Unassigned"
+            ),
+            "payments": item["payments"],
+            "total": item["total"] or Decimal("0.00"),
+        })
+
+
     # =====================================================
     # RECENT ACTIVITY
-    #
-    # Built from actual database records.
     # =====================================================
 
     activities = []
+
 
     # Recent payments
     recent_payment_activity = (
@@ -2099,6 +2310,7 @@ def home(request):
             "date": payment.created_at,
         })
 
+
     # Recently added students
     recent_students = (
         Student.objects
@@ -2119,6 +2331,7 @@ def home(request):
             ),
             "date": student.date_registered,
         })
+
 
     # Recently created bills
     recent_bills = (
@@ -2144,7 +2357,7 @@ def home(request):
             "date": bill.created_at,
         })
 
-    # Sort all activity together
+
     activities.sort(
         key=lambda item: item["date"],
         reverse=True
@@ -2152,36 +2365,81 @@ def home(request):
 
     recent_activity = activities[:5]
 
+
     # =====================================================
     # DASHBOARD CONTEXT
     # =====================================================
 
     context = {
+
         "current_date": today,
-        "current_academic_year": current_academic_year,
 
-        "total_students": total_students,
+        "current_academic_year":
+            current_academic_year,
 
-        "total_fees_due": total_fees_due,
-        "total_paid": total_paid,
-        "outstanding": outstanding,
+        "total_students":
+            total_students,
 
-        "recent_payments": recent_payments,
+        "total_fees_due":
+            total_fees_due,
 
-        "class_distribution": class_distribution,
-        "level_distribution": level_distribution,
+        "total_paid":
+            total_paid,
 
-        "monthly_chart": monthly_chart,
+        "outstanding":
+            outstanding,
 
-        "recent_activity": recent_activity,
+        "recent_payments":
+            recent_payments,
+
+        "class_distribution":
+            class_distribution,
+
+        "level_distribution":
+            level_distribution,
+
+        "monthly_chart":
+            monthly_chart,
+
+        "recent_activity":
+            recent_activity,
+
+
+        # =================================================
+        # COLLECTION UPDATES
+        # =================================================
+
+        "from_date":
+            from_date,
+
+        "to_date":
+            to_date,
+
+        "school_fee_collected":
+            school_fee_collected,
+
+        "feeding_fee_collected":
+            feeding_fee_collected,
+
+        "bus_fee_collected":
+            bus_fee_collected,
+
+        "school_fee_by_class":
+            school_fee_by_class,
+
+        "feeding_fee_by_class":
+            feeding_fee_by_class,
+
+        "bus_fee_by_class":
+            bus_fee_by_class,
     }
+
 
     return render(
         request,
         "fees/home.html",
         context
     )
-
 
 # =========================================================
 # FEES STRUCTURE
