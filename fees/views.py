@@ -6762,7 +6762,7 @@ def export_excel(request):
             ),
 
             (
-                student.photo.name
+                str(student.photo.url)
                 if student.photo
                 else ""
             ),
@@ -6857,7 +6857,7 @@ def export_excel(request):
             settings.school_motto,
 
             (
-                settings.logo.name
+                str(settings.logo.url)
                 if settings.logo
                 else ""
             ),
