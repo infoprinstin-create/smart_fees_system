@@ -26,13 +26,25 @@
             </p>
         </div>
 
-        <a
-            href="{% url 'fees_structure' %}"
-            class="back-button"
-        >
-            <i class="fas fa-arrow-left"></i>
-            <span>Back to Fee Structure</span>
-        </a>
+        <div class="header-actions">
+
+    <a
+        href="{% url 'discount_history' %}"
+        class="discount-history-button"
+    >
+        <i class="fas fa-percent"></i>
+        <span>Discount History</span>
+    </a>
+
+    <a
+        href="{% url 'fees_structure' %}"
+        class="back-button"
+    >
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Fee Structure</span>
+    </a>
+
+</div>
 
     </div>
 

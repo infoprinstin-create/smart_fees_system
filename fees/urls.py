@@ -164,6 +164,12 @@ path(
         name="bill_fee_lookup"
     ),
 
+    path(
+    "discount-history/",
+    views.discount_history,
+    name="discount_history"
+    ),
+
     # =========================================================
     # REPORTS / CLASSES
     # =========================================================

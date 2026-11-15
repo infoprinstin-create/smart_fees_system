@@ -3647,6 +3647,83 @@ def create_bill(request):
     )
 
 
+@login_required
+@role_required("school_fees")
+def discount_history(request):
+
+    bills = (
+        Bill.objects
+        .filter(discount_amount__gt=0)
+        .select_related("student")
+        .order_by(
+            "-academic_year",
+            "term",
+            "student__student_class",
+            "student__first_name"
+        )
+    )
+
+    # Academic year filter
+    academic_year = request.GET.get(
+        "academic_year",
+        ""
+    ).strip()
+
+    if academic_year:
+        bills = bills.filter(
+            academic_year=academic_year
+        )
+
+    # Term filter
+    term = request.GET.get(
+        "term",
+        ""
+    ).strip()
+
+    if term:
+        bills = bills.filter(
+            term=term
+        )
+
+    # Available academic years
+    academic_years = (
+        Bill.objects
+        .filter(discount_amount__gt=0)
+        .values_list(
+            "academic_year",
+            flat=True
+        )
+        .distinct()
+        .order_by("-academic_year")
+    )
+
+    # Summary
+    total_discount = sum(
+        bill.discount_amount
+        for bill in bills
+    )
+
+    total_students = (
+        bills.values("student")
+        .distinct()
+        .count()
+    )
+
+    context = {
+        "bills": bills,
+        "academic_years": academic_years,
+        "selected_academic_year": academic_year,
+        "selected_term": term,
+        "total_discount": total_discount,
+        "total_students": total_students,
+    }
+
+    return render(
+        request,
+        "fees/discount_history.html",
+        context
+    )
+
 
 
 # =========================================================

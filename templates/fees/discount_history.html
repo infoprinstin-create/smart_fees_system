@@ -1,0 +1,367 @@
+{% extends "fees/base.html" %}
+{% load static %}
+
+{% block title %}Discount History{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/discount_history.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="discount-history-page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div>
+            <h1>
+                <i class="fa-solid fa-percent"></i>
+                Discount History
+            </h1>
+
+            <p>
+                View all student discounts by academic year and term.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+    <div class="summary-grid">
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+
+            <div>
+                <span>
+                    Students Discounted
+                </span>
+
+                <strong>
+                    {{ total_students }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <div class="summary-icon">
+                <i class="fa-solid fa-percent"></i>
+            </div>
+
+            <div>
+                <span>
+                    Total Discount
+                </span>
+
+                <strong>
+                    GH₵ {{ total_discount|floatformat:2 }}
+                </strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FILTER -->
+    <div class="filter-card">
+
+        <form
+            method="GET"
+            class="filter-form"
+        >
+
+            <div class="filter-group">
+
+                <label>
+                    Academic Year
+                </label>
+
+                <select name="academic_year">
+
+                    <option value="">
+                        All Academic Years
+                    </option>
+
+                    {% for year in academic_years %}
+
+                        <option
+                            value="{{ year }}"
+                            {% if selected_academic_year == year %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ year }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="filter-group">
+
+                <label>
+                    Term
+                </label>
+
+                <select name="term">
+
+                    <option value="">
+                        All Terms
+                    </option>
+
+                    <option
+                        value="First Term"
+                        {% if selected_term == "First Term" %}
+                            selected
+                        {% endif %}
+                    >
+                        First Term
+                    </option>
+
+                    <option
+                        value="Second Term"
+                        {% if selected_term == "Second Term" %}
+                            selected
+                        {% endif %}
+                    >
+                        Second Term
+                    </option>
+
+                    <option
+                        value="Third Term"
+                        {% if selected_term == "Third Term" %}
+                            selected
+                        {% endif %}
+                    >
+                        Third Term
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="filter-btn"
+            >
+                <i class="fa-solid fa-filter"></i>
+                Apply Filter
+            </button>
+
+
+            <a
+                href="{% url 'discount_history' %}"
+                class="reset-btn"
+            >
+                <i class="fa-solid fa-rotate-left"></i>
+                Reset
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- DISCOUNT TABLE -->
+    <div class="discount-table-card">
+
+        <div class="table-header">
+
+            <div>
+                <h2>
+                    Discount Records
+                </h2>
+
+                <p>
+                    {{ bills|length }} record{{ bills|length|pluralize }}
+                    found
+                </p>
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Student ID
+                        </th>
+
+                        <th>
+                            Class
+                        </th>
+
+                        <th>
+                            Academic Year
+                        </th>
+
+                        <th>
+                            Term
+                        </th>
+
+                        <th>
+                            Original Fee
+                        </th>
+
+                        <th>
+                            Discount
+                        </th>
+
+                        <th>
+                            Discount Amount
+                        </th>
+
+                        <th>
+                            Amount Due
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for bill in bills %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                {{ bill.student.first_name }}
+                                {{ bill.student.last_name }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ bill.student.student_id }}
+                        </td>
+
+
+                        <td>
+                            {{ bill.student.student_class }}
+                        </td>
+
+
+                        <td>
+                            {{ bill.academic_year }}
+                        </td>
+
+
+                        <td>
+
+                            <span class="term-badge">
+                                {{ bill.term }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+                            GH₵ {{ bill.base_amount|floatformat:2 }}
+                        </td>
+
+
+                        <td>
+
+                            <span class="discount-percent">
+                                {{ bill.discount_percent|floatformat:2 }}%
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong class="discount-amount">
+                                GH₵ {{ bill.discount_amount|floatformat:2 }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <strong>
+                                GH₵ {{ bill.amount_due|floatformat:2 }}
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+                            {{ bill.created_at|date:"d M Y" }}
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="10"
+                            class="empty-state"
+                        >
+
+                            <i class="fa-solid fa-percent"></i>
+
+                            <h3>
+                                No discount records found
+                            </h3>
+
+                            <p>
+                                There are no discounted bills
+                                matching the selected filters.
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
